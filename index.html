@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .page-tab { display: none; }
+        .page-tab.active { display: block; }
     </style>
 </head>
-<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-16 md:pb-0">
+<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-24">
 
-    <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-center shadow-md">
-        <div class="flex items-center space-x-3 mb-3 sm:mb-0">
+    <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0">
+        <div class="flex items-center space-x-3">
             <div class="bg-white/20 p-2 rounded-full text-2xl">
                 <i class="fa-solid fa-satellite-dish text-white"></i>
             </div>
@@ -22,93 +24,551 @@
                 <p class="text-xs text-blue-100">Professional Field Engineer App</p>
             </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <div class="bg-white/20 px-4 py-1.5 rounded-full text-sm flex items-center space-x-2">
+        <div class="flex items-center space-x-2">
+            <div class="bg-white/20 px-3 py-1 rounded-full text-xs flex items-center space-x-1.5">
                 <i class="fa-regular fa-calendar"></i>
                 <span id="current-date"></span>
             </div>
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-white text-blue-600 font-bold rounded-full flex items-center justify-center text-lg border-2 border-white shadow">
-                    E
-                </div>
-                <div class="hidden sm:block text-left">
-                    <p class="text-sm font-semibold leading-tight">Engineer</p>
-                    <p class="text-xs text-blue-100">Field Engineer</p>
-                </div>
-            </div>
+            <button onclick="switchTab('admin')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow transition">
+                <i class="fa-solid fa-user-gear"></i> Admin
+            </button>
         </div>
     </header>
 
-    <div class="flex flex-1">
-        <!-- Sidebar for Desktop -->
-        <aside class="w-64 bg-white border-r border-gray-200 p-4 hidden md:flex flex-col justify-between shrink-0">
-            <div>
-                <p class="text-xs font-bold text-blue-600 tracking-wider uppercase mb-3">Main Menu</p>
-                <nav class="space-y-1 mb-6">
-                    <a href="index.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-blue-50 text-blue-600 font-medium transition">
-                        <i class="fa-solid fa-house w-5"></i> <span>Dashboard</span>
-                    </a>
-                    <a href="installation.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
-                        <i class="fa-solid fa-screwdriver-wrench w-5"></i>
-                        <span>Installation</span>
-                    </a>
-                </nav>
-            </div>
-        </aside>
+    <main class="flex-1 max-w-md mx-auto w-full p-4 overflow-y-auto">
 
-        <!-- Main Content -->
-        <main class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto max-w-6xl mx-auto w-full">
-            
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
-                    <div class="bg-blue-50 w-10 h-10 rounded-lg flex items-center justify-center text-blue-600 mb-3 shadow-inner">
-                        <i class="fa-solid fa-box-archive text-lg"></i>
-                    </div>
+        <div id="tab-home" class="page-tab active space-y-5">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-blue-500 text-2xl"><i class="fa-solid fa-box-archive"></i></div>
                     <div>
-                        <h3 id="installationCount" class="text-3xl font-extrabold text-gray-900 leading-tight">0</h3>
-                        <p class="text-sm font-semibold text-gray-800 mt-0.5">Installation</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Today</p>
+                        <h3 id="count-install" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Installation</p>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
-                    <div class="bg-emerald-50 w-10 h-10 rounded-lg flex items-center justify-center text-emerald-600 mb-3 shadow-inner">
-                        <i class="fa-solid fa-phone text-lg"></i>
-                    </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-red-500 text-2xl"><i class="fa-solid fa-phone"></i></div>
                     <div>
-                        <h3 id="srCount" class="text-3xl font-extrabold text-gray-900 leading-tight">0</h3>
-                        <p class="text-sm font-semibold text-gray-800 mt-0.5">SR</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Today</p>
+                        <h3 id="count-sr" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">SR Logs</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-emerald-500 text-2xl"><i class="fa-solid fa-toolbox"></i></div>
+                    <div>
+                        <h3 id="count-restore" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Restored</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-purple-500 text-2xl"><i class="fa-solid fa-car"></i></div>
+                    <div>
+                        <h3 id="count-travel" class="text-xl font-black text-gray-900">0 KM</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Travel</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Shortcuts for Mobile -->
-            <div>
-                <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase mb-3">Quick Shortcuts</h2>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="window.location.href='installation.html'" class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition text-center flex flex-col items-center justify-center cursor-pointer group">
-                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-105 transition shadow-sm border border-blue-100">
-                            <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
+            <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
+                <h3 class="text-xs font-bold text-amber-700 tracking-wider uppercase mb-2"><i class="fa-solid fa-bell animate-pulse"></i> Live Assigned Orders from Admin</h3>
+                <div id="assigned-orders-list" class="space-y-2 text-xs text-gray-600">
+                    <p class="text-gray-400 italic">No pending orders assigned yet.</p>
+                </div>
+            </div>
+
+            <div class="space-y-2.5">
+                <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase">Field Operations Menu</h2>
+                
+                <button onclick="switchTab('install')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-base border border-blue-100"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Add Installation</h4>
+                            <p class="text-xs text-gray-400">Multi-ISP client activation entry</p>
                         </div>
-                        <span class="text-xs font-bold text-gray-700">Add Installation</span>
-                    </button>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('sr')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-base border border-red-100"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Add SR Report</h4>
+                            <p class="text-xs text-gray-400">Service complaints and fault logs</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('restore')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-base border border-emerald-100"><i class="fa-solid fa-signal"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Site Restore & Fatbox</h4>
+                            <p class="text-xs text-gray-400">Fatbox porting, splitter & dB loss check</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('travel')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center text-base border border-purple-100"><i class="fa-solid fa-route"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Start Travel Tracker</h4>
+                            <p class="text-xs text-gray-400">Odometer reading site to site logs</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('visit')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center text-base border border-teal-100"><i class="fa-solid fa-eye"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Other Survey / Joint Visits</h4>
+                            <p class="text-xs text-gray-400">Fiber cut joint, loop test & surveys</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('data'); loadCollectedData();" class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white flex items-center justify-between w-full text-left cursor-pointer shadow-md">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm">All Collected Data</h4>
+                            <p class="text-xs text-blue-100">View or download all saved reports</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-white text-xs mr-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-file-circle-plus text-lg"></i>
+                <h2 class="font-bold text-base">New Installation</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="ins-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="">-- Choose Operator --</option>
+                    <option>GTPL Broadband</option>
+                    <option>Airtel Stream</option>
+                    <option>Jio Fiber</option>
+                    <option>Tata Play Fiber</option>
+                    <option>BSNL FTTH</option>
+                </select>
+            </div>
+            <input id="ins-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <input id="ins-dsl" type="text" placeholder="DSL ID / User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <input id="ins-mobile" type="tel" placeholder="Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <textarea id="ins-address" rows="2" placeholder="Full Installation Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+            
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Upload Installation Site Photo</label>
+                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+                    <i class="fa-solid fa-camera text-xl text-gray-400 mb-0.5"></i>
+                    <p class="text-xs text-gray-500">Take Photo / Select Picture</p>
+                    <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
                 </div>
             </div>
-        </main>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveInstallation()" class="w-2/3 bg-blue-600 text-white font-semibold rounded-lg p-3 hover:bg-blue-700 shadow-md">Save Installation</button>
+            </div>
+        </div>
+
+        <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-red-500 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-phone-volume text-lg"></i>
+                <h2 class="font-bold text-base">Service Request (SR) Log</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="sr-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                    <option value="">-- Choose ISP --</option>
+                    <option>GTPL</option>
+                    <option>Airtel</option>
+                    <option>Jio</option>
+                    <option>Tata Play</option>
+                </select>
+            </div>
+            <input id="sr-customer" type="text" placeholder="Customer Name / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+            <input id="sr-dsl" type="text" placeholder="DSL ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+            <textarea id="sr-issue" rows="2" placeholder="Describe Complaint Issue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
+            
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveSR()" class="w-2/3 bg-red-500 text-white font-semibold rounded-lg p-3 hover:bg-red-600 shadow-md">Save SR Ticket</button>
+            </div>
+        </div>
+
+        <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-emerald-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-signal text-lg"></i>
+                <h2 class="font-bold text-base">Site Restore Details</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="res-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                    <option value="">-- Choose ISP --</option>
+                    <option>GTPL</option>
+                    <option>Airtel</option>
+                    <option>Jio</option>
+                    <option>Tata Play</option>
+                </select>
+            </div>
+            <input id="res-site" type="text" placeholder="Site / Fatbox Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <input id="res-fatbox" type="text" placeholder="Fatbox Number/ID" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                <input id="res-port" type="number" placeholder="Splitter Port No" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <input id="res-loss" type="text" placeholder="dB Signal Loss (e.g. -21.5)" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                <select id="res-status" class="border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                    <option>Successfully Restored</option>
+                    <option>Pending / Major Cut</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Upload Fatbox / Joint Photo</label>
+                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+                    <i class="fa-solid fa-images text-xl text-gray-400 mb-0.5"></i>
+                    <p class="text-xs text-gray-500">Capture OPM / Splice Photo</p>
+                    <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveRestore()" class="w-2/3 bg-emerald-600 text-white font-semibold rounded-xl p-3 hover:bg-emerald-700 shadow-md">Save Site Report</button>
+            </div>
+        </div>
+
+        <div id="tab-travel" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-purple-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-map-location-dot text-lg"></i>
+                <h2 class="font-bold text-base">Site Travel Distance Log</h2>
+            </div>
+            <input id="tr-from" type="text" placeholder="From Location: (e.g. Office / Site A)" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+            <input id="tr-to" type="text" placeholder="To Location: (e.g. Site B)" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Start Meter (KM)</label>
+                    <input id="tr-start" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">End Meter (KM)</label>
+                    <input id="tr-end" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveTravel()" class="w-2/3 bg-purple-600 text-white font-semibold rounded-lg p-3 hover:bg-purple-700 shadow-md">Add Distance</button>
+            </div>
+        </div>
+
+        <div id="tab-visit" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-teal-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-binoculars text-lg"></i>
+                <h2 class="font-bold text-base">Other Survey & Field Visit</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Visit Purpose (Multiple Key)</label>
+                <select id="vis-purpose" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-teal-500">
+                    <option>Fiber Loop/Route Checking</option>
+                    <option>Major Fiber Cut Jointing</option>
+                    <option>New Building Survey</option>
+                    <option>OPM Power Audit Visit</option>
+                    <option>General Maintenance</option>
+                </select>
+            </div>
+            <input id="vis-loc" type="text" placeholder="Area / Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-teal-500">
+            <textarea id="vis-remarks" rows="2" placeholder="Enter Visit Remarks Details..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-teal-500"></textarea>
+            
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveVisit()" class="w-2/3 bg-teal-600 text-white font-semibold rounded-lg p-3 hover:bg-teal-700 shadow-md">Log Visit</button>
+            </div>
+        </div>
+
+        <div id="tab-admin" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-amber-200 shadow-md">
+            <div class="flex items-center space-x-2 text-amber-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-user-shield text-lg"></i>
+                <h2 class="font-bold text-base">Admin Order Dispatch</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Task Type</label>
+                <select id="adm-type" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-amber-500">
+                    <option value="Installation">New Installation Order</option>
+                    <option value="SR Fault">Service Request Ticket (SR)</option>
+                </select>
+            </div>
+            <input id="adm-cust" type="text" placeholder="Client / Ticket Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
+            <input id="adm-dsl" type="text" placeholder="DSL User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
+            <input id="adm-addr" type="text" placeholder="Site Assignment Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
+            
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Back</button>
+                <button onclick="assignOrder()" class="w-2/3 bg-amber-500 text-white font-semibold rounded-lg p-3 hover:bg-amber-600 shadow-md">Dispatch & Assign</button>
+            </div>
+        </div>
+
+        <div id="tab-data" class="page-tab space-y-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm max-w-full overflow-x-auto">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
+                <div class="flex items-center space-x-2 text-indigo-600">
+                    <i class="fa-solid fa-folder-open text-lg"></i>
+                    <h2 class="font-bold text-base">All Logs Data</h2>
+                </div>
+                <button onclick="clearAllData()" class="text-[10px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded border border-red-200">Clear Data</button>
+            </div>
+            
+            <div id="data-tables-container" class="space-y-4 text-xs max-h-96 overflow-y-auto">
+                </div>
+            
+            <button onclick="switchTab('home')" class="w-full bg-gray-700 text-white font-semibold rounded-lg p-2.5 mt-2">Back to Dashboard</button>
+        </div>
+
+    </main>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 shadow-lg z-50 shrink-0">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center text-blue-600 font-bold text-xs cursor-pointer">
+            <i class="fa-solid fa-house text-lg mb-0.5"></i> Home
+        </button>
+        <button onclick="switchTab('install')" id="nav-install" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
+            <i class="fa-solid fa-screwdriver-wrench text-lg mb-0.5"></i> Install
+        </button>
+        <button onclick="switchTab('sr')" id="nav-sr" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
+            <i class="fa-solid fa-phone text-lg mb-0.5"></i> SR Log
+        </button>
+        <button onclick="switchTab('restore')" id="nav-restore" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
+            <i class="fa-solid fa-signal text-lg mb-0.5"></i> Restore
+        </button>
     </div>
 
-    <!-- Bottom Navigation for Mobile -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-2 shadow-lg z-50">
-        <a href="index.html" class="flex flex-col items-center text-blue-600">
-            <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px] font-bold">Home</span>
-        </a>
-        <a href="installation.html" class="flex flex-col items-center text-gray-500 hover:text-blue-600">
-            <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
-            <span class="text-[10px] font-bold">Install</span>
-        </a>
-    </div>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'text-red-500', 'text-emerald-600', 'font-bold');
+                btn.classList.add('text-gray-400');
+            });
 
-    <script src="script.js"></script>
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if(activeBtn) {
+                if(tabId === 'home' || tabId === 'install') activeBtn.classList.add('text-blue-600', 'font-bold');
+                if(tabId === 'sr') activeBtn.classList.add('text-red-500', 'font-bold');
+                if(tabId === 'restore') activeBtn.classList.add('text-emerald-600', 'font-bold');
+            }
+        }
+
+        function refreshCounters() {
+            document.getElementById("count-install").innerText = localStorage.getItem("c_inst") || 0;
+            document.getElementById("count-sr").innerText = localStorage.getItem("c_sr") || 0;
+            document.getElementById("count-restore").innerText = localStorage.getItem("c_rest") || 0;
+            document.getElementById("count-travel").innerText = (localStorage.getItem("travel") || 0) + " KM";
+            loadAssignedOrders();
+        }
+
+        // Admin Order Dispatch Logic
+        function assignOrder() {
+            let type = document.getElementById("adm-type").value;
+            let cust = document.getElementById("adm-cust").value.trim();
+            let dsl = document.getElementById("adm-dsl").value.trim();
+            let addr = document.getElementById("adm-addr").value.trim();
+
+            if(!cust || !dsl || !addr) { alert("Fill fields!"); return; }
+
+            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
+            list.push({ type, cust, dsl, addr, id: Date.now() });
+            localStorage.setItem("adminOrders", JSON.stringify(list));
+            
+            alert("Order dispatched to live board!");
+            document.getElementById("adm-cust").value = "";
+            document.getElementById("adm-dsl").value = "";
+            document.getElementById("adm-addr").value = "";
+            refreshCounters();
+            switchTab('home');
+        }
+
+        function loadAssignedOrders() {
+            let container = document.getElementById("assigned-orders-list");
+            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
+            if(list.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 italic">No pending orders assigned yet.</p>`;
+                return;
+            }
+            container.innerHTML = list.map(item => `
+                <div class="p-2 border-l-2 border-amber-500 bg-white rounded shadow-xs flex justify-between items-center mb-1">
+                    <div>
+                        <span class="font-bold text-amber-700 font-mono">[${item.type}]</span> <b>${item.cust}</b> (ID: ${item.dsl})<br>
+                        <span class="text-[11px] text-gray-400">${item.addr}</span>
+                    </div>
+                    <button onclick="completeAssigned(${item.id})" class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">Done</button>
+                </div>
+            `).join('');
+        }
+
+        function completeAssigned(id) {
+            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
+            list = list.filter(item => item.id !== id);
+            localStorage.setItem("adminOrders", JSON.stringify(list));
+            alert("Task updated!");
+            refreshCounters();
+        }
+
+        // Forms Save Logic
+        function saveInstallation() {
+            let isp = document.getElementById("ins-isp").value;
+            let customer = document.getElementById("ins-customer").value.trim();
+            let dsl = document.getElementById("ins-dsl").value.trim();
+            let mobile = document.getElementById("ins-mobile").value.trim();
+            let address = document.getElementById("ins-address").value.trim();
+
+            if(!isp || !customer || !dsl || !mobile || !address) { alert("Fill all data"); return; }
+            let records = JSON.parse(localStorage.getItem("all_inst_data")) || [];
+            records.push({ isp, customer, dsl, mobile, address, date: new Date().toLocaleString() });
+            localStorage.setItem("all_inst_data", JSON.stringify(records));
+            localStorage.setItem("c_inst", records.length);
+
+            alert("Installation Log Saved");
+            document.getElementById("ins-customer").value = "";
+            document.getElementById("ins-dsl").value = "";
+            document.getElementById("ins-mobile").value = "";
+            document.getElementById("ins-address").value = "";
+            refreshCounters(); switchTab('home');
+        }
+
+        function saveSR() {
+            let isp = document.getElementById("sr-isp").value;
+            let customer = document.getElementById("sr-customer").value.trim();
+            let dsl = document.getElementById("sr-dsl").value.trim();
+            let issue = document.getElementById("sr-issue").value.trim();
+
+            if(!isp || !customer || !dsl || !issue) { alert("Fill all fields"); return; }
+            let records = JSON.parse(localStorage.getItem("all_sr_data")) || [];
+            records.push({ isp, customer, dsl, issue, date: new Date().toLocaleString() });
+            localStorage.setItem("all_sr_data", JSON.stringify(records));
+            localStorage.setItem("c_sr", records.length);
+
+            alert("SR Log Saved");
+            document.getElementById("sr-customer").value = "";
+            document.getElementById("sr-dsl").value = "";
+            document.getElementById("sr-issue").value = "";
+            refreshCounters(); switchTab('home');
+        }
+
+        function saveRestore() {
+            let isp = document.getElementById("res-isp").value;
+            let site = document.getElementById("res-site").value.trim();
+            let fatbox = document.getElementById("res-fatbox").value.trim();
+            let port = document.getElementById("res-port").value.trim();
+            let loss = document.getElementById("res-loss").value.trim();
+            let status = document.getElementById("res-status").value;
+
+            if(!isp || !site || !fatbox || !port || !loss) { alert("Fill network properties"); return; }
+            let records = JSON.parse(localStorage.getItem("all_rest_data")) || [];
+            records.push({ isp, site, fatbox, port, loss, status, date: new Date().toLocaleString() });
+            localStorage.setItem("all_rest_data", JSON.stringify(records));
+            localStorage.setItem("c_rest", records.length);
+
+            alert("Site Restore Saved");
+            document.getElementById("res-site").value = "";
+            document.getElementById("res-fatbox").value = "";
+            document.getElementById("res-port").value = "";
+            document.getElementById("res-loss").value = "";
+            refreshCounters(); switchTab('home');
+        }
+
+        function saveTravel() {
+            let from = document.getElementById("tr-from").value.trim();
+            let to = document.getElementById("tr-to").value.trim();
+            let start = parseFloat(document.getElementById("tr-start").value);
+            let end = parseFloat(document.getElementById("tr-end").value);
+
+            if(!from || !to || isNaN(start) || isNaN(end)) { alert("Fill route details"); return; }
+            if(end < start) { alert("End reading invalid!"); return; }
+
+            let diff = end - start;
+            let current = parseFloat(localStorage.getItem("travel")) || 0;
+            localStorage.setItem("travel", current + diff);
+            
+            let records = JSON.parse(localStorage.getItem("all_tr_data")) || [];
+            records.push({ from, to, km: diff, date: new Date().toLocaleString() });
+            localStorage.setItem("all_tr_data", JSON.stringify(records));
+
+            alert("Distance tracking added!");
+            document.getElementById("tr-from").value = ""; document.getElementById("tr-to").value = "";
+            document.getElementById("tr-start").value = ""; document.getElementById("tr-end").value = "";
+            refreshCounters(); switchTab('home');
+        }
+
+        function saveVisit() {
+            let purpose = document.getElementById("vis-purpose").value;
+            let loc = document.getElementById("vis-loc").value.trim();
+            let remarks = document.getElementById("vis-remarks").value.trim();
+
+            if(!loc || !remarks) { alert("Fill survey specifics!"); return; }
+            let records = JSON.parse(localStorage.getItem("all_vis_data")) || [];
+            records.push({ purpose, loc, remarks, date: new Date().toLocaleString() });
+            localStorage.setItem("all_vis_data", JSON.stringify(records));
+
+            alert("Field visit successfully logged");
+            document.getElementById("vis-loc").value = "";
+            document.getElementById("vis-remarks").value = "";
+            switchTab('home');
+        }
+
+        // Data Viewer Renderer Logic
+        function loadCollectedData() {
+            let container = document.getElementById("data-tables-container");
+            let inst = JSON.parse(localStorage.getItem("all_inst_data")) || [];
+            let srs = JSON.parse(localStorage.getItem("all_sr_data")) || [];
+            let rest = JSON.parse(localStorage.getItem("all_rest_data")) || [];
+            let visits = JSON.parse(localStorage.getItem("all_vis_data")) || [];
+
+            let html = "";
+            
+            html += `<h4 class="font-bold text-blue-600 border-b">1. Installations logged (${inst.length})</h4>`;
+            if(inst.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs.</p>`;
+            else inst.forEach(i => html += `<p class="bg-gray-50 p-1 rounded mb-1 border">${i.date} | <b>${i.isp}</b> - ${i.customer} (${i.dsl})</p>`);
+
+            html += `<h4 class="font-bold text-red-500 border-b mt-3">2. Service Requests logged (${srs.length})</h4>`;
+            if(srs.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs.</p>`;
+            else srs.forEach(s => html += `<p class="bg-gray-50 p-1 rounded mb-1 border">${s.date} | <b>${s.isp}</b> - ${s.customer} : ${s.issue}</p>`);
+
+            html += `<h4 class="font-bold text-emerald-600 border-b mt-3">3. Site Restorations (${rest.length})</h4>`;
+            if(rest.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs.</p>`;
+            else rest.forEach(r => html += `<p class="bg-gray-50 p-1 rounded mb-1 border">${r.date} | Box: ${r.fatbox}, Port: ${r.port}, Signal: ${r.loss}dB [${r.status}]</p>`);
+
+            html += `<h4 class="font-bold text-teal-600 border-b mt-3">4. Other Surveys & Visits (${visits.length})</h4>`;
+            if(visits.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs.</p>`;
+            else visits.forEach(v => html += `<p class="bg-gray-50 p-1 rounded mb-1 border">${v.date} | <b>${v.purpose}</b> @ ${v.loc} (${v.remarks})</p>`);
+
+            container.innerHTML = html;
+        }
+
+        function clearAllData() {
+            if(confirm("Are you sure you want to delete all stored day records?")) {
+                localStorage.clear();
+                refreshCounters();
+                loadCollectedData();
+            }
+        }
+
+        window.onload = function() {
+            refreshCounters();
+            document.getElementById("current-date").innerText = new Date().toLocaleDateString("en-GB", {
+                day: "2-digit", month: "short", year: "numeric"
+            });
+        };
+    </script>
 </body>
 </html>
