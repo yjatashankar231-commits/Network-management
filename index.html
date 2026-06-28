@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiber Work Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .page-tab { display: none; }
+        .page-tab.active { display: block; }
+    </style>
+</head>
+<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-24">
+
+    <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white/20 p-2 rounded-full text-2xl">
+                <i class="fa-solid fa-satellite-dish text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">Fiber Work Manager</h1>
+                <p class="text-xs text-blue-100">Professional Field Engineer App</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <div class="bg-white/20 px-3 py-1 rounded-full text-xs flex items-center space-x-1.5">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="current-date"></span>
+            </div>
+            <button onclick="switchTab('admin')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow transition">
+                <i class="fa-solid fa-user-gear"></i> Admin
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-md mx-auto w-full p-4 overflow-y-auto">
+
+        <div id="tab-home" class="page-tab active space-y-5">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-blue-500 text-2xl"><i class="fa-solid fa-box-archive"></i></div>
+                    <div>
+                        <h3 id="count-install" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Installation</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-red-500 text-2xl"><i class="fa-solid fa-phone"></i></div>
+                    <div>
+                        <h3 id="count-sr" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">SR Logs</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-emerald-500 text-2xl"><i class="fa-solid fa-toolbox"></i></div>
+                    <div>
+                        <h3 id="count-restore" class="text-xl font-black text-gray-900">0</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Restored</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                    <div class="text-purple-500 text-2xl"><i class="fa-solid fa-car"></i></div>
+                    <div>
+                        <h3 id="count-travel" class="text-xl font-black text-gray-900">0 KM</h3>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Travel</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
+                <h3 class="text-xs font-bold text-amber-700 tracking-wider uppercase mb-2"><i class="fa-solid fa-bell animate-pulse"></i> Live Assigned Orders from Admin</h3>
+                <div id="assigned-orders-list" class="space-y-2 text-xs text-gray-600">
+                    <p class="text-gray-400 italic">No pending orders assigned yet.</p>
+                </div>
+            </div>
+
+            <div class="space-y-2.5">
+                <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase">Field Operations Menu</h2>
+                
+                <button onclick="switchTab('install')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-base border border-blue-100"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Add Installation</h4>
+                            <p class="text-xs text-gray-400">Multi-ISP client activation entry</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('sr')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-base border border-red-100"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Add SR Report</h4>
+                            <p class="text-xs text-gray-400">Service complaints and fault logs</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('restore')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-base border border-emerald-100"><i class="fa-solid fa-signal"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Site Restore & Fatbox</h4>
+                            <p class="text-xs text-gray-400">Fatbox porting, splitter & dB loss check</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('travel')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center text-base border border-purple-100"><i class="fa-solid fa-route"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Start Travel Tracker</h4>
+                            <p class="text-xs text-gray-400">Odometer reading site to site logs</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('visit')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center text-base border border-teal-100"><i class="fa-solid fa-eye"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm">Other Survey / Joint Visits</h4>
+                            <p class="text-xs text-gray-400">Fiber cut joint, loop test & surveys</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                </button>
+
+                <button onclick="switchTab('data'); loadCollectedData();" class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white flex items-center justify-between w-full text-left cursor-pointer shadow-md">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm">All Collected Data</h4>
+                            <p class="text-xs text-blue-100">View or download all saved reports</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-white text-xs mr-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-file-circle-plus text-lg"></i>
+                <h2 class="font-bold text-base">New Installation</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="ins-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="">-- Choose Operator --</option>
+                    <option>GTPL Broadband</option>
+                    <option>Airtel Stream</option>
+                    <option>Jio Fiber</option>
+                    <option>Tata Play Fiber</option>
+                    <option>BSNL FTTH</option>
+                </select>
+            </div>
+            <input id="ins-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <input id="ins-dsl" type="text" placeholder="DSL ID / User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <input id="ins-mobile" type="tel" placeholder="Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+            <textarea id="ins-address" rows="2" placeholder="Full Installation Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+            
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Upload Installation Site Photo</label>
+                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+                    <i class="fa-solid fa-camera text-xl text-gray-400 mb-0.5"></i>
+                    <p class="text-xs text-gray-500">Take Photo / Select Picture</p>
+                    <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveInstallation()" class="w-2/3 bg-blue-600 text-white font-semibold rounded-lg p-3 hover:bg-blue-700 shadow-md">Save Installation</button>
+            </div>
+        </div>
+
+        <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-red-500 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-phone-volume text-lg"></i>
+                <h2 class="font-bold text-base">Service Request (SR) Log</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="sr-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                    <option value="">-- Choose ISP --</option>
+                    <option>GTPL</option>
+                    <option>Airtel</option>
+                    <option>Jio</option>
+                    <option>Tata Play</option>
+                </select>
+            </div>
+            <input id="sr-customer" type="text" placeholder="Customer Name / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+            <input id="sr-dsl" type="text" placeholder="DSL ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+            <textarea id="sr-issue" rows="2" placeholder="Describe Complaint Issue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
+            
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveSR()" class="w-2/3 bg-red-500 text-white font-semibold rounded-lg p-3 hover:bg-red-600 shadow-md">Save SR Ticket</button>
+            </div>
+        </div>
+
+        <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-emerald-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-signal text-lg"></i>
+                <h2 class="font-bold text-base">Site Restore Details</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
+                <select id="res-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                    <option value="">-- Choose ISP --</option>
+                    <option>GTPL</option>
+                    <option>Airtel</option>
+                    <option>Jio</option>
+                    <option>Tata Play</option>
+                </select>
+            </div>
+            <input id="res-site" type="text" placeholder="Site / Fatbox Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <input id="res-fatbox" type="text" placeholder="Fatbox Number/ID" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                <input id="res-port" type="number" placeholder="Splitter Port No" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <input id="res-loss" type="text" placeholder="dB Signal Loss (e.g. -21.5)" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                <select id="res-status" class="border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                    <option>Successfully Restored</option>
+                    <option>Pending / Major Cut</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Upload Fatbox / Joint Photo</label>
+                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+                    <i class="fa-solid fa-images text-xl text-gray-400 mb-0.5"></i>
+                    <p class="text-xs text-gray-500">Capture OPM / Splice Photo</p>
+                    <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveRestore()" class="w-2/3 bg-emerald-600 text-white font-semibold rounded-xl p-3 hover:bg-emerald-700 shadow-md">Save Site Report</button>
+            </div>
+        </div>
+
+        <div id="tab-travel" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-purple-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-map-location-dot text-lg"></i>
+                <h2 class="font-bold text-base">Site Travel Distance Log</h2>
+            </div>
+            <input id="tr-from" type="text" placeholder="From Location: (e.g. Office / Site A)" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+            <input id="tr-to" type="text" placeholder="To Location: (e.g. Site B)" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Start Meter (KM)</label>
+                    <input id="tr-start" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">End Meter (KM)</label>
+                    <input id="tr-end" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                <button onclick="saveTravel()" class="w-2/3 bg-purple-600 text-white font-semibold rounded-lg p-3 hover:bg-purple-700 shadow-md">Add Distance</button>
+            </div>
+        </div>
+
+        <div id="tab-visit" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-2 text-teal-600 border-b border-gray-100 pb-3 mb-1">
+                <i class="fa-solid fa-binoculars text-lg"></i>
+                <h2 class="font-bold text-base">Other Survey & Field Visit</h2>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Visit Purpose (Multiple Key)</label>
+                <select id="vis-purpose" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-teal-500">
+                    <option>Fiber Loop/Route Checking</option>
+                    <option>Major Fiber Cut Jointing</option>
+                    <option>New Building Survey</option>
+                    <option>OPM Power Audit Visit</option>
+                    <option>General Maintenance</option>
+                </
