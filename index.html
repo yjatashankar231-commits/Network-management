@@ -25,7 +25,7 @@
             </div>
             <div>
                 <h2 class="text-xl font-black text-gray-800 tracking-wide">Fiber Work Manager</h2>
-                <p id="auth-subtitle" class="text-xs text-gray-400 mt-0.5">Field Engineer Secure Access</p>
+                <p id="auth-subtitle" class="text-xs text-gray-400 mt-0.5">Authorized Field Access Only</p>
             </div>
             
             <div id="form-login" class="auth-form active space-y-4 text-left">
@@ -33,7 +33,7 @@
                     <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Mobile Number</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">+91</span>
-                        <input id="login-mobile" type="tel" maxlength="10" placeholder="Enter 10 Digit Mobile" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
+                        <input id="login-mobile" type="tel" maxlength="10" placeholder="Enter Approved Mobile" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
                     </div>
                 </div>
                 <div>
@@ -57,7 +57,7 @@
                     <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Mobile Number</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">+91</span>
-                        <input id="reg-mobile" type="tel" maxlength="10" placeholder="Enter 10 Digit Mobile" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
+                        <input id="reg-mobile" type="tel" maxlength="10" placeholder="Enter Allowed Mobile Only" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
                     </div>
                 </div>
                 <div>
@@ -71,10 +71,8 @@
                     Pehle se account hai? <button onclick="toggleAuthForm('login')" class="text-blue-600 font-bold underline cursor-pointer">Login Here</button>
                 </p>
             </div>
-            
         </div>
     </div>
-
 
     <div id="app-content" class="flex-col min-h-screen w-full">
 
@@ -90,7 +88,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 <button onclick="switchTab('admin')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shadow transition">
-                    <i class="fa-solid fa-user-gear"></i> Admin
+                    <i class="fa-solid fa-user-gear"></i> Admin Control
                 </button>
                 <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shadow transition">
                     <i class="fa-solid fa-power-off"></i>
@@ -137,13 +135,6 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
-                    <h3 class="text-xs font-bold text-amber-700 tracking-wider uppercase mb-2"><i class="fa-solid fa-bell animate-pulse"></i> Live Assigned Orders from Admin</h3>
-                    <div id="assigned-orders-list" class="space-y-2 text-xs text-gray-600">
-                        <p class="text-gray-400 italic">No pending orders assigned yet.</p>
-                    </div>
-                </div>
-
                 <div class="space-y-2.5">
                     <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase">Field Operations Menu</h2>
                     
@@ -174,29 +165,7 @@
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-base border border-emerald-100"><i class="fa-solid fa-signal"></i></div>
                             <div>
                                 <h4 class="font-bold text-gray-700 text-sm">Site Restore & Fatbox</h4>
-                                <p class="text-xs text-gray-400">Fatbox porting, splitter & dB loss check</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
-                    </button>
-
-                    <button onclick="switchTab('travel')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center text-base border border-purple-100"><i class="fa-solid fa-route"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-700 text-sm">Start Travel Tracker</h4>
-                                <p class="text-xs text-gray-400">Odometer reading site to site logs</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
-                    </button>
-
-                    <button onclick="switchTab('visit')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center text-base border border-teal-100"><i class="fa-solid fa-binoculars"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-700 text-sm">Other Survey / Joint Visits</h4>
-                                <p class="text-xs text-gray-400">Fiber cut joint, loop test & surveys</p>
+                                <p class="text-xs text-gray-400">Fatbox porting with Image Verification</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
@@ -206,8 +175,8 @@
                         <div class="flex items-center space-x-3">
                             <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
                             <div>
-                                <h4 class="font-bold text-sm">All Collected Data</h4>
-                                <p class="text-xs text-blue-100">View or download all saved reports</p>
+                                <h4 class="font-bold text-sm">All Collected Logs & Actions</h4>
+                                <p class="text-xs text-blue-100">View logs, call customer & track stats</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-arrow-right text-white text-xs mr-1"></i>
@@ -221,19 +190,21 @@
                     <h2 class="font-bold text-base">New Installation</h2>
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
-                    <select id="ins-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500">
-                        <option value="">-- Choose Operator --</option>
-                        <option>GTPL Broadband</option>
-                        <option>Airtel Stream</option>
-                        <option>Jio Fiber</option>
-                        <option>Tata Play Fiber</option>
-                        <option>BSNL FTTH</option>
-                    </select>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="ins-isp-select" onchange="handleIspToggle('ins')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="GTPL Broadband">GTPL Broadband</option>
+                            <option value="Airtel Stream">Airtel Stream</option>
+                            <option value="Jio Fiber">Jio Fiber</option>
+                            <option value="Tata Play Fiber">Tata Play Fiber</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
+                        <input id="ins-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500 font-semibold">
+                    </div>
                 </div>
                 <input id="ins-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
                 <input id="ins-dsl" type="text" placeholder="DSL ID / User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
-                <input id="ins-mobile" type="tel" placeholder="Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+                <input id="ins-mobile" type="tel" maxlength="10" placeholder="Customer Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
                 <textarea id="ins-address" rows="2" placeholder="Full Installation Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500"></textarea>
                 
                 <div class="flex gap-2 pt-2">
@@ -248,17 +219,21 @@
                     <h2 class="font-bold text-base">Service Request (SR) Log</h2>
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
-                    <select id="sr-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
-                        <option value="">-- Choose ISP --</option>
-                        <option>GTPL</option>
-                        <option>Airtel</option>
-                        <option>Jio</option>
-                        <option>Tata Play</option>
-                    </select>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="sr-isp-select" onchange="handleIspToggle('sr')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                            <option value="GTPL">GTPL</option>
+                            <option value="Airtel">Airtel</option>
+                            <option value="Jio">Jio</option>
+                            <option value="Tata Play">Tata Play</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
+                        <input id="sr-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500 font-semibold">
+                    </div>
                 </div>
                 <input id="sr-customer" type="text" placeholder="Customer Name / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
                 <input id="sr-dsl" type="text" placeholder="DSL ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-mobile" type="tel" maxlength="10" placeholder="Customer Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
                 <textarea id="sr-issue" rows="2" placeholder="Describe Complaint Issue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
                 
                 <div class="flex gap-2 pt-2">
@@ -273,14 +248,17 @@
                     <h2 class="font-bold text-base">Site Restore Details</h2>
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select ISP</label>
-                    <select id="res-isp" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
-                        <option value="">-- Choose ISP --</option>
-                        <option>GTPL</option>
-                        <option>Airtel</option>
-                        <option>Jio</option>
-                        <option>Tata Play</option>
-                    </select>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="res-isp-select" onchange="handleIspToggle('res')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                            <option value="GTPL">GTPL</option>
+                            <option value="Airtel">Airtel</option>
+                            <option value="Jio">Jio</option>
+                            <option value="Tata Play">Tata Play</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
+                        <input id="res-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500 font-semibold">
+                    </div>
                 </div>
                 <input id="res-site" type="text" placeholder="Site / Fatbox Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
                 
@@ -295,80 +273,46 @@
                         <option>Pending / Major Cut</option>
                     </select>
                 </div>
+
+                <div class="border border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 text-center space-y-2">
+                    <label class="text-xs font-bold text-gray-500 block uppercase"><i class="fa-solid fa-camera mr-1"></i> Upload Fatbox / Site Photo</label>
+                    <input type="file" id="res-photo" accept="image/*" onchange="previewPhoto(event)" class="text-xs w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <img id="photo-preview" src="#" alt="Preview" class="hidden max-h-32 mx-auto rounded-lg shadow-xs border">
+                </div>
+
                 <div class="flex gap-2 pt-2">
                     <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
                     <button onclick="saveRestore()" class="w-2/3 bg-emerald-600 text-white font-semibold rounded-lg p-3 hover:bg-emerald-700 shadow-md">Save Site Report</button>
                 </div>
             </div>
 
-            <div id="tab-travel" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <div class="flex items-center space-x-2 text-purple-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-map-location-dot text-lg"></i>
-                    <h2 class="font-bold text-base">Site Travel Distance Log</h2>
-                </div>
-                <input id="tr-from" type="text" placeholder="From Location" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
-                <input id="tr-to" type="text" placeholder="To Location" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
-                
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Start Meter (KM)</label>
-                        <input id="tr-start" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">End Meter (KM)</label>
-                        <input id="tr-end" type="number" placeholder="Odometer value" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-purple-500">
-                    </div>
-                </div>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
-                    <button onclick="saveTravel()" class="w-2/3 bg-purple-600 text-white font-semibold rounded-lg p-3 hover:bg-purple-700 shadow-md">Add Distance</button>
-                </div>
-            </div>
-
-            <div id="tab-visit" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <div class="flex items-center space-x-2 text-teal-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-binoculars text-lg"></i>
-                    <h2 class="font-bold text-base">Other Survey & Field Visit</h2>
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Visit Purpose</label>
-                    <select id="vis-purpose" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-teal-500">
-                        <option>Fiber Loop/Route Checking</option>
-                        <option>Major Fiber Cut Jointing</option>
-                        <option>New Building Survey</option>
-                        <option>OPM Power Audit Visit</option>
-                        <option>General Maintenance</option>
-                    </select>
-                </div>
-                <input id="vis-loc" type="text" placeholder="Area / Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-teal-500">
-                <textarea id="vis-remarks" rows="2" placeholder="Enter Visit Remarks..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-teal-500"></textarea>
-                
-                <div class="flex gap-2 pt-2">
-                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-slate-50">Cancel</button>
-                    <button onclick="saveVisit()" class="w-2/3 bg-teal-600 text-white font-semibold rounded-lg p-3 hover:bg-teal-700 shadow-md">Log Visit</button>
-                </div>
-            </div>
-
             <div id="tab-admin" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-amber-200 shadow-md">
                 <div class="flex items-center space-x-2 text-amber-600 border-b border-gray-100 pb-3 mb-1">
                     <i class="fa-solid fa-user-shield text-lg"></i>
-                    <h2 class="font-bold text-base">Admin Order Dispatch</h2>
+                    <h2 class="font-bold text-base">Admin Dashboard Control</h2>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Task Type</label>
-                    <select id="adm-type" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-amber-500">
-                        <option value="Installation">New Installation Order</option>
-                        <option value="SR Fault">Service Request Ticket (SR)</option>
-                    </select>
-                </div>
-                <input id="adm-cust" type="text" placeholder="Client / Ticket Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
-                <input id="adm-dsl" type="text" placeholder="DSL User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
-                <input id="adm-addr" type="text" placeholder="Site Assignment Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
                 
-                <div class="flex gap-2 pt-2">
-                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-slate-50">Back</button>
-                    <button onclick="assignOrder()" class="w-2/3 bg-amber-500 text-white font-semibold rounded-lg p-3 hover:bg-amber-600 shadow-md">Dispatch & Assign</button>
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 text-xs text-blue-900 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-shield-halved"></i> Strictly Approved Whitelist Mode:</p>
+                    <p>Yahan aap jis engineer ka mobile number add/upload karenge, **sirf wahi** engineer application ko use (register ya login) kar sakega. Baaki sabka access disabled rahega.</p>
                 </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Allow Engineer Mobile Number</label>
+                    <div class="flex gap-2">
+                        <input id="adm-allow-mobile" type="tel" maxlength="10" placeholder="10-digit mobile number" class="flex-1 border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500 font-semibold">
+                        <button onclick="addAllowedNumber()" class="bg-blue-600 text-white px-4 rounded-lg font-bold text-xs shadow hover:bg-blue-700">Allow Number</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">Approved Whitelist Database</h3>
+                    <div id="allowed-list-container" class="divide-y border rounded-xl overflow-hidden bg-gray-50 max-h-40 overflow-y-auto text-xs">
+                        <p class="p-3 text-gray-400 italic text-center">No allowed numbers added yet.</p>
+                    </div>
+                </div>
+                
+                <button onclick="switchTab('home')" class="w-full bg-gray-700 text-white font-semibold rounded-lg p-3 mt-2">Back to Dashboard</button>
             </div>
 
             <div id="tab-data" class="page-tab space-y-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm max-w-full">
@@ -377,7 +321,7 @@
                         <i class="fa-solid fa-folder-open text-lg"></i>
                         <h2 class="font-bold text-base">All Logs Data</h2>
                     </div>
-                    <button onclick="clearAllData()" class="text-[10px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded border border-red-200">Clear All System</button>
+                    <button onclick="clearAllData()" class="text-[10px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded border border-red-200">Reset System</button>
                 </div>
                 
                 <div id="data-tables-container" class="space-y-4 text-xs max-h-96 overflow-y-auto"></div>
@@ -385,38 +329,57 @@
             </div>
 
         </main>
-
-        <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 shadow-lg z-50 shrink-0">
-            <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center text-blue-600 font-bold text-xs cursor-pointer">
-                <i class="fa-solid fa-house text-lg mb-0.5"></i> Home
-            </button>
-            <button onclick="switchTab('install')" id="nav-install" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
-                <i class="fa-solid fa-screwdriver-wrench text-lg mb-0.5"></i> Install
-            </button>
-            <button onclick="switchTab('sr')" id="nav-sr" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
-                <i class="fa-solid fa-phone text-lg mb-0.5"></i> SR Log
-            </button>
-            <button onclick="switchTab('restore')" id="nav-restore" class="nav-btn flex flex-col items-center text-gray-400 text-xs cursor-pointer">
-                <i class="fa-solid fa-signal text-lg mb-0.5"></i> Restore
-            </button>
-        </div>
     </div>
 
     <script>
-        // Form Switching System (Login <-> Register)
+        let uploadedPhotoBase64 = "";
+
         function toggleAuthForm(formType) {
             document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
             document.getElementById('form-' + formType).classList.add('active');
-            
-            let subtitle = document.getElementById('auth-subtitle');
-            if(formType === 'login') subtitle.innerText = "Field Engineer Secure Access";
-            if(formType === 'register') subtitle.innerText = "Create New Field Engineer Profile";
         }
 
-        // Check Login Session on App Load
+        function handleIspToggle(prefix) {
+            let selectEl = document.getElementById(`${prefix}-isp-select`);
+            let manualEl = document.getElementById(`${prefix}-isp-manual`);
+            if (selectEl.value === "CUSTOM") {
+                manualEl.classList.remove('hidden');
+            } else {
+                manualEl.classList.add('hidden');
+                manualEl.value = "";
+            }
+        }
+
+        function previewPhoto(event) {
+            let input = event.target;
+            let preview = document.getElementById('photo-preview');
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    uploadedPhotoBase64 = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Whitelist Check Rule (Sirf wahi login kar sakta hai jo add hoga)
+        function isMobileAllowed(mobile) {
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            return allowedList.includes(mobile);
+        }
+
         function checkLoginSession() {
             let sessionUserMobile = localStorage.getItem("active_user");
             let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+
+            // Agar login user whitelist se hataya gaya ho, toh session logout ho jayega
+            if (sessionUserMobile && !isMobileAllowed(sessionUserMobile)) {
+                alert("Aapka mobile number Admin Approved list mein nahi hai! Access Denied.");
+                localStorage.removeItem("active_user");
+                sessionUserMobile = null;
+            }
             
             if (sessionUserMobile && usersList[sessionUserMobile]) {
                 document.getElementById("auth-screen").style.display = "none";
@@ -429,231 +392,160 @@
             }
         }
 
-        // Registration Handler
         function handleRegister() {
             let name = document.getElementById("reg-name").value.trim();
             let mobile = document.getElementById("reg-mobile").value.trim();
             let pass = document.getElementById("reg-password").value.trim();
 
-            if (!name) { alert("Kripya Apna Name bharein!"); return; }
-            if (mobile.length !== 10 || isNaN(mobile)) { alert("Kripya valid 10-digit Mobile Number daalein!"); return; }
-            if (!pass) { alert("Kripya Security Password set karein!"); return; }
-
-            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            if (!name || !pass) { alert("Sari details fill karein!"); return; }
+            if (mobile.length !== 10 || isNaN(mobile)) { alert("Valid 10-digit number enter karein!"); return; }
             
-            // Check if user already exists
-            if (usersList[mobile]) {
-                alert("Yeh mobile number pehle se registered hai! Login kijiye.");
-                toggleAuthForm('login');
+            // Registration block agar number whitelisted nahi hai
+            if (!isMobileAllowed(mobile)) {
+                alert("Registration Failed! Yeh mobile number Admin dwara allowed nahi kiya gaya hai. Pehle Admin Control mein add karein.");
                 return;
             }
 
-            // Save new user profile
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            if (usersList[mobile]) { alert("Mobile already registered! Login kijiye."); toggleAuthForm('login'); return; }
+
             usersList[mobile] = { name: name, password: pass };
             localStorage.setItem("registered_users", JSON.stringify(usersList));
-            
-            alert("Registration Successful! Ab aap login kar sakte hain.");
-            
-            // Clear inputs and switch to login
-            document.getElementById("reg-name").value = "";
-            document.getElementById("reg-mobile").value = "";
-            document.getElementById("reg-password").value = "";
+            alert("Registration successful! Ab aap login kar sakte hain.");
             toggleAuthForm('login');
         }
 
-        // Login Handler
         function handleLogin() {
             let mobile = document.getElementById("login-mobile").value.trim();
             let pass = document.getElementById("login-password").value.trim();
 
-            if (mobile.length !== 10 || isNaN(mobile)) { alert("Kripya 10-digit Mobile Number daalein!"); return; }
-            if (!pass) { alert("Kripya Security Password fill karein!"); return; }
-
-            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
-
-            // Validate credentials
-            if (!usersList[mobile] || usersList[mobile].password !== pass) {
-                alert("Mobile number ya Password galat hai! Kripya check karein ya Naya Account Register karein.");
+            if (!isMobileAllowed(mobile)) {
+                alert("Access Denied! Aapka number system mein allowed/registered nahi hai.");
                 return;
             }
 
-            // Authenticated successfully
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            if (!usersList[mobile] || usersList[mobile].password !== pass) {
+                alert("Mobile number ya Password galat hai!"); return;
+            }
+
             localStorage.setItem("active_user", mobile);
-            document.getElementById("login-mobile").value = "";
-            document.getElementById("login-password").value = "";
             checkLoginSession();
         }
 
-        // Logout System
-        function handleLogout() {
-            if(confirm("Kya aap App Logout karna chahte hain?")) {
-                localStorage.removeItem("active_user");
-                checkLoginSession();
+        // Admin functionality: Whitelist Management
+        function addAllowedNumber() {
+            let num = document.getElementById("adm-allow-mobile").value.trim();
+            if(num.length !== 10 || isNaN(num)) { alert("Valid 10 digit number enter karein!"); return; }
+
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            if(!allowedList.includes(num)) {
+                allowedList.push(num);
+                localStorage.setItem("allowed_engineers", JSON.stringify(allowedList));
+                alert("Mobile number Successfully Whitelited/Allowed!");
+                document.getElementById("adm-allow-mobile").value = "";
+                loadAllowedList();
+            } else {
+                alert("Yeh number pehle se hi allowed list mein hai.");
             }
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600', 'text-red-500', 'text-emerald-600', 'font-bold');
-                btn.classList.add('text-gray-400');
-            });
-
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if(activeBtn) {
-                if(tabId === 'home' || tabId === 'install') activeBtn.classList.add('text-blue-600', 'font-bold');
-                if(tabId === 'sr') activeBtn.classList.add('text-red-500', 'font-bold');
-                if(tabId === 'restore') activeBtn.classList.add('text-emerald-600', 'font-bold');
-            }
-        }
-
-        function refreshCounters() {
-            document.getElementById("count-install").innerText = localStorage.getItem("c_inst") || 0;
-            document.getElementById("count-sr").innerText = localStorage.getItem("c_sr") || 0;
-            document.getElementById("count-restore").innerText = localStorage.getItem("c_rest") || 0;
-            document.getElementById("count-travel").innerText = (localStorage.getItem("travel") || 0) + " KM";
-            loadAssignedOrders();
-        }
-
-        function assignOrder() {
-            let type = document.getElementById("adm-type").value;
-            let cust = document.getElementById("adm-cust").value.trim();
-            let dsl = document.getElementById("adm-dsl").value.trim();
-            let addr = document.getElementById("adm-addr").value.trim();
-
-            if(!cust || !dsl || !addr) { alert("Sari details bharein!"); return; }
-
-            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
-            list.push({ type, cust, dsl, addr, id: Date.now() });
-            localStorage.setItem("adminOrders", JSON.stringify(list));
-            
-            alert("Order Dispatched successfully!");
-            document.getElementById("adm-cust").value = "";
-            document.getElementById("adm-dsl").value = "";
-            document.getElementById("adm-addr").value = "";
-            refreshCounters(); switchTab('home');
-        }
-
-        function loadAssignedOrders() {
-            let container = document.getElementById("assigned-orders-list");
-            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
-            if(list.length === 0) {
-                container.innerHTML = `<p class="text-gray-400 italic">No pending orders assigned yet.</p>`;
+        function loadAllowedList() {
+            let container = document.getElementById("allowed-list-container");
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            if(allowedList.length === 0) {
+                container.innerHTML = `<p class="p-3 text-gray-400 italic text-center">No authorized numbers found.</p>`;
                 return;
             }
-            container.innerHTML = list.map(item => `
-                <div class="p-2 border-l-2 border-amber-500 bg-white rounded shadow-xs flex justify-between items-center mb-1">
-                    <div>
-                        <span class="font-bold text-amber-700 font-mono">[${item.type}]</span> <b>${item.cust}</b> (ID: ${item.dsl})<br>
-                        <span class="text-[11px] text-gray-400">${item.addr}</span>
-                    </div>
-                    <button onclick="completeAssigned(${item.id})" class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">Done</button>
+            container.innerHTML = allowedList.map(num => `
+                <div class="flex justify-between items-center p-2.5 bg-white">
+                    <span class="font-mono font-bold text-blue-600"><i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> +91 ${num}</span>
+                    <button onclick="removeAllowedNumber('${num}')" class="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 border border-red-200 rounded font-bold">Remove / Block Access</button>
                 </div>
             `).join('');
         }
 
-        function completeAssigned(id) {
-            let list = JSON.parse(localStorage.getItem("adminOrders")) || [];
-            list = list.filter(item => item.id !== id);
-            localStorage.setItem("adminOrders", JSON.stringify(list));
-            alert("Task completed successfully!");
-            refreshCounters();
+        function removeAllowedNumber(num) {
+            if(confirm("Kya aap is engineer ka access hatana chahte hain? Remove karte hi yeh login nahi kar payega.")) {
+                let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+                allowedList = allowedList.filter(x => x !== num);
+                localStorage.setItem("allowed_engineers", JSON.stringify(allowedList));
+                loadAllowedList();
+                
+                // Agar chalte app mein remove kiya toh instant screen out ho jayega
+                if(localStorage.getItem("active_user") === num) {
+                    localStorage.removeItem("active_user");
+                    checkLoginSession();
+                }
+            }
+        }
+
+        function getIspValue(prefix) {
+            let selectVal = document.getElementById(`${prefix}-isp-select`).value;
+            if(selectVal === "CUSTOM") {
+                return document.getElementById(`${prefix}-isp-manual`).value.trim();
+            }
+            return selectVal;
         }
 
         function saveInstallation() {
-            let isp = document.getElementById("ins-isp").value;
+            let isp = getIspValue('ins');
             let customer = document.getElementById("ins-customer").value.trim();
             let dsl = document.getElementById("ins-dsl").value.trim();
             let mobile = document.getElementById("ins-mobile").value.trim();
             let address = document.getElementById("ins-address").value.trim();
 
-            if(!isp || !customer || !dsl || !mobile || !address) { alert("Kripya forms bharo!"); return; }
+            if(!isp || !customer || !dsl || !mobile || !address) { alert("Please complete all fields!"); return; }
             let records = JSON.parse(localStorage.getItem("all_inst_data")) || [];
             records.push({ isp, customer, dsl, mobile, address, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
             localStorage.setItem("all_inst_data", JSON.stringify(records));
             localStorage.setItem("c_inst", records.length);
 
-            alert("Installation Saved!");
-            document.getElementById("ins-customer").value = ""; document.getElementById("ins-dsl").value = "";
-            document.getElementById("ins-mobile").value = ""; document.getElementById("ins-address").value = "";
-            refreshCounters(); switchTab('home');
+            alert("Installation successfully logged!");
+            switchTab('home');
         }
 
         function saveSR() {
-            let isp = document.getElementById("sr-isp").value;
+            let isp = getIspValue('sr');
             let customer = document.getElementById("sr-customer").value.trim();
             let dsl = document.getElementById("sr-dsl").value.trim();
+            let mobile = document.getElementById("sr-mobile").value.trim();
             let issue = document.getElementById("sr-issue").value.trim();
 
-            if(!isp || !customer || !dsl || !issue) { alert("Data enter karein!"); return; }
+            if(!isp || !customer || !dsl || !mobile || !issue) { alert("Fill all parameters!"); return; }
             let records = JSON.parse(localStorage.getItem("all_sr_data")) || [];
-            records.push({ isp, customer, dsl, issue, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
+            records.push({ isp, customer, dsl, mobile, issue, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
             localStorage.setItem("all_sr_data", JSON.stringify(records));
             localStorage.setItem("c_sr", records.length);
 
-            alert("SR Ticket Saved!");
-            document.getElementById("sr-customer").value = ""; document.getElementById("sr-dsl").value = "";
-            document.getElementById("sr-issue").value = "";
-            refreshCounters(); switchTab('home');
+            alert("SR complaint saved successfully!");
+            switchTab('home');
         }
 
         function saveRestore() {
-            let isp = document.getElementById("res-isp").value;
+            let isp = getIspValue('res');
             let site = document.getElementById("res-site").value.trim();
             let fatbox = document.getElementById("res-fatbox").value.trim();
             let port = document.getElementById("res-port").value.trim();
             let loss = document.getElementById("res-loss").value.trim();
             let status = document.getElementById("res-status").value;
 
-            if(!isp || !site || !fatbox || !port || !loss) { alert("Network details fill karein!"); return; }
+            if(!isp || !site || !fatbox || !port || !loss) { alert("Complete full fields!"); return; }
+            
             let records = JSON.parse(localStorage.getItem("all_rest_data")) || [];
-            records.push({ isp, site, fatbox, port, loss, status, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
+            records.push({ 
+                isp, site, fatbox, port, loss, status, 
+                photo: uploadedPhotoBase64 || null, 
+                user: localStorage.getItem("active_user"), 
+                date: new Date().toLocaleString() 
+            });
             localStorage.setItem("all_rest_data", JSON.stringify(records));
             localStorage.setItem("c_rest", records.length);
 
-            alert("Site Restore Report Saved!");
-            document.getElementById("res-site").value = ""; document.getElementById("res-fatbox").value = "";
-            document.getElementById("res-port").value = ""; document.getElementById("res-loss").value = "";
-            refreshCounters(); switchTab('home');
-        }
-
-        function saveTravel() {
-            let from = document.getElementById("tr-from").value.trim();
-            let to = document.getElementById("tr-to").value.trim();
-            let start = parseFloat(document.getElementById("tr-start").value);
-            let end = parseFloat(document.getElementById("tr-end").value);
-
-            if(!from || !to || isNaN(start) || isNaN(end)) { alert("Meter logs complete karein!"); return; }
-            if(end < start) { alert("Invalid Odometer logic!"); return; }
-
-            let diff = end - start;
-            let current = parseFloat(localStorage.getItem("travel")) || 0;
-            localStorage.setItem("travel", current + diff);
-            
-            let records = JSON.parse(localStorage.getItem("all_tr_data")) || [];
-            records.push({ from, to, km: diff, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
-            localStorage.setItem("all_tr_data", JSON.stringify(records));
-
-            alert("Travel distance tracker saved!");
-            document.getElementById("tr-from").value = ""; document.getElementById("tr-to").value = "";
-            document.getElementById("tr-start").value = ""; document.getElementById("tr-end").value = "";
-            refreshCounters(); switchTab('home');
-        }
-
-        function saveVisit() {
-            let purpose = document.getElementById("vis-purpose").value;
-            let loc = document.getElementById("vis-loc").value.trim();
-            let remarks = document.getElementById("vis-remarks").value.trim();
-
-            if(!loc || !remarks) { alert("Visits parameters fill karein!"); return; }
-            let records = JSON.parse(localStorage.getItem("all_vis_data")) || [];
-            records.push({ purpose, loc, remarks, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
-            localStorage.setItem("all_vis_data", JSON.stringify(records));
-
-            alert("Field visit audit successful!");
-            document.getElementById("vis-loc").value = ""; document.getElementById("vis-remarks").value = "";
+            alert("Site restore saved successfully!");
+            document.getElementById("res-site").value = "";
+            document.getElementById("photo-preview").classList.add('hidden');
+            uploadedPhotoBase64 = "";
             switchTab('home');
         }
 
@@ -662,47 +554,76 @@
             let inst = JSON.parse(localStorage.getItem("all_inst_data")) || [];
             let srs = JSON.parse(localStorage.getItem("all_sr_data")) || [];
             let rest = JSON.parse(localStorage.getItem("all_rest_data")) || [];
-            let visits = JSON.parse(localStorage.getItem("all_vis_data")) || [];
-            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
 
             let html = "";
             
-            html += `<h4 class="font-bold text-blue-600 border-b">1. Installations (${inst.length})</h4>`;
-            if(inst.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs found.</p>`;
+            html += `<h4 class="font-bold text-blue-600 border-b">1. Installations</h4>`;
+            if(inst.length === 0) html += `<p class="italic text-gray-400 mb-2">No records found.</p>`;
             else inst.forEach(i => {
-                let uName = usersList[i.user] ? usersList[i.user].name : (i.user || 'N/A');
-                html += `<p class="bg-gray-50 p-1 rounded mb-1 border">[By: ${uName}] ${i.date} | <b>${i.isp}</b> - ${i.customer} (${i.dsl})</p>`;
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${i.date}</span> <span>ISP: ${i.isp}</span></div>
+                    <div><b>${i.customer}</b> (${i.dsl})</div>
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-gray-500 text-[11px]"><i class="fa-solid fa-location-dot"></i> ${i.address}</span>
+                        <a href="tel:${i.mobile}" class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px]"><i class="fa-solid fa-phone"></i> Call Back</a>
+                    </div>
+                </div>`;
             });
 
-            html += `<h4 class="font-bold text-red-500 border-b mt-3">2. Service Requests logged (${srs.length})</h4>`;
-            if(srs.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs found.</p>`;
+            html += `<h4 class="font-bold text-red-500 border-b mt-3">2. Service Requests (SR)</h4>`;
+            if(srs.length === 0) html += `<p class="italic text-gray-400 mb-2">No records found.</p>`;
             else srs.forEach(s => {
-                let uName = usersList[s.user] ? usersList[s.user].name : (s.user || 'N/A');
-                html += `<p class="bg-gray-50 p-1 rounded mb-1 border">[By: ${uName}] ${s.date} | <b>${s.isp}</b> - ${s.customer} : ${s.issue}</p>`;
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${s.date}</span> <span>ISP: ${s.isp}</span></div>
+                    <div><b>${s.customer}</b> (ID: ${s.dsl})</div>
+                    <div class="text-amber-700 bg-amber-50 p-1 rounded text-[11px]">Issue: ${s.issue}</div>
+                    <div class="flex justify-end pt-1">
+                        <a href="tel:${s.mobile}" class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px]"><i class="fa-solid fa-phone"></i> Call Back</a>
+                    </div>
+                </div>`;
             });
 
-            html += `<h4 class="font-bold text-emerald-600 border-b mt-3">3. Site Restorations (${rest.length})</h4>`;
-            if(rest.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs found.</p>`;
+            html += `<h4 class="font-bold text-emerald-600 border-b mt-3">3. Site Restorations</h4>`;
+            if(rest.length === 0) html += `<p class="italic text-gray-400 mb-2">No records found.</p>`;
             else rest.forEach(r => {
-                let uName = usersList[r.user] ? usersList[r.user].name : (r.user || 'N/A');
-                html += `<p class="bg-gray-50 p-1 rounded mb-1 border">[By: ${uName}] ${r.date} | Box: ${r.fatbox}, Port: ${r.port}, Signal: ${r.loss}dB [${r.status}]</p>`;
-            });
-
-            html += `<h4 class="font-bold text-teal-600 border-b mt-3">4. Other Surveys & Visits (${visits.length})</h4>`;
-            if(visits.length === 0) html += `<p class="italic text-gray-400 mb-2">No logs found.</p>`;
-            else visits.forEach(v => {
-                let uName = usersList[v.user] ? usersList[v.user].name : (v.user || 'N/A');
-                html += `<p class="bg-gray-50 p-1 rounded mb-1 border">[By: ${uName}] ${v.date} | <b>${v.purpose}</b> @ ${v.loc} (${v.remarks})</p>`;
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${r.date}</span> <span>ISP: ${r.isp}</span></div>
+                    <div>Site: <b>${r.site}</b> | Fatbox: ${r.fatbox} (Port: ${r.port})</div>
+                    <div class="text-xs font-semibold">Signal Loss: <span class="text-red-500">${r.loss} dB</span></div>
+                    ${r.photo ? `<div class="mt-1"><img src="${r.photo}" class="max-h-24 rounded border shadow-inner"></div>` : ''}
+                </div>`;
             });
 
             container.innerHTML = html;
         }
 
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if(tabId === 'admin') loadAllowedList();
+        }
+
+        function refreshCounters() {
+            document.getElementById("count-install").innerText = localStorage.getItem("c_inst") || 0;
+            document.getElementById("count-sr").innerText = localStorage.getItem("c_sr") || 0;
+            document.getElementById("count-restore").innerText = localStorage.getItem("c_rest") || 0;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("active_user");
+            checkLoginSession();
+        }
+
         function clearAllData() {
-            if(confirm("Warning! Kya aap system ka saara data reset karna chahte hain (Users list ko chhod kar)?")) {
+            if(confirm("Reset software data completely (keeping approved engineers whitelist)?")) {
                 let users = localStorage.getItem("registered_users");
+                let allowed = localStorage.getItem("allowed_engineers");
                 localStorage.clear();
                 if(users) localStorage.setItem("registered_users", users);
+                if(allowed) localStorage.setItem("allowed_engineers", allowed);
                 checkLoginSession();
             }
         }
