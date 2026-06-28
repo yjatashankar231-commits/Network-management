@@ -786,3 +786,297 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiber Work Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .page-tab { display: none; }
+        .page-tab.active { display: block; }
+        #auth-screen { display: none; } /* Set to none for testing main app, change to flex in production */
+        #app-content { display: flex; }
+    </style>
+</head>
+<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-24">
+
+    <div id="app-content" class="flex-col min-h-screen w-full">
+
+        <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0">
+            <div class="flex items-center space-x-3">
+                <button onclick="switchTab('home')" class="bg-white/20 p-2 rounded-full text-2xl hover:bg-white/30 transition">
+                    <i class="fa-solid fa-house text-white"></i>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Fiber Work Manager</h1>
+                    <p id="user-display" class="text-xs text-blue-100 font-medium">Owner: Jatashankar Yadav</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-md mx-auto w-full p-4 overflow-y-auto">
+
+            <div id="tab-home" class="page-tab active space-y-4">
+                <div class="space-y-2.5 mt-4">
+                    <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase">Field Operations Menu</h2>
+                    
+                    <button onclick="switchTab('install')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-base border border-blue-100"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-700 text-sm">Add Installation</h4>
+                                <p class="text-xs text-gray-400">Multi-ISP activation log</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+
+                    <button onclick="switchTab('sr')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-base border border-red-100"><i class="fa-solid fa-phone-slash"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-700 text-sm">SR Completed</h4>
+                                <p class="text-xs text-gray-400">Resolve Service Requests</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+
+                    <button onclick="switchTab('data')" class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white flex items-center justify-between w-full text-left cursor-pointer shadow-md">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
+                            <div>
+                                <h4 class="font-bold text-sm">Stored Data & Export</h4>
+                                <p class="text-xs text-blue-100">Export to Excel & PDF</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-white text-xs mr-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-file-circle-plus text-lg"></i>
+                    <h2 class="font-bold text-base">Installation Complete</h2>
+                </div>
+                
+                <form id="install-form" class="space-y-3" onsubmit="saveData(event, 'Installation')">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Name</label>
+                            <select id="ins-isp" class="w-full border rounded-lg p-2.5 bg-white outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <option>GTPL Broadband</option>
+                                <option>Airtel Stream</option>
+                                <option>Jio Fiber</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Order ID</label>
+                            <input id="ins-order-id" type="text" placeholder="e.g. ORD-1234" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                        </div>
+                    </div>
+
+                    <input id="ins-name" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                    <input id="ins-mobile" type="tel" maxlength="10" placeholder="Mobile Number" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="ins-city" type="text" placeholder="City" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                        <input id="ins-site" type="text" placeholder="Site" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                    </div>
+                    <textarea id="ins-address" rows="2" placeholder="Address : Shop / House No." class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required></textarea>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Black White IPTV</label>
+                            <select id="ins-iptv" class="w-full border rounded-lg p-2.5 bg-white outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Received Time</label>
+                            <input id="ins-time" type="time" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Installation Date</label>
+                        <input id="ins-date" type="date" class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 text-sm" required>
+                    </div>
+
+                    <textarea id="ins-remark" rows="2" placeholder="Remark If Delayed..." class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-amber-500 text-sm bg-amber-50"></textarea>
+
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 text-center space-y-3">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Upload Documents</p>
+                        
+                        <div class="flex items-center justify-between bg-white border rounded-lg p-2 shadow-sm">
+                            <label class="text-xs font-semibold text-gray-600 flex items-center">
+                                <i class="fa-solid fa-camera text-blue-500 mr-2 text-lg"></i> Site Photo
+                            </label>
+                            <input type="file" accept="image/*" class="text-[10px] text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 w-1/2">
+                        </div>
+
+                        <div class="flex items-center justify-between bg-white border rounded-lg p-2 shadow-sm">
+                            <label class="text-xs font-semibold text-gray-600 flex items-center">
+                                <i class="fa-solid fa-file-pdf text-red-500 mr-2 text-lg"></i> CAF / Form PDF
+                            </label>
+                            <input type="file" accept="application/pdf" class="text-[10px] text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 w-1/2">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold rounded-xl p-3.5 hover:bg-blue-700 shadow-md transition">
+                        Submit Installation <i class="fa-solid fa-check-circle ml-1"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-red-500 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-wrench text-lg"></i>
+                    <h2 class="font-bold text-base text-gray-800">SR Completed</h2>
+                </div>
+                
+                <form id="sr-form" class="space-y-3" onsubmit="saveData(event, 'SR')">
+                    <input id="sr-number" type="text" placeholder="SR Number / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500 text-sm" required>
+                    <input id="sr-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500 text-sm" required>
+                    <textarea id="sr-action" rows="2" placeholder="Action Taken to Resolve" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500 text-sm" required></textarea>
+                    
+                    <div class="flex items-center justify-between bg-white border rounded-lg p-2 shadow-sm mt-2">
+                        <label class="text-xs font-semibold text-gray-600 flex items-center">
+                            <i class="fa-solid fa-image text-emerald-500 mr-2 text-lg"></i> Resolved Photo
+                        </label>
+                        <input type="file" accept="image/*" class="text-[10px] text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-emerald-50 file:text-emerald-700 w-1/2">
+                    </div>
+
+                    <button type="submit" class="w-full bg-red-500 text-white font-bold rounded-xl p-3.5 hover:bg-red-600 shadow-md transition mt-4">
+                        Mark SR Completed <i class="fa-solid fa-check-double ml-1"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div id="tab-data" class="page-tab space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                    <h2 class="font-bold text-gray-800 mb-4 border-b pb-2">Export Operations</h2>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <button onclick="exportExcel()" class="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-emerald-100 transition shadow-sm">
+                            <i class="fa-solid fa-file-excel text-3xl"></i>
+                            <span class="text-xs font-bold uppercase">Save Excel</span>
+                        </button>
+                        
+                        <button onclick="exportPDF()" class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-red-100 transition shadow-sm">
+                            <i class="fa-solid fa-file-pdf text-3xl"></i>
+                            <span class="text-xs font-bold uppercase">Save PDF</span>
+                        </button>
+                    </div>
+
+                    <div id="report-container" class="space-y-3 bg-gray-50 p-3 rounded-lg border text-xs text-gray-600 max-h-64 overflow-y-auto">
+                        <p class="text-center text-gray-400 italic">Saved records will appear here...</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Global Array to hold submitted data
+        let workData = [];
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if(tabId === 'data') {
+                renderData();
+            }
+        }
+
+        // Save Data to Array (and simulate saving to storage)
+        function saveData(event, type) {
+            event.preventDefault();
+            
+            let record = { type: type, date: new Date().toLocaleDateString() };
+
+            if(type === 'Installation') {
+                record.isp = document.getElementById('ins-isp').value;
+                record.orderId = document.getElementById('ins-order-id').value;
+                record.customer = document.getElementById('ins-name').value;
+                record.mobile = document.getElementById('ins-mobile').value;
+                record.city = document.getElementById('ins-city').value;
+                record.site = document.getElementById('ins-site').value;
+                record.iptv = document.getElementById('ins-iptv').value;
+                record.status = "Completed";
+                alert("Installation Saved Successfully!");
+                document.getElementById('install-form').reset();
+            } else if (type === 'SR') {
+                record.srNumber = document.getElementById('sr-number').value;
+                record.customer = document.getElementById('sr-customer').value;
+                record.action = document.getElementById('sr-action').value;
+                record.status = "Resolved";
+                alert("SR Marked as Completed!");
+                document.getElementById('sr-form').reset();
+            }
+
+            workData.push(record);
+            switchTab('home');
+        }
+
+        // Render Data in DOM for PDF extraction
+        function renderData() {
+            const container = document.getElementById('report-container');
+            container.innerHTML = '<h3 class="font-bold text-sm mb-2 text-black">Daily Work Report</h3>';
+            
+            if(workData.length === 0) {
+                container.innerHTML += '<p>No records found today.</p>';
+                return;
+            }
+
+            workData.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="border-b border-gray-300 pb-2 mb-2">
+                        <b>${index + 1}. [${item.type}] - ${item.customer}</b><br>
+                        ${item.type === 'Installation' ? `Order: ${item.orderId} | ISP: ${item.isp} | Site: ${item.site}` : `SR No: ${item.srNumber} | Action: ${item.action}`}<br>
+                        Status: <span class="text-green-600 font-bold">${item.status}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // EXPORT TO EXCEL USING SHEETJS
+        function exportExcel() {
+            if(workData.length === 0) return alert("No data to export!");
+            const worksheet = XLSX.utils.json_to_sheet(workData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Work Data");
+            XLSX.writeFile(workbook, "Fiber_Work_Report.xlsx");
+        }
+
+        // EXPORT TO PDF USING HTML2PDF
+        function exportPDF() {
+            if(workData.length === 0) return alert("No data to export!");
+            const element = document.getElementById('report-container');
+            const opt = {
+                margin:       1,
+                filename:     'Fiber_Work_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
+
