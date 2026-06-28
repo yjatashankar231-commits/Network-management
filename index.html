@@ -1,816 +1,781 @@
-                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
-                        Cancel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiber Work Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .page-tab { display: none; }
+        .page-tab.active { display: block; }
+        #auth-screen { display: flex; }
+        #app-content { display: none; }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+    </style>
+</head>
+<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-24">
+
+    <!-- ================= 0. AUTH SCREEN (LOGIN & REGISTER) ================= -->
+    <div id="auth-screen" class="fixed inset-0 bg-gradient-to-b from-blue-600 to-indigo-800 z-[9999] flex flex-col justify-center items-center p-6 overflow-y-auto">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl text-center space-y-4 my-auto">
+            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mx-auto border border-blue-100 shadow-inner">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-gray-800 tracking-wide">Fiber Work Manager</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Secure Gateway Control</p>
+            </div>
+
+            <!-- Custom Form Switcher Tabs -->
+            <div class="flex border-b border-gray-100 text-xs font-bold text-gray-400">
+                <button id="btn-tab-login" onclick="toggleAuthForm('login')" class="w-1/2 pb-2 text-blue-600 border-b-2 border-blue-600">LOGIN</button>
+                <button id="btn-tab-register" onclick="toggleAuthForm('register')" class="w-1/2 pb-2">EMPLOYEE SIGNUP</button>
+            </div>
+            
+            <!-- LOGIN FORM VIEW -->
+            <div id="form-login" class="auth-form active space-y-4 text-left pt-2">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Select Your Role</label>
+                    <select id="login-role" class="w-full border rounded-xl p-3 bg-white font-semibold outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="Admin">Admin / App Owner</option>
+                        <option value="Engineer">Field Engineer</option>
+                        <option value="Helper">Field Helper</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Mobile Number</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">+91</span>
+                        <input id="login-mobile" type="tel" maxlength="10" placeholder="10 Digit Number" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Password / PIN</label>
+                    <input id="login-password" type="password" placeholder="Enter Password" class="w-full border rounded-xl p-3 outline-none focus:ring-1 focus:ring-blue-500 tracking-widest">
+                </div>
+                
+                <!-- DYNAMIC RESET ACTION LINK -->
+                <div id="reset-trigger-container" class="hidden text-right">
+                    <button onclick="triggerMasterReset()" type="button" class="text-xs text-red-500 font-bold hover:underline">
+                        <i class="fa-solid fa-key-skeleton"></i> Forgot PIN? Reset Admin Password
                     </button>
-                    <button onclick="saveInstallation()" class="w-1/2 bg-blue-600 text-white font-bold rounded-xl p-3 hover:bg-blue-700 shadow-md transition text-center text-xs">
-                        Save Installation <i class="fa-solid fa-check ml-1"></i>
+                </div>
+
+                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white font-bold rounded-xl p-3.5 hover:bg-blue-700 shadow-md transition transform active:scale-95 text-center block">
+                    Access Account <i class="fa-solid fa-right-to-bracket ml-1"></i>
+                </button>
+            </div>
+
+            <!-- REGISTRATION FORM VIEW -->
+            <div id="form-register" class="auth-form space-y-4 text-left pt-2">
+                <div class="bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-200 text-[11px] font-medium">
+                    <i class="fa-solid fa-circle-info mr-1"></i> <b>Notice:</b> Number Admin Panel database mein uploaded hona mandatory hai.
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Join As Role</label>
+                    <select id="reg-role" class="w-full border rounded-xl p-3 bg-white font-semibold outline-none focus:ring-1 focus:ring-emerald-500">
+                        <option value="Engineer">Field Engineer</option>
+                        <option value="Helper">Field Helper</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Full Name</label>
+                    <input id="reg-name" type="text" placeholder="Enter Full Name" class="w-full border rounded-xl p-3 outline-none focus:ring-1 focus:ring-blue-500 font-semibold">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Mobile Number</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">+91</span>
+                        <input id="reg-mobile" type="tel" maxlength="10" placeholder="Authorized Mobile Only" class="w-full border rounded-xl p-3 pl-10 outline-none focus:ring-1 focus:ring-blue-500 font-semibold tracking-wide">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase tracking-wider">Create Password / PIN</label>
+                    <input id="reg-password" type="password" placeholder="Set Password" class="w-full border rounded-xl p-3 outline-none focus:ring-1 focus:ring-blue-500 tracking-widest">
+                </div>
+                <button onclick="handleRegister()" class="w-full bg-emerald-600 text-white font-bold rounded-xl p-3.5 hover:bg-emerald-700 shadow-md transition transform active:scale-95 text-center block">
+                    Create Employee Account <i class="fa-solid fa-user-plus ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP WRAPPER ================= -->
+    <div id="app-content" class="flex-col min-h-screen w-full">
+
+        <!-- Top Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/20 p-2 rounded-full text-2xl">
+                    <i class="fa-solid fa-satellite-dish text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Fiber Work Manager</h1>
+                    <p id="user-display" class="text-xs text-blue-100 font-medium">Owner: Jatashankar Yadav (9142173747)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="admin-gate-btn" onclick="switchTab('admin')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shadow transition hidden">
+                    <i class="fa-solid fa-user-gear"></i> Admin Panel
+                </button>
+                <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shadow transition">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="flex-1 max-w-md mx-auto w-full p-4 overflow-y-auto">
+
+            <!-- ================= TAB 1: DASHBOARD ================= -->
+            <div id="tab-home" class="page-tab active space-y-4">
+                
+                <!-- OWNER CONTROL INFO BOX WITH ACTIVE STAFF COUNTERS -->
+                <div class="bg-gradient-to-br from-indigo-900 to-slate-800 text-white p-4 rounded-xl shadow-md border border-slate-700 space-y-3">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <div>
+                            <p class="text-[10px] uppercase text-indigo-300 font-bold tracking-widest">Application Owner</p>
+                            <h3 class="text-base font-black tracking-wide">Jatashankar Yadav</h3>
+                        </div>
+                        <span class="bg-indigo-500/30 text-indigo-300 border border-indigo-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown text-amber-400"></i> Master Live</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 pt-1 text-center">
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-2">
+                            <p id="staff-count-admin" class="text-sm font-black text-amber-400">1</p>
+                            <p class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Admin</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-2">
+                            <p id="staff-count-engineer" class="text-sm font-black text-blue-400">0</p>
+                            <p class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Engineer</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-2">
+                            <p id="staff-count-helper" class="text-sm font-black text-emerald-400">0</p>
+                            <p class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Helper</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIVE TRAVEL TRACKER UNIT -->
+                <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center border-b border-gray-50 pb-2">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wide"><i class="fa-solid fa-route text-blue-500 mr-1"></i> Auto GPS Travel Engine</span>
+                        <span id="travel-status-badge" class="bg-gray-100 text-gray-600 text-[10px] font-black px-2 py-0.5 rounded-sm">IDLE</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold">Today Total Dist</p>
+                            <p id="count-travel" class="text-xl font-black text-indigo-900">0.00 KM</p>
+                        </div>
+                        <div id="punch-btn-container">
+                            <button onclick="triggerPunchIn()" class="bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-blue-700 transition">
+                                <i class="fa-solid fa-location-crosshairs mr-1"></i> Punch In Site A
+                            </button>
+                        </div>
+                    </div>
+                    <p id="gps-log-info" class="text-[10px] text-gray-400 italic font-medium text-center">Ready for next site navigation...</p>
+                </div>
+
+                <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 shadow-xs flex justify-between items-center text-xs text-gray-500 font-semibold">
+                    <span><i class="fa-solid fa-circle text-emerald-500 text-[9px] mr-1"></i> Terminal Active</span>
+                    <span id="current-date"></span>
+                </div>
+
+                <!-- Grid Work Counters -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                        <div class="text-blue-500 text-2xl"><i class="fa-solid fa-box-archive"></i></div>
+                        <div>
+                            <h3 id="count-install" class="text-xl font-black text-gray-900">0</h3>
+                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-tight">Installation</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                        <div class="text-red-500 text-2xl"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <h3 id="count-sr" class="text-xl font-black text-gray-900">0</h3>
+                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-tight">SR Logs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operations Menu Options -->
+                <div class="space-y-2.5">
+                    <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase">Field Operations Menu</h2>
+                    
+                    <button onclick="switchTab('install')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-base border border-blue-100"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-700 text-sm">Add Installation</h4>
+                                <p class="text-xs text-gray-400">Multi-ISP activation log</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+
+                    <button onclick="switchTab('sr')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-base border border-red-100"><i class="fa-solid fa-phone"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-700 text-sm">Add SR Report</h4>
+                                <p class="text-xs text-gray-400">Service faults and lines breakdown</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+
+                    <button onclick="switchTab('restore')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between w-full text-left cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-base border border-emerald-100"><i class="fa-solid fa-signal"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-700 text-sm">Site Restore & Fatbox</h4>
+                                <p class="text-xs text-gray-400">Fatbox verification with upload</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+
+                    <button onclick="switchTab('data'); loadCollectedData();" class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white flex items-center justify-between w-full text-left cursor-pointer shadow-md">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
+                            <div>
+                                <h4 class="font-bold text-sm">All Collected Logs & Actions</h4>
+                                <p class="text-xs text-blue-100">View updates, call customer directly</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-white text-xs mr-1"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <div class="flex items-center space-x-2 text-red-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-                    <h2 class="font-bold text-base">New Service Request (SR)</h2>
+            <!-- ================= TAB 2: INSTALLATION ================= -->
+            <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-file-circle-plus text-lg"></i>
+                    <h2 class="font-bold text-base">New Installation</h2>
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
                     <div class="space-y-2">
-                        <select id="sr-isp-select" onchange="handleIspToggle('sr')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                        <select id="ins-isp-select" onchange="handleIspToggle('ins')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500">
                             <option value="GTPL Broadband">GTPL Broadband</option>
                             <option value="Airtel Stream">Airtel Stream</option>
                             <option value="Jio Fiber">Jio Fiber</option>
                             <option value="Tata Play Fiber">Tata Play Fiber</option>
                             <option value="CUSTOM">-- Type Manual ISP Name --</option>
                         </select>
+                        <input id="ins-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500 font-semibold">
+                    </div>
+                </div>
+                <input id="ins-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+                <input id="ins-dsl" type="text" placeholder="DSL ID / User ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+                <input id="ins-mobile" type="tel" maxlength="10" placeholder="Customer Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500">
+                <textarea id="ins-address" rows="2" placeholder="Full Installation Address" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                
+                <div class="flex gap-2 pt-2">
+                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                    <button onclick="saveInstallation()" class="w-2/3 bg-blue-600 text-white font-semibold rounded-lg p-3 hover:bg-blue-700 shadow-md">Save Installation</button>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: SR COMPLAINTS ================= -->
+            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-red-500 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-phone-volume text-lg"></i>
+                    <h2 class="font-bold text-base">Service Request (SR) Log</h2>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="sr-isp-select" onchange="handleIspToggle('sr')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                            <option value="GTPL">GTPL</option>
+                            <option value="Airtel">Airtel</option>
+                            <option value="Jio">Jio</option>
+                            <option value="Tata Play">Tata Play</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
                         <input id="sr-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500 font-semibold">
                     </div>
                 </div>
-                <input id="sr-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
-                <input id="sr-dsl" type="text" placeholder="DSL ID / User ID / Ticket No" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
-                <input id="sr-mobile" type="tel" maxlength="10" placeholder="Customer Contact Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-customer" type="text" placeholder="Customer Name / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-dsl" type="text" placeholder="DSL ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-mobile" type="tel" maxlength="10" placeholder="Customer Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <textarea id="sr-issue" rows="2" placeholder="Describe Complaint Issue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
                 
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Fault Classification</label>
-                    <select id="sr-fault-type" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
-                        <option value="Main Feed Fiber Cut">Main Feed Fiber Cut</option>
-                        <option value="Fatbox Port Red Light Loss">Fatbox Port Red Light Loss</option>
-                        <option value="ONT Router Damage / No Power">ONT Router Damage / No Power</option>
-                        <option value="Drop Wire Patch Cord Broken">Drop Wire Patch Cord Broken</option>
-                        <option value="High Attenuation Optical Loss">High Attenuation (> -28dBm) Optical Loss</option>
-                    </select>
-                </div>
-                <textarea id="sr-address" rows="2" placeholder="Fault Incident Address / Location" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
-
                 <div class="flex gap-2 pt-2">
-                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
-                        Cancel
-                    </button>
-                    <button onclick="saveSRReport()" class="w-1/2 bg-red-600 text-white font-bold rounded-xl p-3 hover:bg-red-700 shadow-md transition text-center text-xs">
-                        Save SR Log <i class="fa-solid fa-check ml-1"></i>
-                    </button>
+                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                    <button onclick="saveSR()" class="w-2/3 bg-red-500 text-white font-semibold rounded-lg p-3 hover:bg-red-600 shadow-md">Save SR Ticket</button>
                 </div>
             </div>
 
+            <!-- ================= TAB 4: SITE RESTORE ================= -->
             <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
                 <div class="flex items-center space-x-2 text-emerald-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-circle-check text-lg"></i>
-                    <h2 class="font-bold text-base">Fatbox Restoration Verification</h2>
+                    <i class="fa-solid fa-signal text-lg"></i>
+                    <h2 class="font-bold text-base">Site Restore Details</h2>
                 </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="res-isp-select" onchange="handleIspToggle('res')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                            <option value="GTPL">GTPL</option>
+                            <option value="Airtel">Airtel</option>
+                            <option value="Jio">Jio</option>
+                            <option value="Tata Play">Tata Play</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
+                        <input id="res-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500 font-semibold">
+                    </div>
+                </div>
+                <input id="res-site" type="text" placeholder="Site / Fatbox Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
                 
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Fatbox Identifier / Location Tag</label>
-                    <input id="res-fatbox-id" type="text" placeholder="e.g., FTB-MUM-04 / Pole-23" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                </div>
-
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Core No / Color</label>
-                        <input id="res-core" type="text" placeholder="e.g., Core 4 Blue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Optical Power Level</label>
-                        <input id="res-power" type="text" placeholder="e.g., -21.40 dBm" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                    </div>
+                    <input id="res-fatbox" type="text" placeholder="Fatbox Number/ID" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                    <input id="res-port" type="number" placeholder="Splitter Port No" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
                 </div>
-
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Action Undertaken</label>
-                    <select id="res-action" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
-                        <option value="Splicing Mechanical Joint Done">Splicing Mechanical Joint Done</option>
-                        <option value="Fatbox Splitter Replaced">Fatbox Splitter Replaced</option>
-                        <option value="Patch Cord Swapped inside Box">Patch Cord Swapped inside Box</option>
-                        <option value="Overhead Fiber Span Re-pulled">Overhead Fiber Span Re-pulled</option>
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="res-loss" type="text" placeholder="dB Signal Loss" class="border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                    <select id="res-status" class="border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                        <option>Successfully Restored</option>
+                        <option>Pending / Major Cut</option>
                     </select>
                 </div>
 
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Restoration Status Summary Remarks</label>
-                    <textarea id="res-remarks" rows="2" placeholder="Enter clear summary notes..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
+                <!-- PHOTO UPLOAD WITH VERIFICATION PREVIEW -->
+                <div class="border border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 text-center space-y-2">
+                    <label class="text-xs font-bold text-gray-500 block uppercase"><i class="fa-solid fa-camera mr-1"></i> Upload Fatbox / Site Photo</label>
+                    <input type="file" id="res-photo" accept="image/*" onchange="previewPhoto(event)" class="text-xs w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <img id="photo-preview" src="#" alt="Preview" class="hidden max-h-32 mx-auto rounded-lg shadow-xs border">
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
-                        Cancel
-                    </button>
-                    <button onclick="saveRestoration()" class="w-1/2 bg-emerald-600 text-white font-bold rounded-xl p-3 hover:bg-emerald-700 shadow-md transition text-center text-xs">
-                        Submit Audit <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
-                    </button>
+                    <button onclick="switchTab('home')" class="w-1/3 border rounded-lg p-3 text-gray-600 font-semibold hover:bg-gray-50">Cancel</button>
+                    <button onclick="saveRestore()" class="w-2/3 bg-emerald-600 text-white font-semibold rounded-lg p-3 hover:bg-emerald-700 shadow-md">Save Site Report</button>
                 </div>
             </div>
 
-            <div id="tab-data" class="page-tab space-y-4">
-                <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                    <h2 class="font-bold text-sm text-gray-700"><i class="fa-solid fa-server mr-1 text-indigo-500"></i> Local Activity Logs Ledger</h2>
-                    <span id="log-count-badge" class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Records</span>
+            <!-- ================= TAB 7: ADMIN CONTROL CENTER ================= -->
+            <div id="tab-admin" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-amber-200 shadow-md">
+                <div class="flex items-center space-x-2 text-amber-600 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-user-shield text-lg"></i>
+                    <h2 class="font-bold text-base">Admin Dashboard Control</h2>
                 </div>
 
-                <div class="flex gap-1 bg-white p-1 rounded-lg border border-gray-100 text-xs shadow-xs font-semibold">
-                    <button onclick="filterLogs('ALL')" id="filter-all" class="flex-1 py-1.5 text-center rounded-md bg-blue-600 text-white transition">All</button>
-                    <button onclick="filterLogs('INSTALL')" id="filter-install" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Installs</button>
-                    <button onclick="filterLogs('SR')" id="filter-sr" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Faults</button>
-                    <button onclick="filterLogs('RESTORE')" id="filter-restore" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Audits</button>
-                </div>
-
-                <div id="logs-render-target" class="space-y-3">
-                    </div>
-            </div>
-
-            <div id="tab-admin" class="page-tab space-y-4">
-                <div class="bg-amber-500 text-white p-4 rounded-xl shadow-sm space-y-1">
-                    <h2 class="text-base font-black tracking-wide"><i class="fa-solid fa-user-shield"></i> Administration & Deployment Control</h2>
-                    <p class="text-[11px] text-amber-100">Manage approved staff registry, credentials authorization, and core application schemas.</p>
-                </div>
-
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-xs space-y-3">
-                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide border-b border-gray-100 pb-1.5"><i class="fa-solid fa-address-book text-amber-500 mr-1"></i> Authorize Mobile Database</h3>
-                    
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Authorize Employee Number</label>
                     <div class="flex gap-2">
-                        <div class="flex-1">
-                            <input id="admin-whitelist-mobile" type="tel" maxlength="10" placeholder="10 Digit Number" class="w-full text-xs border rounded-lg p-2.5 outline-none font-semibold">
-                        </div>
-                        <div class="w-1/3">
-                            <select id="admin-whitelist-role" class="w-full text-xs border rounded-lg p-2.5 bg-white font-semibold outline-none">
-                                <option value="Engineer">Engineer</option>
-                                <option value="Helper">Helper</option>
-                            </select>
-                        </div>
-                        <button onclick="addMobileToWhitelist()" class="bg-amber-500 text-white font-bold px-3 py-2.5 rounded-lg text-xs hover:bg-amber-600 transition shadow">
-                            Add
-                        </button>
-                    </div>
-
-                    <div class="space-y-1 max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50/50" id="whitelist-render-container">
-                        </div>
-                </div>
-
-                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-xs space-y-2.5">
-                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide border-b border-gray-100 pb-1.5 text-red-600"><i class="fa-solid fa-radiation"></i> Destructive Actions & Operations</h3>
-                    
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="exportDataString()" class="w-full text-[11px] bg-slate-800 text-white font-bold p-3 rounded-xl hover:bg-slate-900 transition flex items-center justify-center gap-1.5 shadow-xs">
-                            <i class="fa-solid fa-copy"></i> Copy Database Dump
-                        </button>
-                        <button onclick="triggerSystemPurge()" class="w-full text-[11px] bg-red-600 text-white font-bold p-3 rounded-xl hover:bg-red-700 transition flex items-center justify-center gap-1.5 shadow-xs">
-                            <i class="fa-solid fa-trash-can"></i> Reset App Data
-                        </button>
+                        <input id="adm-allow-mobile" type="tel" maxlength="10" placeholder="10-digit mobile number" class="flex-1 border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500 font-semibold">
+                        <button onclick="addAllowedNumber()" class="bg-blue-600 text-white px-4 rounded-lg font-bold text-xs shadow hover:bg-blue-700">Allow Access</button>
                     </div>
                 </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">Approved Staff List</h3>
+                    <div id="allowed-list-container" class="divide-y border rounded-xl overflow-hidden bg-gray-50 max-h-40 overflow-y-auto text-xs"></div>
+                </div>
+                
+                <button onclick="switchTab('home')" class="w-full bg-gray-700 text-white font-semibold rounded-lg p-3 mt-2">Back to Dashboard</button>
+            </div>
+
+            <!-- ================= TAB 8: ALL DATA COLLECTED ================= -->
+            <div id="tab-data" class="page-tab space-y-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm max-w-full">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
+                    <div class="flex items-center space-x-2 text-indigo-600">
+                        <i class="fa-solid fa-folder-open text-lg"></i>
+                        <h2 class="font-bold text-base">All Logs Data</h2>
+                    </div>
+                    <button onclick="clearAllData()" class="text-[10px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded border border-red-200">Reset Logs</button>
+                </div>
+                
+                <div id="data-tables-container" class="space-y-4 text-xs max-h-96 overflow-y-auto"></div>
+                <button onclick="switchTab('home')" class="w-full bg-gray-700 text-white font-semibold rounded-lg p-2.5 mt-2">Back to Dashboard</button>
             </div>
 
         </main>
-
-        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-blue-100 shadow-xl py-2 px-4 z-50 shrink-0">
-            <div class="max-w-md mx-auto flex justify-around items-center">
-                <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-0.5 text-blue-600 transition group">
-                    <i class="fa-solid fa-house text-lg"></i>
-                    <span class="text-[10px] font-bold tracking-tight">Console</span>
-                </button>
-                <button onclick="switchTab('install')" id="nav-install" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-blue-500 transition group">
-                    <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
-                    <span class="text-[10px] font-bold tracking-tight">Install</span>
-                </button>
-                <button onclick="switchTab('sr')" id="nav-sr" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-red-500 transition group">
-                    <i class="fa-solid fa-phone-flip text-lg"></i>
-                    <span class="text-[10px] font-bold tracking-tight">SR Fault</span>
-                </button>
-                <button onclick="switchTab('restore')" id="nav-restore" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-emerald-500 transition group">
-                    <i class="fa-solid fa-signal text-lg"></i>
-                    <span class="text-[10px] font-bold tracking-tight">Restore</span>
-                </button>
-                <button onclick="switchTab('data'); loadCollectedData();" id="nav-data" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-indigo-500 transition group">
-                    <i class="fa-solid fa-database text-lg"></i>
-                    <span class="text-[10px] font-bold tracking-tight">Ledger</span>
-                </button>
-            </div>
-        </footer>
     </div>
 
+    <!-- APP CORE ENGINE -->
     <script>
-        // System wide initial storage states schemas configurations
-        const DEFAULT_WHITELIST = [
-            { mobile: "9988776655", role: "Engineer" },
-            { mobile: "8877665544", role: "Helper" },
-            { mobile: "9142173747", role: "Admin" } // App Owner Standard Entry
-        ];
+        let uploadedPhotoBase64 = "";
+        const MASTER_ADMIN_MOBILE = "9142173747";
 
-        let state = {
-            currentUser: null,
-            whitelist: JSON.parse(localStorage.getItem('fwm_whitelist')) || DEFAULT_WHITELIST,
-            users: JSON.parse(localStorage.getItem('fwm_users')) || [
-                { mobile: "9142173747", name: "Jatashankar Yadav", role: "Admin", pin: "1234" }
-            ],
-            logs: JSON.parse(localStorage.getItem('fwm_logs')) || [],
-            tracking: JSON.parse(localStorage.getItem('fwm_tracking')) || {
-                isPunchedIn: false,
-                totalDistance: 0.00,
-                lastLat: null,
-                lastLng: null,
-                currentSiteIndex: 0
-            },
-            currentFilter: "ALL"
-        };
-
-        // Simulated Site Geo Locations Coordinates Matrix Array List sequence for Travel Testing Engine simulations loop
-        const SIM_SITES = [
-            { name: "Main Hub Alpha Node", lat: 26.1200, lng: 85.3600 },
-            { name: "Fatbox Distribution Sector B", lat: 26.1325, lng: 85.3720 },
-            { name: "Sub-Station Junction Delta Cluster", lat: 26.1480, lng: 85.3590 },
-            { name: "Commercial High-Rise Splitter Node V", lat: 26.1150, lng: 85.3910 }
-        ];
-
-        // System Core Lifecycle Initialization on Document Load
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-IN', {
-                weekday: 'short', day: '2-digit', month: 'short', year: 'numeric'
-            });
-            
-            // Check for persistent user engine operational session state caches
-            const savedSession = localStorage.getItem('fwm_session');
-            if (savedSession) {
-                state.currentUser = JSON.parse(savedSession);
-                bootApplicationUI();
-            }
-            updateStaffCounters();
-        });
-
-        // Interface Authorization Window Switch Mechanics
-        function toggleAuthForm(mode) {
-            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
-            document.getElementById('btn-tab-login').className = "w-1/2 pb-2 text-gray-400";
-            document.getElementById('btn-tab-register').className = "w-1/2 pb-2 text-gray-400";
-
-            if (mode === 'login') {
-                document.getElementById('form-login').classList.add('active');
-                document.getElementById('btn-tab-login').className = "w-1/2 pb-2 text-blue-600 border-b-2 border-blue-600 font-bold";
-            } else {
-                document.getElementById('form-register').classList.add('active');
-                document.getElementById('btn-tab-register').className = "w-1/2 pb-2 text-emerald-600 border-b-2 border-emerald-600 font-bold";
-            }
-            
-            // Check and display emergency administrative override links when choosing roles
-            const selectedRole = document.getElementById('login-role').value;
-            toggleResetTriggerVisibility(selectedRole);
+        // Fetch custom master PIN or use fallback default seed
+        function getMasterAdminPass() {
+            return localStorage.getItem("master_admin_pin") || "admin123";
         }
 
-        document.getElementById('login-role').addEventListener('change', (e) => {
-            toggleResetTriggerVisibility(e.target.value);
-        });
+        function toggleAuthForm(formType) {
+            document.getElementById('btn-tab-login').className = "w-1/2 pb-2 " + (formType === 'login' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400');
+            document.getElementById('btn-tab-register').className = "w-1/2 pb-2 " + (formType === 'register' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400');
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            document.getElementById('form-' + formType).classList.add('active');
+        }
 
-        function toggleResetTriggerVisibility(role) {
-            const container = document.getElementById('reset-trigger-container');
-            if (role === 'Admin') {
-                container.classList.remove('hidden');
+        function handleIspToggle(prefix) {
+            let selectEl = document.getElementById(`${prefix}-isp-select`);
+            let manualEl = document.getElementById(`${prefix}-isp-manual`);
+            if (selectEl.value === "CUSTOM") {
+                manualEl.classList.remove('hidden');
             } else {
-                container.classList.add('hidden');
+                manualEl.classList.add('hidden');
+                manualEl.value = "";
             }
         }
 
-        // Operational Authentication Business Logics Processing Loop Rules
-        function handleLogin() {
-            const role = document.getElementById('login-role').value;
-            const mobile = document.getElementById('login-mobile').value.trim();
-            const pin = document.getElementById('login-password').value;
-
-            if (mobile.length !== 10 || isNaN(mobile)) {
-                alert("🚨 Validation Error: system requires a clean, valid 10-digit mobile identification number sequence.");
-                return;
+        function previewPhoto(event) {
+            let input = event.target;
+            let preview = document.getElementById('photo-preview');
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    uploadedPhotoBase64 = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
             }
-            if (!pin) {
-                alert("🚨 Configuration missing: Verification Password / Security PIN matrix data slot empty.");
-                return;
-            }
+        }
 
-            // Database Search Match Engine Query
-            const accountMatch = state.users.find(u => u.mobile === mobile && u.role === role && u.pin === pin);
+        // ================= DISTANCE GEOLOCATION ENGINE =================
+        function calculateDistanceKM(lat1, lon1, lat2, lon2) {
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; 
+        }
 
-            if (accountMatch) {
-                state.currentUser = accountMatch;
-                localStorage.setItem('fwm_session', JSON.stringify(accountMatch));
-                bootApplicationUI();
-                alert(`✨ Access Granted! Node terminal established for ${accountMatch.name} (${accountMatch.role}).`);
+        function triggerPunchIn() {
+            if (!navigator.geolocation) { alert("Aapka device GPS support nahi karta!"); return; }
+            document.getElementById("gps-log-info").innerText = "Capturing Site A Live Location...";
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                let punchInData = { lat: pos.coords.latitude, lon: pos.coords.longitude, time: new Date().toLocaleTimeString() };
+                localStorage.setItem("temp_punch_in", JSON.stringify(punchInData));
+                alert(`Punch In Successful!\nTime: ${punchInData.time}`);
+                setupPunchUI(true);
+            }, function(err) {
+                alert("GPS Permission Denied! Settings se check karein.");
+                document.getElementById("gps-log-info").innerText = "GPS Error: Please enable location services.";
+            }, { enableHighAccuracy: true });
+        }
+
+        function triggerPunchOut() {
+            if (!navigator.geolocation) { alert("GPS module error!"); return; }
+            let savedPunchIn = JSON.parse(localStorage.getItem("temp_punch_in"));
+            if (!savedPunchIn) { alert("Pehle Punch In karein!"); return; }
+
+            document.getElementById("gps-log-info").innerText = "Capturing Site B Destination Coordinates...";
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                let currentLat = pos.coords.latitude, currentLon = pos.coords.longitude;
+                let parsedDistance = calculateDistanceKM(savedPunchIn.lat, savedPunchIn.lon, currentLat, currentLon);
+                
+                let totalAccumulated = parseFloat(localStorage.getItem("accumulated_travel_distance") || 0);
+                totalAccumulated += parsedDistance;
+                localStorage.setItem("accumulated_travel_distance", totalAccumulated.toFixed(2));
+                
+                localStorage.removeItem("temp_punch_in");
+                alert(`Punch Out Successful!\nDistance added: ${parsedDistance.toFixed(2)} KM`);
+                setupPunchUI(false);
+                refreshCounters();
+            }, function(err) {
+                alert("Punch Out Error: Location read failure.");
+            }, { enableHighAccuracy: true });
+        }
+
+        function setupPunchUI(isActive) {
+            let container = document.getElementById("punch-btn-container");
+            let badge = document.getElementById("travel-status-badge");
+            let info = document.getElementById("gps-log-info");
+
+            if (isActive) {
+                let saved = JSON.parse(localStorage.getItem("temp_punch_in"));
+                badge.innerText = "ON THE WAY";
+                badge.className = "bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-sm animate-pulse";
+                info.innerText = `Punched in at Site A (${saved.time}). Proceed to next node point.`;
+                container.innerHTML = `
+                    <button onclick="triggerPunchOut()" class="bg-red-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-red-700 transition">
+                        <i class="fa-solid fa-flag-checkered mr-1"></i> Punch Out Site B
+                    </button>
+                `;
             } else {
-                alert("❌ Authentication Failure: Provided mobile payload coordinates match no records inside security perimeter schemas.");
+                badge.innerText = "IDLE";
+                badge.className = "bg-gray-100 text-gray-600 text-[10px] font-black px-2 py-0.5 rounded-sm";
+                info.innerText = "Ready for next site navigation coordinates tracking...";
+                container.innerHTML = `
+                    <button onclick="triggerPunchIn()" class="bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-blue-700 transition">
+                        <i class="fa-solid fa-location-crosshairs mr-1"></i> Punch In Site A
+                    </button>
+                `;
+            }
+        }
+
+        function isMobileAllowed(mobile) {
+            if (mobile === MASTER_ADMIN_MOBILE) return true;
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            return allowedList.includes(mobile);
+        }
+
+        function checkLoginSession() {
+            let sessionUserMobile = localStorage.getItem("active_user");
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+
+            if (sessionUserMobile && !isMobileAllowed(sessionUserMobile)) {
+                localStorage.removeItem("active_user");
+                sessionUserMobile = null;
+            }
+            
+            if (sessionUserMobile && (sessionUserMobile === MASTER_ADMIN_MOBILE || usersList[sessionUserMobile])) {
+                let currentUser = (sessionUserMobile === MASTER_ADMIN_MOBILE) ? { name: "Jatashankar Yadav", role: "Admin" } : usersList[sessionUserMobile];
+                document.getElementById("auth-screen").style.display = "none";
+                document.getElementById("app-content").style.display = "flex";
+                document.getElementById("user-display").innerText = `${currentUser.role}: ${currentUser.name} (${sessionUserMobile})`;
+                
+                if (currentUser.role === "Admin" || sessionUserMobile === MASTER_ADMIN_MOBILE) {
+                    document.getElementById("admin-gate-btn").classList.remove("hidden");
+                } else {
+                    document.getElementById("admin-gate-btn").classList.add("hidden");
+                }
+                
+                setupPunchUI(localStorage.getItem("temp_punch_in") !== null);
+                refreshCounters();
+            } else {
+                document.getElementById("auth-screen").style.display = "flex";
+                document.getElementById("app-content").style.display = "none";
+                document.getElementById("reset-trigger-container").classList.add("hidden");
             }
         }
 
         function handleRegister() {
-            const role = document.getElementById('reg-role').value;
-            const name = document.getElementById('reg-name').value.trim();
-            const mobile = document.getElementById('reg-mobile').value.trim();
-            const pin = document.getElementById('reg-password').value;
+            let role = document.getElementById("reg-role").value;
+            let name = document.getElementById("reg-name").value.trim();
+            let mobile = document.getElementById("reg-mobile").value.trim();
+            let pass = document.getElementById("reg-password").value.trim();
 
-            if (!name || mobile.length !== 10 || !pin) {
-                alert("🚨 Missing payload metadata: Make sure all input parameters fields are fully populated.");
-                return;
-            }
+            if (!name || !pass) { alert("Sari details fill karein!"); return; }
+            if (mobile.length !== 10 || isNaN(mobile)) { alert("Valid 10-digit entry!"); return; }
+            if (mobile === MASTER_ADMIN_MOBILE) { alert("Admin registration dropdown se nahi hoga, directly dynamic panel se reset karein."); toggleAuthForm('login'); return; }
 
-            // Verify white-listed system entry credentials inside control registry framework
-            const isAuthorized = state.whitelist.some(w => w.mobile === mobile && w.role === role);
-            if (!isAuthorized) {
-                alert("⛔ Authorization Exception Rejected: This terminal contact framework number is absent from administrative pre-approval ledger arrays.");
-                return;
-            }
+            if (!isMobileAllowed(mobile)) { alert("Registration Error! Number not whitelisted by Admin."); return; }
 
-            // Check if user already exists
-            const existingUser = state.users.some(u => u.mobile === mobile && u.role === role);
-            if (existingUser) {
-                alert("🛡️ Security Exception: Account registration node signature already alive on this pipeline tracking array.");
-                return;
-            }
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            if (usersList[mobile]) { toggleAuthForm('login'); return; }
 
-            // Register account node mapping layout elements sequence arrays
-            const newWorker = { mobile, name, role, pin };
-            state.users.push(newWorker);
-            localStorage.setItem('fwm_users', JSON.stringify(state.users));
-
-            alert(`✅ Account Registry Confirmed! Switch to login interface panel layout node parameters for accessing secure session tracking.`);
+            usersList[mobile] = { name, password: pass, role };
+            localStorage.setItem("registered_users", JSON.stringify(usersList));
+            alert("Registered successfully! Proceed to login.");
             toggleAuthForm('login');
-            document.getElementById('login-mobile').value = mobile;
-            updateStaffCounters();
         }
 
+        function handleLogin() {
+            let role = document.getElementById("login-role").value;
+            let mobile = document.getElementById("login-mobile").value.trim();
+            let pass = document.getElementById("login-password").value.trim();
+
+            if (mobile === MASTER_ADMIN_MOBILE) {
+                let currentMasterPin = getMasterAdminPass();
+                if(pass === currentMasterPin) {
+                    localStorage.setItem("active_user", mobile);
+                    document.getElementById("reset-trigger-container").classList.add("hidden");
+                    checkLoginSession();
+                } else { 
+                    alert("Wrong Admin PIN!"); 
+                    document.getElementById("reset-trigger-container").classList.remove("hidden"); // SHOW RESET OPTION ON ERROR
+                }
+                return;
+            }
+
+            if (!isMobileAllowed(mobile)) { alert("Access Denied!"); return; }
+
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            if (!usersList[mobile] || usersList[mobile].password !== pass || usersList[mobile].role !== role) {
+                alert("Invalid Credentials or Role matching error!"); return;
+            }
+
+            localStorage.setItem("active_user", mobile);
+            checkLoginSession();
+        }
+
+        // FORCE RESET ENGINE FOR MASTER NUMBER ADMIN
         function triggerMasterReset() {
-            if (confirm("⚠️ System override sequence verification requested: Do you wish to reset the Master Admin Password database mapping layout configuration?")) {
-                state.users = state.users.map(u => {
-                    if (u.mobile === "9142173747" && u.role === "Admin") {
-                        u.pin = "1234"; // Fallback to standard baseline structural pin matrix
-                    }
-                    return u;
-                });
-                localStorage.setItem('fwm_users', JSON.stringify(state.users));
-                alert("🔄 Baseline Master Security Matrix reset back to factory standard parameter coordinates config: PIN -> 1234");
-            }
-        }
-
-        function handleLogout() {
-            if (confirm("🔒 Terminate system terminal tracking context parameters and wipe runtime volatile memory caches?")) {
-                localStorage.removeItem('fwm_session');
-                state.currentUser = null;
-                document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('app-content').style.display = 'none';
-            }
-        }
-
-        // Framework UI Controller Routing Pipeline Actions Logic Engines
-        function bootApplicationUI() {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'flex';
-            
-            // Header context profile status rendering parameters
-            document.getElementById('user-display').innerText = `${state.currentUser.role}: ${state.currentUser.name} (${state.currentUser.mobile})`;
-            
-            // Toggle visibility parameters depending on authorization metrics profiles definitions
-            const adminGateBtn = document.getElementById('admin-gate-btn');
-            if (state.currentUser.role === 'Admin') {
-                adminGateBtn.classList.remove('hidden');
+            let nayaPin = prompt("Admin (9142173747) ke liye naya Secret PIN/Password type karein:");
+            if (nayaPin && nayaPin.trim().length > 0) {
+                localStorage.setItem("master_admin_pin", nayaPin.trim());
+                alert("Success! Admin Master PIN change ho gaya hai. Ab naye PIN se login karein.");
+                document.getElementById("login-password").value = nayaPin.trim();
+                document.getElementById("reset-trigger-container").classList.add("hidden");
             } else {
-                adminGateBtn.classList.add('hidden');
-            }
-
-            switchTab('home');
-            refreshGlobalCounters();
-            renderTravelEngineState();
-            renderAdminWhitelistLedger();
-        }
-
-        function switchTab(targetTabId) {
-            document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-${targetTabId}`).classList.add('active');
-
-            // Reset footer elements styling context array configurations highlights
-            const footerButtons = document.querySelectorAll('footer button');
-            footerButtons.forEach(btn => {
-                btn.className = "flex flex-col items-center space-y-0.5 text-gray-400 hover:text-blue-500 transition group";
-            });
-
-            // Highlight tracking element configurations mapping definitions
-            const activeNavButton = document.getElementById(`nav-${targetTabId}`);
-            if (activeNavButton) {
-                if (targetTabId === 'sr') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-red-600 font-bold";
-                else if (targetTabId === 'restore') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-emerald-600 font-bold";
-                else if (targetTabId === 'data') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-indigo-600 font-bold";
-                else activeNavButton.className = "flex flex-col items-center space-y-0.5 text-blue-600 font-bold";
+                alert("Reset cancel ya galat password format!");
             }
         }
 
-        function handleIspToggle(formPrefix) {
-            const selector = document.getElementById(`${formPrefix}-isp-select`);
-            const manualInput = document.getElementById(`${formPrefix}-isp-manual`);
-            if (selector.value === 'CUSTOM') {
-                manualInput.classList.remove('hidden');
-            } else {
-                manualInput.classList.add('hidden');
+        function addAllowedNumber() {
+            let num = document.getElementById("adm-allow-mobile").value.trim();
+            if(num.length !== 10 || isNaN(num)) { alert("Enter 10 digit number!"); return; }
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            if(!allowedList.includes(num)) {
+                allowedList.push(num);
+                localStorage.setItem("allowed_engineers", JSON.stringify(allowedList));
+                alert("Successfully Whitelisted!");
+                document.getElementById("adm-allow-mobile").value = "";
+                loadAllowedList();
+                refreshCounters();
             }
         }
 
-        // Data Storage CRUD Pipeline Transaction Routines Processing
+        function loadAllowedList() {
+            let container = document.getElementById("allowed-list-container");
+            let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+            if(allowedList.length === 0) { container.innerHTML = `<p class="p-3 text-gray-400 text-center">Empty List.</p>`; return; }
+            container.innerHTML = allowedList.map(num => `
+                <div class="flex justify-between items-center p-2.5 bg-white">
+                    <span class="font-mono font-bold text-indigo-600"><i class="fa-solid fa-user text-xs mr-1"></i> +91 ${num}</span>
+                    <button onclick="removeAllowedNumber('${num}')" class="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 border border-red-200 rounded">Block</button>
+                </div>
+            `).join('');
+        }
+
+        function removeAllowedNumber(num) {
+            if(confirm("Block access?")) {
+                let allowedList = JSON.parse(localStorage.getItem("allowed_engineers")) || [];
+                allowedList = allowedList.filter(x => x !== num);
+                localStorage.setItem("allowed_engineers", JSON.stringify(allowedList));
+                loadAllowedList();
+                refreshCounters();
+                if(localStorage.getItem("active_user") === num) { localStorage.removeItem("active_user"); checkLoginSession(); }
+            }
+        }
+
+        function getIspValue(prefix) {
+            let selectVal = document.getElementById(`${prefix}-isp-select`).value;
+            return selectVal === "CUSTOM" ? document.getElementById(`${prefix}-isp-manual`).value.trim() : selectVal;
+        }
+
         function saveInstallation() {
-            const ispSelect = document.getElementById('ins-isp-select').value;
-            const ispManual = document.getElementById('ins-isp-manual').value.trim();
-            const customer = document.getElementById('ins-customer').value.trim();
-            const dsl = document.getElementById('ins-dsl').value.trim();
-            const mobile = document.getElementById('ins-mobile').value.trim();
-            const address = document.getElementById('ins-address').value.trim();
+            let isp = getIspValue('ins'), customer = document.getElementById("ins-customer").value.trim(), dsl = document.getElementById("ins-dsl").value.trim(), mobile = document.getElementById("ins-mobile").value.trim(), address = document.getElementById("ins-address").value.trim();
+            if(!isp || !customer || !dsl || !mobile || !address) { alert("Fill all details!"); return; }
+            let records = JSON.parse(localStorage.getItem("all_inst_data")) || [];
+            records.push({ isp, customer, dsl, mobile, address, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
+            localStorage.setItem("all_inst_data", JSON.stringify(records));
+            localStorage.setItem("c_inst", records.length);
+            alert("Logged!"); switchTab('home');
+        }
 
-            const finalIspName = ispSelect === 'CUSTOM' ? ispManual : ispSelect;
+        function saveSR() {
+            let isp = getIspValue('sr'), customer = document.getElementById("sr-customer").value.trim(), dsl = document.getElementById("sr-dsl").value.trim(), mobile = document.getElementById("sr-mobile").value.trim(), issue = document.getElementById("sr-issue").value.trim();
+            if(!isp || !customer || !dsl || !mobile || !issue) { alert("Fill all details!"); return; }
+            let records = JSON.parse(localStorage.getItem("all_sr_data")) || [];
+            records.push({ isp, customer, dsl, mobile, issue, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
+            localStorage.setItem("all_sr_data", JSON.stringify(records));
+            localStorage.setItem("c_sr", records.length);
+            alert("Saved!"); switchTab('home');
+        }
 
-            if (!finalIspName || !customer || !dsl || mobile.length !== 10 || !address) {
-                alert("🚨 Schema Constraint Violation: Please clean and complete all validation input parameters fields accurately.");
-                return;
-            }
+        function saveRestore() {
+            let isp = getIspValue('res'), site = document.getElementById("res-site").value.trim(), fatbox = document.getElementById("res-fatbox").value.trim(), port = document.getElementById("res-port").value.trim(), loss = document.getElementById("res-loss").value.trim(), status = document.getElementById("res-status").value;
+            if(!isp || !site || !fatbox || !port || !loss) { alert("Fill all details!"); return; }
+            
+            let records = JSON.parse(localStorage.getItem("all_rest_data")) || [];
+            records.push({ isp, site, fatbox, port, loss, status, photo: uploadedPhotoBase64 || null, user: localStorage.getItem("active_user"), date: new Date().toLocaleString() });
+            localStorage.setItem("all_rest_data", JSON.stringify(records));
+            localStorage.setItem("c_rest", records.length);
 
-            const payload = {
-                id: "INST-" + Date.now(),
-                type: "INSTALL",
-                isp: finalIspName,
-                customer, dsl, mobile, address,
-                timestamp: new Date().toISOString(),
-                loggedBy: state.currentUser.name,
-                loggedByMobile: state.currentUser.mobile
-            };
-
-            commitLogToStorage(payload);
-            clearFormFields(['ins-isp-manual', 'ins-customer', 'ins-dsl', 'ins-mobile', 'ins-address']);
-            document.getElementById('ins-isp-select').value = "GTPL Broadband";
-            handleIspToggle('ins');
-            alert("🎯 Installation Record persistent state mapped cleanly into central structural telemetry arrays ledger ledger storage!");
+            alert("Site details saved with Photo Vault data!");
+            document.getElementById("res-site").value = "";
+            document.getElementById("photo-preview").classList.add('hidden');
+            uploadedPhotoBase64 = "";
             switchTab('home');
         }
 
-        function saveSRReport() {
-            const ispSelect = document.getElementById('sr-isp-select').value;
-            const ispManual = document.getElementById('sr-isp-manual').value.trim();
-            const customer = document.getElementById('sr-customer').value.trim();
-            const dsl = document.getElementById('sr-dsl').value.trim();
-            const mobile = document.getElementById('sr-mobile').value.trim();
-            const faultType = document.getElementById('sr-fault-type').value;
-            const address = document.getElementById('sr-address').value.trim();
-
-            const finalIspName = ispSelect === 'CUSTOM' ? ispManual : ispSelect;
-
-            if (!finalIspName || !customer || !dsl || mobile.length !== 10 || !address) {
-                alert("🚨 Schema Constraint Violation: Service fault data mapping parameters field inputs contains validation empty sets.");
-                return;
-            }
-
-            const payload = {
-                id: "SR-" + Date.now(),
-                type: "SR",
-                isp: finalIspName,
-                customer, dsl, mobile, faultType, address,
-                timestamp: new Date().toISOString(),
-                loggedBy: state.currentUser.name,
-                loggedByMobile: state.currentUser.mobile
-            };
-
-            commitLogToStorage(payload);
-            clearFormFields(['sr-isp-manual', 'sr-customer', 'sr-dsl', 'sr-mobile', 'sr-address']);
-            document.getElementById('sr-isp-select').value = "GTPL Broadband";
-            handleIspToggle('sr');
-            alert("🚨 Service Request Fault ticket created successfully and tracked to operational logs arrays database.");
-            switchTab('home');
-        }
-
-        function saveRestoration() {
-            const fatboxId = document.getElementById('res-fatbox-id').value.trim();
-            const coreNo = document.getElementById('res-core').value.trim();
-            const power = document.getElementById('res-power').value.trim();
-            const action = document.getElementById('res-action').value;
-            const remarks = document.getElementById('res-remarks').value.trim();
-
-            if (!fatboxId || !coreNo || !power || !remarks) {
-                alert("🚨 Schema Error: Fatbox alignment parameters validation telemetry metrics data slots cannot accept empty variables values.");
-                return;
-            }
-
-            const payload = {
-                id: "RESTORE-" + Date.now(),
-                type: "RESTORE",
-                fatboxId, coreNo, power, action, remarks,
-                timestamp: new Date().toISOString(),
-                loggedBy: state.currentUser.name,
-                loggedByMobile: state.currentUser.mobile
-            };
-
-            commitLogToStorage(payload);
-            clearFormFields(['res-fatbox-id', 'res-core', 'res-power', 'res-remarks']);
-            alert("🌿 Fatbox Restoration Audit Log uploaded completely and catalogued to the active local transaction storage matrices!");
-            switchTab('home');
-        }
-
-        function commitLogToStorage(payload) {
-            state.logs.unshift(payload); // Push immediately to head of historical arrays sequence 
-            localStorage.setItem('fwm_logs', JSON.stringify(state.logs));
-            refreshGlobalCounters();
-        }
-
-        function clearFormFields(fieldsArray) {
-            fieldsArray.forEach(id => document.getElementById(id).value = "");
-        }
-
-        // Ledger Feed Renderer Engine Blocks & Filters Pipelines
         function loadCollectedData() {
-            switchTab('data');
-            renderLogsLedgerView();
-        }
-
-        function filterLogs(filterType) {
-            state.currentFilter = filterType;
+            let container = document.getElementById("data-tables-container");
+            let inst = JSON.parse(localStorage.getItem("all_inst_data")) || [];
+            let srs = JSON.parse(localStorage.getItem("all_sr_data")) || [];
+            let rest = JSON.parse(localStorage.getItem("all_rest_data")) || [];
+            let html = "";
             
-            // Style configuration mapping loop reset framework mechanics
-            const filterButtons = ['all', 'install', 'sr', 'restore'];
-            filterButtons.forEach(btn => {
-                const el = document.getElementById(`filter-${btn}`);
-                if (btn.toUpperCase() === filterType) {
-                    el.className = "flex-1 py-1.5 text-center rounded-md bg-blue-600 text-white transition font-bold shadow-xs";
-                } else {
-                    el.className = "flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition font-medium";
-                }
+            html += `<h4 class="font-bold text-blue-600 border-b">1. Installations</h4>`;
+            inst.forEach(i => {
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${i.date}</span> <span>ISP: ${i.isp}</span></div>
+                    <div><b>${i.customer}</b> (${i.dsl})</div>
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-gray-500 text-[11px]"><i class="fa-solid fa-location-dot"></i> ${i.address}</span>
+                        <a href="tel:${i.mobile}" class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-phone text-[9px]"></i> Call Back</a>
+                    </div>
+                </div>`;
             });
 
-            renderLogsLedgerView();
-        }
-
-        function renderLogsLedgerView() {
-            const container = document.getElementById('logs-render-target');
-            container.innerHTML = "";
-
-            const filteredLogs = state.logs.filter(log => {
-                if (state.currentFilter === "ALL") return true;
-                return log.type === state.currentFilter;
+            html += `<h4 class="font-bold text-red-500 border-b mt-3">2. Service Requests (SR)</h4>`;
+            srs.forEach(s => {
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${s.date}</span> <span>ISP: ${s.isp}</span></div>
+                    <div><b>${s.customer}</b> (ID: ${s.dsl})</div>
+                    <div class="text-amber-700 bg-amber-50 p-1 rounded text-[11px]">Issue: ${s.issue}</div>
+                    <div class="flex justify-end pt-1">
+                        <a href="tel:${s.mobile}" class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-phone text-[9px]"></i> Call Back</a>
+                    </div>
+                </div>`;
             });
 
-            document.getElementById('log-count-badge').innerText = `${filteredLogs.length} Records`;
-
-            if (filteredLogs.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-white rounded-xl p-8 text-center text-gray-400 text-xs border border-dashed border-gray-200">
-                        <i class="fa-solid fa-folder-open text-2xl mb-2 text-gray-300 block"></i>
-                        No operational activity data files records found corresponding to the active log segment filters configuration.
-                    </div>`;
-                return;
-            }
-
-            filteredLogs.forEach(log => {
-                let cardHtml = "";
-                const logTime = new Date(log.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + " | " + new Date(log.timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-                
-                if (log.type === 'INSTALL') {
-                    cardHtml = `
-                        <div class="bg-white p-4 rounded-xl border-l-4 border-blue-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
-                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="bg-blue-50 text-blue-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-blue-100 uppercase">INSTALLATION</span>
-                                <span class="text-xs font-black text-gray-800">${log.isp}</span>
-                            </div>
-                            <div class="text-xs space-y-1 text-gray-600">
-                                <p class="font-bold text-gray-900"><i class="fa-solid fa-user mr-1 text-gray-400 text-[10px]"></i> Client: ${log.customer} </p>
-                                <p><i class="fa-solid fa-fingerprint mr-1 text-gray-400 text-[10px]"></i> User/DSL ID: <b class="text-slate-800 select-all">${log.dsl}</b></p>
-                                <p><i class="fa-solid fa-location-dot mr-1 text-gray-400 text-[10px]"></i> Loc: ${log.address}</p>
-                            </div>
-                            <div class="flex justify-between items-center border-t border-gray-50 pt-2 mt-1">
-                                <span class="text-[9px] text-gray-400 font-semibold">Tech: ${log.loggedBy}</span>
-                                <a href="tel:${log.mobile}" class="bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-black px-2.5 py-1 rounded-md flex items-center gap-1 transition">
-                                    <i class="fa-solid fa-phone"></i> Call Customer
-                                </a>
-                            </div>
-                        </div>`;
-                } else if (log.type === 'SR') {
-                    cardHtml = `
-                        <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
-                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="bg-red-50 text-red-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-red-100 uppercase">FAULT TICKET</span>
-                                <span class="text-xs font-black text-gray-800">${log.isp}</span>
-                            </div>
-                            <div class="text-xs space-y-1 text-gray-600">
-                                <p class="font-bold text-red-700"><i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> Error: ${log.faultType} </p>
-                                <p class="font-bold text-gray-900"><i class="fa-solid fa-user mr-1 text-gray-400 text-[10px]"></i> Caller: ${log.customer} (DSL: ${log.dsl})</p>
-                                <p><i class="fa-solid fa-location-dot mr-1 text-gray-400 text-[10px]"></i> Loc: ${log.address}</p>
-                            </div>
-                            <div class="flex justify-between items-center border-t border-gray-50 pt-2 mt-1">
-                                <span class="text-[9px] text-gray-400 font-semibold">Tech: ${log.loggedBy}</span>
-                                <a href="tel:${log.mobile}" class="bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-black px-2.5 py-1 rounded-md flex items-center gap-1 transition">
-                                    <i class="fa-solid fa-phone"></i> Call Line
-                                </a>
-                            </div>
-                        </div>`;
-                } else if (log.type === 'RESTORE') {
-                    cardHtml = `
-                        <div class="bg-white p-4 rounded-xl border-l-4 border-emerald-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
-                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="bg-emerald-50 text-emerald-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-emerald-100 uppercase">FATBOX AUDIT</span>
-                                <span class="text-xs font-black text-gray-800 text-emerald-700"><i class="fa-solid fa-box text-[11px] mr-0.5"></i> ${log.fatboxId}</span>
-                            </div>
-                            <div class="text-xs space-y-1 text-gray-600">
-                                <p><i class="fa-solid fa-bolt mr-1 text-gray-400 text-[10px]"></i> Power Attenuation Level: <b class="text-gray-900">${log.power}</b></p>
-                                <p><i class="fa-solid fa-bezier-curve mr-1 text-gray-400 text-[10px]"></i> Matrix Splitter Path: Core Info -> ${log.coreNo}</p>
-                                <p class="bg-gray-50 p-1.5 rounded text-gray-500 italic text-[11px] mt-1 border border-gray-100"><b>Action:</b> ${log.action}. ${log.remarks}</p>
-                            </div>
-                            <div class="text-[9px] text-gray-400 font-semibold pt-1 border-t border-gray-50 text-right">Verified Auditor: ${log.loggedBy}</div>
-                        </div>`;
-                }
-
-                container.insertAdjacentHTML('beforeend', cardHtml);
+            html += `<h4 class="font-bold text-emerald-600 border-b mt-3">3. Site Restorations</h4>`;
+            rest.forEach(r => {
+                html += `
+                <div class="bg-white p-2.5 rounded-lg border my-1 shadow-xs space-y-1">
+                    <div class="flex justify-between text-gray-400 text-[10px]"><span>${r.date}</span> <span>ISP: ${r.isp}</span></div>
+                    <div>Site: <b>${r.site}</b> | Fatbox: ${r.fatbox} (Port: ${r.port})</div>
+                    <div class="text-xs font-semibold">Loss: <span class="text-red-500">${r.loss} dB</span></div>
+                    ${r.photo ? `<div class="mt-1"><img src="${r.photo}" class="max-h-32 w-full object-cover rounded border shadow-inner"></div>` : ''}
+                </div>`;
             });
+            container.innerHTML = html || "<p class='text-center text-gray-400'>No logs found.</p>";
         }
 
-        // Auto GPS Tracking Logic Engine & Distance Calculations (Haversine Formula Implementation)
-        function triggerPunchIn() {
-            if (!navigator.geolocation) {
-                // Device interface failure logic fallback handler loop
-                alert("💻 Geolocation Engine hardware API missing from this terminal interface framework environment. Initiating high-fidelity route coordinate simulation matrix mapping loop sequence...");
-                executeMockLocationIntervalEngine();
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    processTrackingDataPayload(position.coords.latitude, position.coords.longitude);
-                },
-                (error) => {
-                    console.warn("⚠️ Device Native GPS hardware channel error parameters block context, utilizing automated route simulation path engine tracking array calculations.");
-                    executeMockLocationIntervalEngine();
-                },
-                { enableHighAccuracy: true, timeout: 6000 }
-            );
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if(tabId === 'admin') loadAllowedList();
         }
 
-        function executeMockLocationIntervalEngine() {
-            state.tracking.isPunchedIn = !state.tracking.isPunchedIn;
+        function refreshCounters() {
+            document.getElementById("count-install").innerText = localStorage.getItem("c_inst") || 0;
+            document.getElementById("count-sr").innerText = localStorage.getItem("c_sr") || 0;
+            document.getElementById("count-travel").innerText = (localStorage.getItem("accumulated_travel_distance") || "0.00") + " KM";
             
-            if (state.tracking.isPunchedIn) {
-                // Punch in sequence context array setup logic processing triggers
-                const activeIndex = state.tracking.currentSiteIndex % SIM_SITES.length;
-                const nextSite = SIM_SITES[activeIndex];
-                
-                if (state.tracking.lastLat && state.tracking.lastLng) {
-                    const computedDistanceDelta = computeHaversineDistanceKm(state.tracking.lastLat, state.tracking.lastLng, nextSite.lat, nextSite.lng);
-                    state.tracking.totalDistance += computedDistanceDelta;
-                }
-
-                state.tracking.lastLat = nextSite.lat;
-                state.tracking.lastLng = nextSite.lng;
-                state.tracking.currentSiteIndex++;
-                
-                localStorage.setItem('fwm_tracking', JSON.stringify(state.tracking));
-                alert(`🚀 Punched In and Authenticated at location node point [${nextSite.name}]. Travel distance delta accrued to workspace analytics matrices tracking loop schemas!`);
-            } else {
-                alert("🏁 Terminated active work site operation routing. Device terminal status flipped back into standby IDLE.");
+            let usersList = JSON.parse(localStorage.getItem("registered_users")) || {};
+            let engCount = 0, hlprCount = 0;
+            for(let key in usersList) {
+                if(usersList[key].role === "Engineer") engCount++;
+                if(usersList[key].role === "Helper") hlprCount++;
             }
-
-            renderTravelEngineState();
+            document.getElementById("staff-count-engineer").innerText = engCount;
+            document.getElementById("staff-count-helper").innerText = hlprCount;
         }
 
-        function processTrackingDataPayload(lat, lng) {
-            state.tracking.isPunchedIn = !state.tracking.isPunchedIn;
+        function handleLogout() { localStorage.removeItem("active_user"); checkLoginSession(); }
 
-            if (state.tracking.isPunchedIn) {
-                if (state.tracking.lastLat && state.tracking.lastLng) {
-                    const distanceAccumulateDelta = computeHaversineDistanceKm(state.tracking.lastLat, state.tracking.lastLng, lat, lng);
-                    state.tracking.totalDistance += distanceAccumulateDelta;
-                }
-                state.tracking.lastLat = lat;
-                state.tracking.lastLng = lng;
-                localStorage.setItem('fwm_tracking', JSON.stringify(state.tracking));
-                alert("🚀 Dynamic Live GPS Location Node telemetry acquired! Active tracking array coordinates established on terminal.");
-            } else {
-                alert("🏁 Station tracking context decoupled. Node terminal tracking logged out safely to memory buffer arrays map.");
-            }
-
-            renderTravelEngineState();
-        }
-
-        function renderTravelEngineState() {
-            const statusBadge = document.getElementById('travel-status-badge');
-            const distanceCounter = document.getElementById('count-travel');
-            const buttonContainer = document.getElementById('punch-btn-container');
-            const logInfo = document.getElementById('gps-log-info');
-
-            distanceCounter.innerText = `${state.tracking.totalDistance.toFixed(2)} KM`;
-
-            if (state.tracking.isPunchedIn) {
-                statusBadge.innerText = "ACTIVE ON SITE";
-                statusBadge.className = "bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-sm animate-pulse shadow-xs";
-                buttonContainer.innerHTML = `
-                    <button onclick="triggerPunchIn()" class="bg-red-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-red-600 transition">
-                        <i class="fa-solid fa-circle-stop mr-1"></i> Punch Out Station
-                    </button>`;
-                logInfo.innerText = `Connected Node Latitude: ${state.tracking.lastLat ? state.tracking.lastLat.toFixed(4) : "Simulated Lat Matrix Axis"} | Longitude: ${state.tracking.lastLng ? state.tracking.lastLng.toFixed(4) : "Simulated Lng Matrix Axis"}`;
-                logInfo.className = "text-[10px] text-emerald-600 font-bold text-center tracking-wide";
-            } else {
-                statusBadge.innerText = "IDLE";
-                statusBadge.className = "bg-gray-100 text-gray-600 text-[10px] font-black px-2 py-0.5 rounded-sm";
-                buttonContainer.innerHTML = `
-                    <button onclick="triggerPunchIn()" class="bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-blue-700 transition">
-                        <i class="fa-solid fa-location-crosshairs mr-1"></i> Punch In Site ${String.fromCharCode(65 + (state.tracking.currentSiteIndex % 26))}
-                    </button>`;
-                logInfo.innerText = "Ready for next site navigation...";
-                logInfo.className = "text-[10px] text-gray-400 italic font-medium text-center";
-            }
-        }
-
-        // Mathematical Computation Pipeline Functions
-        function computeHaversineDistanceKm(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth's mean radius standard measurement scale parameter constant parameters variable definitions mapping
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        // UI Statistics Metrics Synchronization Elements Updates Processing Block Loop
-        function refreshGlobalCounters() {
-            const countInstallEl = document.getElementById('count-install');
-            const countSrEl = document.getElementById('count-sr');
-
-            const installCount = state.logs.filter(l => l.type === 'INSTALL').length;
-            const srCount = state.logs.filter(l => l.type === 'SR').length;
-
-            if (countInstallEl) countInstallEl.innerText = installCount;
-            if (countSrEl) countSrEl.innerText = srCount;
-            updateStaffCounters();
-        }
-
-        function updateStaffCounters() {
-            const adminCount = state.users.filter(u => u.role === 'Admin').length;
-            const engCount = state.users.filter(u => u.role === 'Engineer').length;
-            const helpCount = state.users.filter(u => u.role === 'Helper').length;
-
-            document.getElementById('staff-count-admin').innerText = adminCount;
-            document.getElementById('staff-count-engineer').innerText = engCount;
-            document.getElementById('staff-count-helper').innerText = helpCount;
-        }
-
-        // Administration Tab Functional Operations Processing Layout Core Logics Loops
-        function renderAdminWhitelistLedger() {
-            const container = document.getElementById('whitelist-render-container');
-            if (!container) return;
-            container.innerHTML = "";
-
-            state.whitelist.forEach(item => {
-                const rowHtml = `
-                    <div class="flex justify-between items-center text-xs bg-white p-2 border border-gray-100 rounded-md shadow-xs mb-1">
-                        <span class="font-bold text-gray-700 tracking-wide">+91 ${item.mobile}</span>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${item.role === 'Admin' ? 'bg-amber-50 text-amber-600 border-amber-200' : item.role === 'Engineer' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}">${item.role}</span>
-                            ${item.mobile !== "9142173747" ? `<button onclick="removeMobileFromWhitelist('${item.mobile}')" class="text-red-500 hover:text-red-700 font-semibold text-[11px]"><i class="fa-regular fa-trash-can"></i></button>` : ''}
-                        </div>
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', rowHtml);
-            });
-        }
-
-        function addMobileToWhitelist() {
-            const mobile = document.getElementById('admin-whitelist-mobile').value.trim();
-            const role = document.getElementById('admin-whitelist-role').value;
-
-            if (mobile.length !== 10 || isNaN(mobile)) {
-                alert("🚨 Operation Aborted: Target validation parameter configuration must match exactly a 10-digit telephone matrix array stream.");
-                return;
-            }
-
-            const alreadyPresent = state.whitelist.some(w => w.mobile === mobile);
-            if (alreadyPresent) {
-                alert("📝 Contact payload data node already mapped to access whitelist security clearance configuration profiles.");
-                return;
-            }
-
-            state.whitelist.push({ mobile, role });
-            localStorage.setItem('fwm_whitelist', JSON.stringify(state.whitelist));
-            document.getElementById('admin-whitelist-mobile').value = "";
-            renderAdminWhitelistLedger();
-            alert("🎯 Successfully Authorized! New staff coordinate number added to whitelist system blueprint arrays mapping layout.");
-        }
-
-        function removeMobileFromWhitelist(mobileNumber) {
-            if (confirm("⚠️ System modification warning: Block authentication routes and delete this mobile tracking registry target clearance item node?")) {
-                state.whitelist = state.whitelist.filter(w => w.mobile !== mobileNumber);
-                localStorage.setItem('fwm_whitelist', JSON.stringify(state.whitelist));
-                renderAdminWhitelistLedger();
-            }
-        }
-
-        function exportDataString() {
-            const dumpDataString = btoa(unescape(encodeURIComponent(JSON.stringify({ logs: state.logs, whitelist: state.whitelist, users: state.users }))));
-            navigator.clipboard.writeText(dumpDataString).then(() => {
-                alert("📋 System encrypted database state payload snapshot strings dump array data successfully copied straight to operating system context clipboard storage buffers arrays!");
-            }).catch(err => {
-                alert("Data Dump String Output Payload Array: \n\n" + dumpDataString);
-            });
-        }
-
-        function triggerSystemPurge() {
-            if (confirm("💥 CRITICAL ACTION WARNING: This will permanently wipe out all current localized installation transactions logs databases matrices, travel track history configuration parameters and operational states caches! Proceed?")) {
+        function clearAllData() {
+            if(confirm("Clear data completely?")) {
+                let users = localStorage.getItem("registered_users"), allowed = localStorage.getItem("allowed_engineers");
                 localStorage.clear();
-                alert("🔄 Local storage systems memory completely purged clean. Reloading app context environments baseline configurations...");
-                window.location.reload();
+                if(users) localStorage.setItem("registered_users", users);
+                if(allowed) localStorage.setItem("allowed_engineers", allowed);
+                checkLoginSession();
             }
         }
+
+        window.onload = function() {
+            checkLoginSession();
+            document.getElementById("current-date").innerText = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+        };
     </script>
 </body>
 </html>
