@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Report Export App</title>
+    
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        .btn-container { margin-bottom: 20px; }
+        .btn { padding: 10px 15px; margin-right: 10px; font-size: 14px; cursor: pointer; border: none; border-radius: 4px; color: white; }
+        .btn-pdf { background-color: #e74c3c; }
+        .btn-excel { background-color: #27ae60; }
+        #report-container { background: white; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <div class="btn-container">
+        <button class="btn btn-pdf" onclick="exportToPDF()">Export to PDF</button>
+        <button class="btn btn-excel" onclick="exportToExcel()">Export to Excel</button>
+    </div>
+
+    <div id="report-container">
+        <h2>Sales & Revenue Report</h2>
+        <p>Date: June 2026</p>
+        
+        <table id="report-table">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1001</td>
+                    <td>Laptop Pro</td>
+                    <td>Electronics</td>
+                    <td>$1200</td>
+                    <td>Delivered</td>
+                </tr>
+                <tr>
+                    <td>#1002</td>
+                    <td>Wireless Mouse</td>
+                    <td>Accessories</td>
+                    <td>$25</td>
+                    <td>Pending</td>
+                </tr>
+                <tr>
+                    <td>#1003</td>
+                    <td>HD Monitor</td>
+                    <td>Electronics</td>
+                    <td>$300</td>
+                    <td>Delivered</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // --- 1. HTML to PDF Function ---
+        function exportToPDF() {
+            // Jis element ko PDF banana hai use select karein
+            const element = document.getElementById('report-container');
+            
+            // PDF ki settings
+            const options = {
+                margin:       10,
+                filename:     'My_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 }, // Quality badhane ke liye
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // PDF generate aur download karein
+            html2pdf().set(options).from(element).save();
+        }
+
+        // --- 2. HTML Table to Excel Function ---
+        function exportToExcel() {
+            // Table element ko select karein
+            const table = document.getElementById('report-table');
+            
+            // Table ko Excel workbook mein convert karein
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Sales Report" });
+            
+            // Excel file download karein
+            XLSX.writeFile(workbook, 'My_Report.xlsx');
+        }
+    </script>
+
+</body>
+</html>
