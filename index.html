@@ -1,114 +1,815 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FiberPro Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
-</head>
-<body class="bg-gray-50 pb-20">
-
-    <div id="auth-screen" class="fixed inset-0 bg-blue-900 z-50 flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-8 rounded-3xl shadow-2xl text-center">
-            <h1 class="text-xl font-bold text-blue-900 mb-6">FiberPro Admin/Staff</h1>
-            <input id="login-mobile" type="tel" placeholder="Mobile Number" class="w-full p-3 mb-4 rounded-xl border border-gray-200 outline-none">
-            <input id="login-pass" type="password" placeholder="Password/PIN" class="w-full p-3 mb-6 rounded-xl border border-gray-200 outline-none">
-            <button onclick="auth()" class="w-full bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700">LOGIN / ACCESS</button>
-        </div>
-    </div>
-
-    <div id="main-app" class="hidden">
-        <nav class="bg-white p-4 shadow-sm border-b sticky top-0 flex justify-between items-center">
-            <h2 class="font-black text-blue-900">FiberPro</h2>
-            <button onclick="resetAdminPin()" class="text-[10px] bg-red-100 text-red-600 px-3 py-1 rounded-full font-bold">Change PIN</button>
-        </nav>
-
-        <main class="p-4 space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-blue-600 text-white p-4 rounded-2xl">
-                    <p class="text-[10px] opacity-80">Tasks Productivity</p>
-                    <h3 id="stat-tasks" class="text-2xl font-black">0</h3>
+                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
+                        Cancel
+                    </button>
+                    <button onclick="saveInstallation()" class="w-1/2 bg-blue-600 text-white font-bold rounded-xl p-3 hover:bg-blue-700 shadow-md transition text-center text-xs">
+                        Save Installation <i class="fa-solid fa-check ml-1"></i>
+                    </button>
                 </div>
-                <button onclick="exportData()" class="bg-emerald-600 text-white p-4 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-file-export mr-2"></i> Export Excel
+            </div>
+
+            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-red-600 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                    <h2 class="font-bold text-base">New Service Request (SR)</h2>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">ISP Selection / Custom Name</label>
+                    <div class="space-y-2">
+                        <select id="sr-isp-select" onchange="handleIspToggle('sr')" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                            <option value="GTPL Broadband">GTPL Broadband</option>
+                            <option value="Airtel Stream">Airtel Stream</option>
+                            <option value="Jio Fiber">Jio Fiber</option>
+                            <option value="Tata Play Fiber">Tata Play Fiber</option>
+                            <option value="CUSTOM">-- Type Manual ISP Name --</option>
+                        </select>
+                        <input id="sr-isp-manual" type="text" placeholder="Type ISP Name Manually Here" class="hidden w-full border border-amber-300 bg-amber-50/50 rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500 font-semibold">
+                    </div>
+                </div>
+                <input id="sr-customer" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-dsl" type="text" placeholder="DSL ID / User ID / Ticket No" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                <input id="sr-mobile" type="tel" maxlength="10" placeholder="Customer Contact Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
+                
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Fault Classification</label>
+                    <select id="sr-fault-type" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
+                        <option value="Main Feed Fiber Cut">Main Feed Fiber Cut</option>
+                        <option value="Fatbox Port Red Light Loss">Fatbox Port Red Light Loss</option>
+                        <option value="ONT Router Damage / No Power">ONT Router Damage / No Power</option>
+                        <option value="Drop Wire Patch Cord Broken">Drop Wire Patch Cord Broken</option>
+                        <option value="High Attenuation Optical Loss">High Attenuation (> -28dBm) Optical Loss</option>
+                    </select>
+                </div>
+                <textarea id="sr-address" rows="2" placeholder="Fault Incident Address / Location" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
+                        Cancel
+                    </button>
+                    <button onclick="saveSRReport()" class="w-1/2 bg-red-600 text-white font-bold rounded-xl p-3 hover:bg-red-700 shadow-md transition text-center text-xs">
+                        Save SR Log <i class="fa-solid fa-check ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex items-center space-x-2 text-emerald-600 border-b border-gray-100 pb-3 mb-1">
+                    <i class="fa-solid fa-circle-check text-lg"></i>
+                    <h2 class="font-bold text-base">Fatbox Restoration Verification</h2>
+                </div>
+                
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Fatbox Identifier / Location Tag</label>
+                    <input id="res-fatbox-id" type="text" placeholder="e.g., FTB-MUM-04 / Pole-23" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Core No / Color</label>
+                        <input id="res-core" type="text" placeholder="e.g., Core 4 Blue" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Optical Power Level</label>
+                        <input id="res-power" type="text" placeholder="e.g., -21.40 dBm" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Action Undertaken</label>
+                    <select id="res-action" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-emerald-500">
+                        <option value="Splicing Mechanical Joint Done">Splicing Mechanical Joint Done</option>
+                        <option value="Fatbox Splitter Replaced">Fatbox Splitter Replaced</option>
+                        <option value="Patch Cord Swapped inside Box">Patch Cord Swapped inside Box</option>
+                        <option value="Overhead Fiber Span Re-pulled">Overhead Fiber Span Re-pulled</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Restoration Status Summary Remarks</label>
+                    <textarea id="res-remarks" rows="2" placeholder="Enter clear summary notes..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="switchTab('home')" class="w-1/2 bg-gray-200 text-gray-700 font-bold rounded-xl p-3 hover:bg-gray-300 transition text-center text-xs">
+                        Cancel
+                    </button>
+                    <button onclick="saveRestoration()" class="w-1/2 bg-emerald-600 text-white font-bold rounded-xl p-3 hover:bg-emerald-700 shadow-md transition text-center text-xs">
+                        Submit Audit <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="tab-data" class="page-tab space-y-4">
+                <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                    <h2 class="font-bold text-sm text-gray-700"><i class="fa-solid fa-server mr-1 text-indigo-500"></i> Local Activity Logs Ledger</h2>
+                    <span id="log-count-badge" class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Records</span>
+                </div>
+
+                <div class="flex gap-1 bg-white p-1 rounded-lg border border-gray-100 text-xs shadow-xs font-semibold">
+                    <button onclick="filterLogs('ALL')" id="filter-all" class="flex-1 py-1.5 text-center rounded-md bg-blue-600 text-white transition">All</button>
+                    <button onclick="filterLogs('INSTALL')" id="filter-install" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Installs</button>
+                    <button onclick="filterLogs('SR')" id="filter-sr" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Faults</button>
+                    <button onclick="filterLogs('RESTORE')" id="filter-restore" class="flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition">Audits</button>
+                </div>
+
+                <div id="logs-render-target" class="space-y-3">
+                    </div>
+            </div>
+
+            <div id="tab-admin" class="page-tab space-y-4">
+                <div class="bg-amber-500 text-white p-4 rounded-xl shadow-sm space-y-1">
+                    <h2 class="text-base font-black tracking-wide"><i class="fa-solid fa-user-shield"></i> Administration & Deployment Control</h2>
+                    <p class="text-[11px] text-amber-100">Manage approved staff registry, credentials authorization, and core application schemas.</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-xs space-y-3">
+                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide border-b border-gray-100 pb-1.5"><i class="fa-solid fa-address-book text-amber-500 mr-1"></i> Authorize Mobile Database</h3>
+                    
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <input id="admin-whitelist-mobile" type="tel" maxlength="10" placeholder="10 Digit Number" class="w-full text-xs border rounded-lg p-2.5 outline-none font-semibold">
+                        </div>
+                        <div class="w-1/3">
+                            <select id="admin-whitelist-role" class="w-full text-xs border rounded-lg p-2.5 bg-white font-semibold outline-none">
+                                <option value="Engineer">Engineer</option>
+                                <option value="Helper">Helper</option>
+                            </select>
+                        </div>
+                        <button onclick="addMobileToWhitelist()" class="bg-amber-500 text-white font-bold px-3 py-2.5 rounded-lg text-xs hover:bg-amber-600 transition shadow">
+                            Add
+                        </button>
+                    </div>
+
+                    <div class="space-y-1 max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50/50" id="whitelist-render-container">
+                        </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-xs space-y-2.5">
+                    <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide border-b border-gray-100 pb-1.5 text-red-600"><i class="fa-solid fa-radiation"></i> Destructive Actions & Operations</h3>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportDataString()" class="w-full text-[11px] bg-slate-800 text-white font-bold p-3 rounded-xl hover:bg-slate-900 transition flex items-center justify-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-copy"></i> Copy Database Dump
+                        </button>
+                        <button onclick="triggerSystemPurge()" class="w-full text-[11px] bg-red-600 text-white font-bold p-3 rounded-xl hover:bg-red-700 transition flex items-center justify-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-trash-can"></i> Reset App Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-blue-100 shadow-xl py-2 px-4 z-50 shrink-0">
+            <div class="max-w-md mx-auto flex justify-around items-center">
+                <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-0.5 text-blue-600 transition group">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span class="text-[10px] font-bold tracking-tight">Console</span>
+                </button>
+                <button onclick="switchTab('install')" id="nav-install" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-blue-500 transition group">
+                    <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
+                    <span class="text-[10px] font-bold tracking-tight">Install</span>
+                </button>
+                <button onclick="switchTab('sr')" id="nav-sr" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-red-500 transition group">
+                    <i class="fa-solid fa-phone-flip text-lg"></i>
+                    <span class="text-[10px] font-bold tracking-tight">SR Fault</span>
+                </button>
+                <button onclick="switchTab('restore')" id="nav-restore" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-emerald-500 transition group">
+                    <i class="fa-solid fa-signal text-lg"></i>
+                    <span class="text-[10px] font-bold tracking-tight">Restore</span>
+                </button>
+                <button onclick="switchTab('data'); loadCollectedData();" id="nav-data" class="flex flex-col items-center space-y-0.5 text-gray-400 hover:text-indigo-500 transition group">
+                    <i class="fa-solid fa-database text-lg"></i>
+                    <span class="text-[10px] font-bold tracking-tight">Ledger</span>
                 </button>
             </div>
-
-            <div class="bg-white p-5 rounded-3xl border shadow-sm">
-                <h3 class="font-bold text-sm mb-3">Assign Task to Employee</h3>
-                <input id="t-name" placeholder="Employee Name" class="w-full p-2 mb-2 bg-gray-50 rounded-lg outline-none">
-                <input id="t-work" placeholder="Task Details" class="w-full p-2 mb-2 bg-gray-50 rounded-lg outline-none">
-                <button onclick="addTask()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-sm font-bold">ASSIGN TASK</button>
-            </div>
-
-            <div class="bg-white rounded-3xl border overflow-hidden shadow-sm">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-gray-50 border-b">
-                        <tr>
-                            <th class="p-3">Staff</th>
-                            <th class="p-3">Task</th>
-                            <th class="p-3">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="data-body"></tbody>
-                </table>
-            </div>
-        </main>
+        </footer>
     </div>
 
     <script>
-        // Password Management
-        function resetAdminPin() {
-            let p = prompt("Set New Admin PIN:");
-            if(p) { localStorage.setItem('admin_pin', p); alert("PIN Updated!"); }
+        // System wide initial storage states schemas configurations
+        const DEFAULT_WHITELIST = [
+            { mobile: "9988776655", role: "Engineer" },
+            { mobile: "8877665544", role: "Helper" },
+            { mobile: "9142173747", role: "Admin" } // App Owner Standard Entry
+        ];
+
+        let state = {
+            currentUser: null,
+            whitelist: JSON.parse(localStorage.getItem('fwm_whitelist')) || DEFAULT_WHITELIST,
+            users: JSON.parse(localStorage.getItem('fwm_users')) || [
+                { mobile: "9142173747", name: "Jatashankar Yadav", role: "Admin", pin: "1234" }
+            ],
+            logs: JSON.parse(localStorage.getItem('fwm_logs')) || [],
+            tracking: JSON.parse(localStorage.getItem('fwm_tracking')) || {
+                isPunchedIn: false,
+                totalDistance: 0.00,
+                lastLat: null,
+                lastLng: null,
+                currentSiteIndex: 0
+            },
+            currentFilter: "ALL"
+        };
+
+        // Simulated Site Geo Locations Coordinates Matrix Array List sequence for Travel Testing Engine simulations loop
+        const SIM_SITES = [
+            { name: "Main Hub Alpha Node", lat: 26.1200, lng: 85.3600 },
+            { name: "Fatbox Distribution Sector B", lat: 26.1325, lng: 85.3720 },
+            { name: "Sub-Station Junction Delta Cluster", lat: 26.1480, lng: 85.3590 },
+            { name: "Commercial High-Rise Splitter Node V", lat: 26.1150, lng: 85.3910 }
+        ];
+
+        // System Core Lifecycle Initialization on Document Load
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-IN', {
+                weekday: 'short', day: '2-digit', month: 'short', year: 'numeric'
+            });
+            
+            // Check for persistent user engine operational session state caches
+            const savedSession = localStorage.getItem('fwm_session');
+            if (savedSession) {
+                state.currentUser = JSON.parse(savedSession);
+                bootApplicationUI();
+            }
+            updateStaffCounters();
+        });
+
+        // Interface Authorization Window Switch Mechanics
+        function toggleAuthForm(mode) {
+            document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+            document.getElementById('btn-tab-login').className = "w-1/2 pb-2 text-gray-400";
+            document.getElementById('btn-tab-register').className = "w-1/2 pb-2 text-gray-400";
+
+            if (mode === 'login') {
+                document.getElementById('form-login').classList.add('active');
+                document.getElementById('btn-tab-login').className = "w-1/2 pb-2 text-blue-600 border-b-2 border-blue-600 font-bold";
+            } else {
+                document.getElementById('form-register').classList.add('active');
+                document.getElementById('btn-tab-register').className = "w-1/2 pb-2 text-emerald-600 border-b-2 border-emerald-600 font-bold";
+            }
+            
+            // Check and display emergency administrative override links when choosing roles
+            const selectedRole = document.getElementById('login-role').value;
+            toggleResetTriggerVisibility(selectedRole);
         }
 
-        // Logic
-        function auth() {
-            const m = document.getElementById('login-mobile').value;
-            const p = document.getElementById('login-pass').value;
-            // Simplified check
+        document.getElementById('login-role').addEventListener('change', (e) => {
+            toggleResetTriggerVisibility(e.target.value);
+        });
+
+        function toggleResetTriggerVisibility(role) {
+            const container = document.getElementById('reset-trigger-container');
+            if (role === 'Admin') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // Operational Authentication Business Logics Processing Loop Rules
+        function handleLogin() {
+            const role = document.getElementById('login-role').value;
+            const mobile = document.getElementById('login-mobile').value.trim();
+            const pin = document.getElementById('login-password').value;
+
+            if (mobile.length !== 10 || isNaN(mobile)) {
+                alert("🚨 Validation Error: system requires a clean, valid 10-digit mobile identification number sequence.");
+                return;
+            }
+            if (!pin) {
+                alert("🚨 Configuration missing: Verification Password / Security PIN matrix data slot empty.");
+                return;
+            }
+
+            // Database Search Match Engine Query
+            const accountMatch = state.users.find(u => u.mobile === mobile && u.role === role && u.pin === pin);
+
+            if (accountMatch) {
+                state.currentUser = accountMatch;
+                localStorage.setItem('fwm_session', JSON.stringify(accountMatch));
+                bootApplicationUI();
+                alert(`✨ Access Granted! Node terminal established for ${accountMatch.name} (${accountMatch.role}).`);
+            } else {
+                alert("❌ Authentication Failure: Provided mobile payload coordinates match no records inside security perimeter schemas.");
+            }
+        }
+
+        function handleRegister() {
+            const role = document.getElementById('reg-role').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const mobile = document.getElementById('reg-mobile').value.trim();
+            const pin = document.getElementById('reg-password').value;
+
+            if (!name || mobile.length !== 10 || !pin) {
+                alert("🚨 Missing payload metadata: Make sure all input parameters fields are fully populated.");
+                return;
+            }
+
+            // Verify white-listed system entry credentials inside control registry framework
+            const isAuthorized = state.whitelist.some(w => w.mobile === mobile && w.role === role);
+            if (!isAuthorized) {
+                alert("⛔ Authorization Exception Rejected: This terminal contact framework number is absent from administrative pre-approval ledger arrays.");
+                return;
+            }
+
+            // Check if user already exists
+            const existingUser = state.users.some(u => u.mobile === mobile && u.role === role);
+            if (existingUser) {
+                alert("🛡️ Security Exception: Account registration node signature already alive on this pipeline tracking array.");
+                return;
+            }
+
+            // Register account node mapping layout elements sequence arrays
+            const newWorker = { mobile, name, role, pin };
+            state.users.push(newWorker);
+            localStorage.setItem('fwm_users', JSON.stringify(state.users));
+
+            alert(`✅ Account Registry Confirmed! Switch to login interface panel layout node parameters for accessing secure session tracking.`);
+            toggleAuthForm('login');
+            document.getElementById('login-mobile').value = mobile;
+            updateStaffCounters();
+        }
+
+        function triggerMasterReset() {
+            if (confirm("⚠️ System override sequence verification requested: Do you wish to reset the Master Admin Password database mapping layout configuration?")) {
+                state.users = state.users.map(u => {
+                    if (u.mobile === "9142173747" && u.role === "Admin") {
+                        u.pin = "1234"; // Fallback to standard baseline structural pin matrix
+                    }
+                    return u;
+                });
+                localStorage.setItem('fwm_users', JSON.stringify(state.users));
+                alert("🔄 Baseline Master Security Matrix reset back to factory standard parameter coordinates config: PIN -> 1234");
+            }
+        }
+
+        function handleLogout() {
+            if (confirm("🔒 Terminate system terminal tracking context parameters and wipe runtime volatile memory caches?")) {
+                localStorage.removeItem('fwm_session');
+                state.currentUser = null;
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-content').style.display = 'none';
+            }
+        }
+
+        // Framework UI Controller Routing Pipeline Actions Logic Engines
+        function bootApplicationUI() {
             document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            loadData();
+            document.getElementById('app-content').style.display = 'flex';
+            
+            // Header context profile status rendering parameters
+            document.getElementById('user-display').innerText = `${state.currentUser.role}: ${state.currentUser.name} (${state.currentUser.mobile})`;
+            
+            // Toggle visibility parameters depending on authorization metrics profiles definitions
+            const adminGateBtn = document.getElementById('admin-gate-btn');
+            if (state.currentUser.role === 'Admin') {
+                adminGateBtn.classList.remove('hidden');
+            } else {
+                adminGateBtn.classList.add('hidden');
+            }
+
+            switchTab('home');
+            refreshGlobalCounters();
+            renderTravelEngineState();
+            renderAdminWhitelistLedger();
         }
 
-        function addTask() {
-            let n = document.getElementById('t-name').value;
-            let w = document.getElementById('t-work').value;
-            let list = JSON.parse(localStorage.getItem('f_tasks') || '[]');
-            list.push({n, w, d: new Date().toLocaleDateString()});
-            localStorage.setItem('f_tasks', JSON.stringify(list));
-            loadData();
-            alert("Task Assigned & Reminder Sent!");
+        function switchTab(targetTabId) {
+            document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${targetTabId}`).classList.add('active');
+
+            // Reset footer elements styling context array configurations highlights
+            const footerButtons = document.querySelectorAll('footer button');
+            footerButtons.forEach(btn => {
+                btn.className = "flex flex-col items-center space-y-0.5 text-gray-400 hover:text-blue-500 transition group";
+            });
+
+            // Highlight tracking element configurations mapping definitions
+            const activeNavButton = document.getElementById(`nav-${targetTabId}`);
+            if (activeNavButton) {
+                if (targetTabId === 'sr') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-red-600 font-bold";
+                else if (targetTabId === 'restore') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-emerald-600 font-bold";
+                else if (targetTabId === 'data') activeNavButton.className = "flex flex-col items-center space-y-0.5 text-indigo-600 font-bold";
+                else activeNavButton.className = "flex flex-col items-center space-y-0.5 text-blue-600 font-bold";
+            }
         }
 
-        function loadData() {
-            let list = JSON.parse(localStorage.getItem('f_tasks') || '[]');
-            document.getElementById('stat-tasks').innerText = list.length;
-            let html = list.map(i => `
-                <tr class="border-b">
-                    <td class="p-3 font-bold">${i.n}</td>
-                    <td class="p-3">${i.w}</td>
-                    <td class="p-3 text-gray-400">${i.d}</td>
-                </tr>
-            `).join('');
-            document.getElementById('data-body').innerHTML = html;
+        function handleIspToggle(formPrefix) {
+            const selector = document.getElementById(`${formPrefix}-isp-select`);
+            const manualInput = document.getElementById(`${formPrefix}-isp-manual`);
+            if (selector.value === 'CUSTOM') {
+                manualInput.classList.remove('hidden');
+            } else {
+                manualInput.classList.add('hidden');
+            }
         }
 
-        function exportData() {
-            let list = JSON.parse(localStorage.getItem('f_tasks') || '[]');
-            let csv = "Name,Task,Date\n" + list.map(i => `${i.n},${i.w},${i.d}`).join('\n');
-            let blob = new Blob([csv], {type: 'text/csv'});
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url; a.download = "Report.csv"; a.click();
+        // Data Storage CRUD Pipeline Transaction Routines Processing
+        function saveInstallation() {
+            const ispSelect = document.getElementById('ins-isp-select').value;
+            const ispManual = document.getElementById('ins-isp-manual').value.trim();
+            const customer = document.getElementById('ins-customer').value.trim();
+            const dsl = document.getElementById('ins-dsl').value.trim();
+            const mobile = document.getElementById('ins-mobile').value.trim();
+            const address = document.getElementById('ins-address').value.trim();
+
+            const finalIspName = ispSelect === 'CUSTOM' ? ispManual : ispSelect;
+
+            if (!finalIspName || !customer || !dsl || mobile.length !== 10 || !address) {
+                alert("🚨 Schema Constraint Violation: Please clean and complete all validation input parameters fields accurately.");
+                return;
+            }
+
+            const payload = {
+                id: "INST-" + Date.now(),
+                type: "INSTALL",
+                isp: finalIspName,
+                customer, dsl, mobile, address,
+                timestamp: new Date().toISOString(),
+                loggedBy: state.currentUser.name,
+                loggedByMobile: state.currentUser.mobile
+            };
+
+            commitLogToStorage(payload);
+            clearFormFields(['ins-isp-manual', 'ins-customer', 'ins-dsl', 'ins-mobile', 'ins-address']);
+            document.getElementById('ins-isp-select').value = "GTPL Broadband";
+            handleIspToggle('ins');
+            alert("🎯 Installation Record persistent state mapped cleanly into central structural telemetry arrays ledger ledger storage!");
+            switchTab('home');
+        }
+
+        function saveSRReport() {
+            const ispSelect = document.getElementById('sr-isp-select').value;
+            const ispManual = document.getElementById('sr-isp-manual').value.trim();
+            const customer = document.getElementById('sr-customer').value.trim();
+            const dsl = document.getElementById('sr-dsl').value.trim();
+            const mobile = document.getElementById('sr-mobile').value.trim();
+            const faultType = document.getElementById('sr-fault-type').value;
+            const address = document.getElementById('sr-address').value.trim();
+
+            const finalIspName = ispSelect === 'CUSTOM' ? ispManual : ispSelect;
+
+            if (!finalIspName || !customer || !dsl || mobile.length !== 10 || !address) {
+                alert("🚨 Schema Constraint Violation: Service fault data mapping parameters field inputs contains validation empty sets.");
+                return;
+            }
+
+            const payload = {
+                id: "SR-" + Date.now(),
+                type: "SR",
+                isp: finalIspName,
+                customer, dsl, mobile, faultType, address,
+                timestamp: new Date().toISOString(),
+                loggedBy: state.currentUser.name,
+                loggedByMobile: state.currentUser.mobile
+            };
+
+            commitLogToStorage(payload);
+            clearFormFields(['sr-isp-manual', 'sr-customer', 'sr-dsl', 'sr-mobile', 'sr-address']);
+            document.getElementById('sr-isp-select').value = "GTPL Broadband";
+            handleIspToggle('sr');
+            alert("🚨 Service Request Fault ticket created successfully and tracked to operational logs arrays database.");
+            switchTab('home');
+        }
+
+        function saveRestoration() {
+            const fatboxId = document.getElementById('res-fatbox-id').value.trim();
+            const coreNo = document.getElementById('res-core').value.trim();
+            const power = document.getElementById('res-power').value.trim();
+            const action = document.getElementById('res-action').value;
+            const remarks = document.getElementById('res-remarks').value.trim();
+
+            if (!fatboxId || !coreNo || !power || !remarks) {
+                alert("🚨 Schema Error: Fatbox alignment parameters validation telemetry metrics data slots cannot accept empty variables values.");
+                return;
+            }
+
+            const payload = {
+                id: "RESTORE-" + Date.now(),
+                type: "RESTORE",
+                fatboxId, coreNo, power, action, remarks,
+                timestamp: new Date().toISOString(),
+                loggedBy: state.currentUser.name,
+                loggedByMobile: state.currentUser.mobile
+            };
+
+            commitLogToStorage(payload);
+            clearFormFields(['res-fatbox-id', 'res-core', 'res-power', 'res-remarks']);
+            alert("🌿 Fatbox Restoration Audit Log uploaded completely and catalogued to the active local transaction storage matrices!");
+            switchTab('home');
+        }
+
+        function commitLogToStorage(payload) {
+            state.logs.unshift(payload); // Push immediately to head of historical arrays sequence 
+            localStorage.setItem('fwm_logs', JSON.stringify(state.logs));
+            refreshGlobalCounters();
+        }
+
+        function clearFormFields(fieldsArray) {
+            fieldsArray.forEach(id => document.getElementById(id).value = "");
+        }
+
+        // Ledger Feed Renderer Engine Blocks & Filters Pipelines
+        function loadCollectedData() {
+            switchTab('data');
+            renderLogsLedgerView();
+        }
+
+        function filterLogs(filterType) {
+            state.currentFilter = filterType;
+            
+            // Style configuration mapping loop reset framework mechanics
+            const filterButtons = ['all', 'install', 'sr', 'restore'];
+            filterButtons.forEach(btn => {
+                const el = document.getElementById(`filter-${btn}`);
+                if (btn.toUpperCase() === filterType) {
+                    el.className = "flex-1 py-1.5 text-center rounded-md bg-blue-600 text-white transition font-bold shadow-xs";
+                } else {
+                    el.className = "flex-1 py-1.5 text-center rounded-md text-gray-500 hover:bg-gray-50 transition font-medium";
+                }
+            });
+
+            renderLogsLedgerView();
+        }
+
+        function renderLogsLedgerView() {
+            const container = document.getElementById('logs-render-target');
+            container.innerHTML = "";
+
+            const filteredLogs = state.logs.filter(log => {
+                if (state.currentFilter === "ALL") return true;
+                return log.type === state.currentFilter;
+            });
+
+            document.getElementById('log-count-badge').innerText = `${filteredLogs.length} Records`;
+
+            if (filteredLogs.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl p-8 text-center text-gray-400 text-xs border border-dashed border-gray-200">
+                        <i class="fa-solid fa-folder-open text-2xl mb-2 text-gray-300 block"></i>
+                        No operational activity data files records found corresponding to the active log segment filters configuration.
+                    </div>`;
+                return;
+            }
+
+            filteredLogs.forEach(log => {
+                let cardHtml = "";
+                const logTime = new Date(log.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + " | " + new Date(log.timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                
+                if (log.type === 'INSTALL') {
+                    cardHtml = `
+                        <div class="bg-white p-4 rounded-xl border-l-4 border-blue-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
+                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="bg-blue-50 text-blue-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-blue-100 uppercase">INSTALLATION</span>
+                                <span class="text-xs font-black text-gray-800">${log.isp}</span>
+                            </div>
+                            <div class="text-xs space-y-1 text-gray-600">
+                                <p class="font-bold text-gray-900"><i class="fa-solid fa-user mr-1 text-gray-400 text-[10px]"></i> Client: ${log.customer} </p>
+                                <p><i class="fa-solid fa-fingerprint mr-1 text-gray-400 text-[10px]"></i> User/DSL ID: <b class="text-slate-800 select-all">${log.dsl}</b></p>
+                                <p><i class="fa-solid fa-location-dot mr-1 text-gray-400 text-[10px]"></i> Loc: ${log.address}</p>
+                            </div>
+                            <div class="flex justify-between items-center border-t border-gray-50 pt-2 mt-1">
+                                <span class="text-[9px] text-gray-400 font-semibold">Tech: ${log.loggedBy}</span>
+                                <a href="tel:${log.mobile}" class="bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-black px-2.5 py-1 rounded-md flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-phone"></i> Call Customer
+                                </a>
+                            </div>
+                        </div>`;
+                } else if (log.type === 'SR') {
+                    cardHtml = `
+                        <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
+                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="bg-red-50 text-red-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-red-100 uppercase">FAULT TICKET</span>
+                                <span class="text-xs font-black text-gray-800">${log.isp}</span>
+                            </div>
+                            <div class="text-xs space-y-1 text-gray-600">
+                                <p class="font-bold text-red-700"><i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> Error: ${log.faultType} </p>
+                                <p class="font-bold text-gray-900"><i class="fa-solid fa-user mr-1 text-gray-400 text-[10px]"></i> Caller: ${log.customer} (DSL: ${log.dsl})</p>
+                                <p><i class="fa-solid fa-location-dot mr-1 text-gray-400 text-[10px]"></i> Loc: ${log.address}</p>
+                            </div>
+                            <div class="flex justify-between items-center border-t border-gray-50 pt-2 mt-1">
+                                <span class="text-[9px] text-gray-400 font-semibold">Tech: ${log.loggedBy}</span>
+                                <a href="tel:${log.mobile}" class="bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-black px-2.5 py-1 rounded-md flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-phone"></i> Call Line
+                                </a>
+                            </div>
+                        </div>`;
+                } else if (log.type === 'RESTORE') {
+                    cardHtml = `
+                        <div class="bg-white p-4 rounded-xl border-l-4 border-emerald-500 border-y border-r border-gray-100 shadow-xs space-y-2 relative">
+                            <span class="absolute top-3 right-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight">${logTime}</span>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="bg-emerald-50 text-emerald-600 font-bold text-[9px] px-1.5 py-0.5 rounded-sm border border-emerald-100 uppercase">FATBOX AUDIT</span>
+                                <span class="text-xs font-black text-gray-800 text-emerald-700"><i class="fa-solid fa-box text-[11px] mr-0.5"></i> ${log.fatboxId}</span>
+                            </div>
+                            <div class="text-xs space-y-1 text-gray-600">
+                                <p><i class="fa-solid fa-bolt mr-1 text-gray-400 text-[10px]"></i> Power Attenuation Level: <b class="text-gray-900">${log.power}</b></p>
+                                <p><i class="fa-solid fa-bezier-curve mr-1 text-gray-400 text-[10px]"></i> Matrix Splitter Path: Core Info -> ${log.coreNo}</p>
+                                <p class="bg-gray-50 p-1.5 rounded text-gray-500 italic text-[11px] mt-1 border border-gray-100"><b>Action:</b> ${log.action}. ${log.remarks}</p>
+                            </div>
+                            <div class="text-[9px] text-gray-400 font-semibold pt-1 border-t border-gray-50 text-right">Verified Auditor: ${log.loggedBy}</div>
+                        </div>`;
+                }
+
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        // Auto GPS Tracking Logic Engine & Distance Calculations (Haversine Formula Implementation)
+        function triggerPunchIn() {
+            if (!navigator.geolocation) {
+                // Device interface failure logic fallback handler loop
+                alert("💻 Geolocation Engine hardware API missing from this terminal interface framework environment. Initiating high-fidelity route coordinate simulation matrix mapping loop sequence...");
+                executeMockLocationIntervalEngine();
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    processTrackingDataPayload(position.coords.latitude, position.coords.longitude);
+                },
+                (error) => {
+                    console.warn("⚠️ Device Native GPS hardware channel error parameters block context, utilizing automated route simulation path engine tracking array calculations.");
+                    executeMockLocationIntervalEngine();
+                },
+                { enableHighAccuracy: true, timeout: 6000 }
+            );
+        }
+
+        function executeMockLocationIntervalEngine() {
+            state.tracking.isPunchedIn = !state.tracking.isPunchedIn;
+            
+            if (state.tracking.isPunchedIn) {
+                // Punch in sequence context array setup logic processing triggers
+                const activeIndex = state.tracking.currentSiteIndex % SIM_SITES.length;
+                const nextSite = SIM_SITES[activeIndex];
+                
+                if (state.tracking.lastLat && state.tracking.lastLng) {
+                    const computedDistanceDelta = computeHaversineDistanceKm(state.tracking.lastLat, state.tracking.lastLng, nextSite.lat, nextSite.lng);
+                    state.tracking.totalDistance += computedDistanceDelta;
+                }
+
+                state.tracking.lastLat = nextSite.lat;
+                state.tracking.lastLng = nextSite.lng;
+                state.tracking.currentSiteIndex++;
+                
+                localStorage.setItem('fwm_tracking', JSON.stringify(state.tracking));
+                alert(`🚀 Punched In and Authenticated at location node point [${nextSite.name}]. Travel distance delta accrued to workspace analytics matrices tracking loop schemas!`);
+            } else {
+                alert("🏁 Terminated active work site operation routing. Device terminal status flipped back into standby IDLE.");
+            }
+
+            renderTravelEngineState();
+        }
+
+        function processTrackingDataPayload(lat, lng) {
+            state.tracking.isPunchedIn = !state.tracking.isPunchedIn;
+
+            if (state.tracking.isPunchedIn) {
+                if (state.tracking.lastLat && state.tracking.lastLng) {
+                    const distanceAccumulateDelta = computeHaversineDistanceKm(state.tracking.lastLat, state.tracking.lastLng, lat, lng);
+                    state.tracking.totalDistance += distanceAccumulateDelta;
+                }
+                state.tracking.lastLat = lat;
+                state.tracking.lastLng = lng;
+                localStorage.setItem('fwm_tracking', JSON.stringify(state.tracking));
+                alert("🚀 Dynamic Live GPS Location Node telemetry acquired! Active tracking array coordinates established on terminal.");
+            } else {
+                alert("🏁 Station tracking context decoupled. Node terminal tracking logged out safely to memory buffer arrays map.");
+            }
+
+            renderTravelEngineState();
+        }
+
+        function renderTravelEngineState() {
+            const statusBadge = document.getElementById('travel-status-badge');
+            const distanceCounter = document.getElementById('count-travel');
+            const buttonContainer = document.getElementById('punch-btn-container');
+            const logInfo = document.getElementById('gps-log-info');
+
+            distanceCounter.innerText = `${state.tracking.totalDistance.toFixed(2)} KM`;
+
+            if (state.tracking.isPunchedIn) {
+                statusBadge.innerText = "ACTIVE ON SITE";
+                statusBadge.className = "bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-sm animate-pulse shadow-xs";
+                buttonContainer.innerHTML = `
+                    <button onclick="triggerPunchIn()" class="bg-red-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-red-600 transition">
+                        <i class="fa-solid fa-circle-stop mr-1"></i> Punch Out Station
+                    </button>`;
+                logInfo.innerText = `Connected Node Latitude: ${state.tracking.lastLat ? state.tracking.lastLat.toFixed(4) : "Simulated Lat Matrix Axis"} | Longitude: ${state.tracking.lastLng ? state.tracking.lastLng.toFixed(4) : "Simulated Lng Matrix Axis"}`;
+                logInfo.className = "text-[10px] text-emerald-600 font-bold text-center tracking-wide";
+            } else {
+                statusBadge.innerText = "IDLE";
+                statusBadge.className = "bg-gray-100 text-gray-600 text-[10px] font-black px-2 py-0.5 rounded-sm";
+                buttonContainer.innerHTML = `
+                    <button onclick="triggerPunchIn()" class="bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-blue-700 transition">
+                        <i class="fa-solid fa-location-crosshairs mr-1"></i> Punch In Site ${String.fromCharCode(65 + (state.tracking.currentSiteIndex % 26))}
+                    </button>`;
+                logInfo.innerText = "Ready for next site navigation...";
+                logInfo.className = "text-[10px] text-gray-400 italic font-medium text-center";
+            }
+        }
+
+        // Mathematical Computation Pipeline Functions
+        function computeHaversineDistanceKm(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's mean radius standard measurement scale parameter constant parameters variable definitions mapping
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // UI Statistics Metrics Synchronization Elements Updates Processing Block Loop
+        function refreshGlobalCounters() {
+            const countInstallEl = document.getElementById('count-install');
+            const countSrEl = document.getElementById('count-sr');
+
+            const installCount = state.logs.filter(l => l.type === 'INSTALL').length;
+            const srCount = state.logs.filter(l => l.type === 'SR').length;
+
+            if (countInstallEl) countInstallEl.innerText = installCount;
+            if (countSrEl) countSrEl.innerText = srCount;
+            updateStaffCounters();
+        }
+
+        function updateStaffCounters() {
+            const adminCount = state.users.filter(u => u.role === 'Admin').length;
+            const engCount = state.users.filter(u => u.role === 'Engineer').length;
+            const helpCount = state.users.filter(u => u.role === 'Helper').length;
+
+            document.getElementById('staff-count-admin').innerText = adminCount;
+            document.getElementById('staff-count-engineer').innerText = engCount;
+            document.getElementById('staff-count-helper').innerText = helpCount;
+        }
+
+        // Administration Tab Functional Operations Processing Layout Core Logics Loops
+        function renderAdminWhitelistLedger() {
+            const container = document.getElementById('whitelist-render-container');
+            if (!container) return;
+            container.innerHTML = "";
+
+            state.whitelist.forEach(item => {
+                const rowHtml = `
+                    <div class="flex justify-between items-center text-xs bg-white p-2 border border-gray-100 rounded-md shadow-xs mb-1">
+                        <span class="font-bold text-gray-700 tracking-wide">+91 ${item.mobile}</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${item.role === 'Admin' ? 'bg-amber-50 text-amber-600 border-amber-200' : item.role === 'Engineer' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}">${item.role}</span>
+                            ${item.mobile !== "9142173747" ? `<button onclick="removeMobileFromWhitelist('${item.mobile}')" class="text-red-500 hover:text-red-700 font-semibold text-[11px]"><i class="fa-regular fa-trash-can"></i></button>` : ''}
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', rowHtml);
+            });
+        }
+
+        function addMobileToWhitelist() {
+            const mobile = document.getElementById('admin-whitelist-mobile').value.trim();
+            const role = document.getElementById('admin-whitelist-role').value;
+
+            if (mobile.length !== 10 || isNaN(mobile)) {
+                alert("🚨 Operation Aborted: Target validation parameter configuration must match exactly a 10-digit telephone matrix array stream.");
+                return;
+            }
+
+            const alreadyPresent = state.whitelist.some(w => w.mobile === mobile);
+            if (alreadyPresent) {
+                alert("📝 Contact payload data node already mapped to access whitelist security clearance configuration profiles.");
+                return;
+            }
+
+            state.whitelist.push({ mobile, role });
+            localStorage.setItem('fwm_whitelist', JSON.stringify(state.whitelist));
+            document.getElementById('admin-whitelist-mobile').value = "";
+            renderAdminWhitelistLedger();
+            alert("🎯 Successfully Authorized! New staff coordinate number added to whitelist system blueprint arrays mapping layout.");
+        }
+
+        function removeMobileFromWhitelist(mobileNumber) {
+            if (confirm("⚠️ System modification warning: Block authentication routes and delete this mobile tracking registry target clearance item node?")) {
+                state.whitelist = state.whitelist.filter(w => w.mobile !== mobileNumber);
+                localStorage.setItem('fwm_whitelist', JSON.stringify(state.whitelist));
+                renderAdminWhitelistLedger();
+            }
+        }
+
+        function exportDataString() {
+            const dumpDataString = btoa(unescape(encodeURIComponent(JSON.stringify({ logs: state.logs, whitelist: state.whitelist, users: state.users }))));
+            navigator.clipboard.writeText(dumpDataString).then(() => {
+                alert("📋 System encrypted database state payload snapshot strings dump array data successfully copied straight to operating system context clipboard storage buffers arrays!");
+            }).catch(err => {
+                alert("Data Dump String Output Payload Array: \n\n" + dumpDataString);
+            });
+        }
+
+        function triggerSystemPurge() {
+            if (confirm("💥 CRITICAL ACTION WARNING: This will permanently wipe out all current localized installation transactions logs databases matrices, travel track history configuration parameters and operational states caches! Proceed?")) {
+                localStorage.clear();
+                alert("🔄 Local storage systems memory completely purged clean. Reloading app context environments baseline configurations...");
+                window.location.reload();
+            }
         }
     </script>
 </body>
