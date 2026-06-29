@@ -75,7 +75,6 @@
 
                 <div class="space-y-3">
                     <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase pl-1">Work Actions</h2>
-                    
                     <button onclick="switchTab('install')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
                         <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-plus-circle"></i></div>
                         <div class="text-left flex-1">
@@ -84,7 +83,6 @@
                         </div>
                         <i class="fa-solid fa-chevron-right text-slate-300"></i>
                     </button>
-
                     <button onclick="switchTab('sr')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
                         <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
                         <div class="text-left flex-1">
@@ -93,7 +91,6 @@
                         </div>
                         <i class="fa-solid fa-chevron-right text-slate-300"></i>
                     </button>
-
                     <button onclick="switchTab('restore')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
                         <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-signal"></i></div>
                         <div class="text-left flex-1">
@@ -107,18 +104,14 @@
 
             <div id="tab-users" class="page-tab space-y-4">
                 <div class="bg-gradient-to-br from-indigo-800 to-slate-900 text-white p-5 rounded-xl shadow-md">
-                    <h2 class="font-bold text-base border-b border-white/20 pb-2 mb-3"><i class="fa-solid fa-users-gear mr-2"></i> User & Sub-Admin Control</h2>
+                    <h2 class="font-bold text-base border-b border-white/20 pb-2 mb-3"><i class="fa-solid fa-users-gear mr-2"></i> Add New Engineer</h2>
                     <div class="space-y-3 text-sm">
                         <input id="new-user-name" type="text" placeholder="Full Name" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 placeholder-white/50 text-white">
                         <input id="new-user-mobile" type="tel" maxlength="10" placeholder="10 Digit Mobile Number" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 placeholder-white/50 text-white">
-                        <select id="new-user-role" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 text-white appearance-none">
-                            <option value="engineer" class="text-black">Field Engineer</option>
-                            <option value="admin" class="text-black">Admin (Full Access)</option>
-                        </select>
                         <button onclick="saveUser()" class="w-full bg-amber-500 text-slate-900 font-bold rounded-lg p-3 hover:bg-amber-400 transition">Create User Profile</button>
                     </div>
                 </div>
-                <h3 class="text-xs font-bold text-gray-500 uppercase">Registered System Users</h3>
+                <h3 class="text-xs font-bold text-gray-500 uppercase">Registered Engineers</h3>
                 <div id="users-list" class="space-y-2"></div>
             </div>
 
@@ -129,7 +122,6 @@
                     <input id="task-cust-name" type="text" placeholder="Customer / Site Name" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
                     <input id="task-cust-mobile" type="tel" maxlength="10" placeholder="Customer Mobile (For Calling)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
                     <textarea id="task-details" rows="2" placeholder="Task Details & Address..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                    
                     <button onclick="saveTask()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700">Dispatch Task</button>
                 </div>
             </div>
@@ -169,18 +161,23 @@
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-bold text-gray-500 uppercase">Site</label>
-                        <input id="ins-site" type="text" placeholder="Site Name (e.g. Rashmi South Park)" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Site Name</label>
+                        <input id="ins-site" type="text" placeholder="e.g. Rashmi South Park" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div>
                         <label class="text-[10px] font-bold text-gray-500 uppercase">Customer Name & Mobile</label>
-                        <input id="ins-customer" type="text" placeholder="Mobile & Name (e.g. 9033669337 Khusbhu)" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                        <input id="ins-customer" type="text" placeholder="e.g. 9033669337 Khusbhu" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div>
                         <label class="text-[10px] font-bold text-gray-500 uppercase">Address</label>
                         <textarea id="ins-address" rows="2" placeholder="Complete Address" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Travel Distance (Kilometers)</label>
+                        <input id="ins-distance" type="number" placeholder="Enter Travel Distance e.g. 15" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -199,14 +196,21 @@
                         <input id="ins-remark" type="text" placeholder="Reason for delay..." class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
-                    <label class="block w-full bg-slate-50 border-2 border-dashed border-blue-300 text-blue-600 font-bold px-3 py-4 rounded-lg text-center cursor-pointer hover:bg-blue-50">
-                        <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 block"></i> 
-                        Upload Photos & PDF (10 - 15 Files)
-                        <input type="file" id="ins-files" accept="image/*, application/pdf" multiple class="hidden" onchange="handleMultipleFiles(this)">
-                    </label>
-                    <p id="ins-upload-msg" class="text-[11px] text-emerald-600 font-bold text-center mt-1"></p>
+                    <div class="space-y-2 pt-2 border-t mt-2">
+                        <label class="block w-full bg-blue-50 border-2 border-dashed border-blue-300 text-blue-600 font-bold px-3 py-3 rounded-lg text-center cursor-pointer hover:bg-blue-100">
+                            <i class="fa-solid fa-camera mb-1 block"></i> Upload Photos (Max 15)
+                            <input type="file" id="ins-photos" accept="image/*" multiple class="hidden" onchange="handleFileCount(this, 'ins-photo-msg')">
+                        </label>
+                        <p id="ins-photo-msg" class="text-[11px] text-blue-600 font-bold text-center"></p>
 
-                    <button onclick="saveInstallationData()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700">Submit Installation</button>
+                        <label class="block w-full bg-red-50 border-2 border-dashed border-red-300 text-red-600 font-bold px-3 py-3 rounded-lg text-center cursor-pointer hover:bg-red-100">
+                            <i class="fa-solid fa-file-pdf mb-1 block"></i> Upload PDF Document
+                            <input type="file" id="ins-pdf" accept="application/pdf" class="hidden" onchange="handleFileCount(this, 'ins-pdf-msg')">
+                        </label>
+                        <p id="ins-pdf-msg" class="text-[11px] text-red-600 font-bold text-center"></p>
+                    </div>
+
+                    <button onclick="saveInstallationData()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700 mt-2">Submit Installation</button>
                 </div>
             </div>
 
@@ -216,6 +220,7 @@
                     <input id="sr-fault" type="text" placeholder="Type Fault (e.g. Fiber Cut, Red LOS)" class="w-full border border-red-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400 font-bold text-red-700">
                     <input id="sr-ticket" type="text" placeholder="SR / Ticket Number" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
                     <input id="sr-customer" type="text" placeholder="Customer Name & Details" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
+                    <input id="sr-distance" type="number" placeholder="Travel Distance (KM)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
                     <textarea id="sr-resolve" rows="2" placeholder="Resolution Steps Taken..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400"></textarea>
                     
                     <button onclick="saveData('sr')" class="w-full bg-red-500 text-white font-bold rounded-lg p-3 shadow-md">Save SR Ticket</button>
@@ -225,10 +230,16 @@
             <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <h2 class="font-bold text-base text-emerald-600 border-b pb-2"><i class="fa-solid fa-signal mr-1"></i> Site Restore</h2>
                 <div class="space-y-3 text-sm">
-                    <input id="rest-id" type="text" placeholder="Manual Type Node/Fatbox ID" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400 font-bold">
+                    <input id="rest-id" type="text" placeholder="Node/Fatbox ID" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400 font-bold">
                     <input id="rest-power" type="text" placeholder="Power Level (e.g. -21.5 dBm)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400">
                     <textarea id="rest-remarks" rows="2" placeholder="Remarks..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
                     
+                    <label class="block w-full bg-slate-50 border border-dashed border-slate-300 text-slate-500 font-bold px-3 py-3 rounded-lg text-center cursor-pointer hover:bg-slate-100 text-sm">
+                        <i class="fa-solid fa-camera mr-1"></i> Attach Restore Photo
+                        <input type="file" id="rest-photo" accept="image/*" class="hidden" onchange="document.getElementById('rest-photo-msg').classList.remove('hidden')">
+                    </label>
+                    <p id="rest-photo-msg" class="text-[10px] text-emerald-600 font-bold hidden"><i class="fa-solid fa-check-circle"></i> Photo Attached</p>
+
                     <button onclick="saveData('restore')" class="w-full bg-emerald-600 text-white font-bold rounded-lg p-3 shadow-md">Submit Restoration</button>
                 </div>
             </div>
@@ -265,13 +276,21 @@
     </div>
 
     <script>
-        // System Data Variables
+        // Default Engineers (Hardcoded so they can always login)
+        const DEFAULT_ENGINEERS = [
+            { name: "Jatashankar", mobile: "8051452468", role: "engineer" },
+            { name: "Aquib", mobile: "9512312123", role: "engineer" },
+            { name: "Sumit", mobile: "9157194096", role: "engineer" },
+            { name: "Viral", mobile: "9638991061", role: "engineer" },
+            { name: "Sahil", mobile: "9016321440", role: "engineer" }
+        ];
+
         const MASTER_ADMIN = "9142173747";
         let currentUser = null;
-        let selectedFiles = [];
 
-        // 1. Initial Load Engine
+        // 1. Initial Load Engine & Setup Default Users
         window.onload = () => {
+            initDefaultUsers();
             const session = localStorage.getItem('fib_session');
             if (session) {
                 currentUser = JSON.parse(session);
@@ -285,7 +304,20 @@
         function getStore(key) { return JSON.parse(localStorage.getItem(key)) || []; }
         function setStore(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
-        // 2. Fixed Login System
+        // Setup Hardcoded Engineers into System
+        function initDefaultUsers() {
+            let users = getStore('fib_users');
+            let updated = false;
+            DEFAULT_ENGINEERS.forEach(eng => {
+                if (!users.find(u => u.mobile === eng.mobile)) {
+                    users.push(eng);
+                    updated = true;
+                }
+            });
+            if (updated) setStore('fib_users', users);
+        }
+
+        // 2. Login System
         function handleLogin() {
             const mobile = document.getElementById('login-mobile').value.trim();
             if (mobile.length !== 10) return alert("Enter valid 10 digit number.");
@@ -307,7 +339,6 @@
             bootApp();
         }
 
-        // Fixed Logout
         function logout() {
             localStorage.removeItem('fib_session');
             location.reload();
@@ -333,7 +364,7 @@
             switchTab('home');
         }
 
-        // 4. Navigation Tab Switcher
+        // 4. Navigation
         function switchTab(tabId) {
             document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
@@ -348,11 +379,11 @@
             });
         }
 
-        // 5. User Management (Admin Only)
+        // 5. User Management & Assignment Dropdown
         function saveUser() {
             const name = document.getElementById('new-user-name').value;
             const mobile = document.getElementById('new-user-mobile').value;
-            const role = document.getElementById('new-user-role').value;
+            const role = 'engineer'; // Standardized to engineer
             
             if (mobile.length !== 10 || name === '') return alert("Please fill valid details.");
             
@@ -371,14 +402,18 @@
         function renderUsers() {
             const users = getStore('fib_users');
             const list = document.getElementById('users-list');
-            list.innerHTML = users.map(u => `
-                <div class="bg-white p-3 rounded-lg border flex justify-between items-center shadow-sm">
-                    <div><p class="font-bold text-sm text-slate-800">${u.name}</p><p class="text-[10px] text-slate-400">${u.mobile}</p></div>
-                    <span class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-600 uppercase">${u.role}</span>
-                </div>
-            `).join('');
             
-            // Populate Assign Dropdown
+            // List in Users Tab
+            if(list) {
+                list.innerHTML = users.map(u => `
+                    <div class="bg-white p-3 rounded-lg border flex justify-between items-center shadow-sm">
+                        <div><p class="font-bold text-sm text-slate-800">${u.name}</p><p class="text-[10px] text-slate-400">${u.mobile}</p></div>
+                        <span class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-600 uppercase">${u.role}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Dropdown in Assign Tab
             const taskUser = document.getElementById('task-user');
             if(taskUser) {
                 taskUser.innerHTML = '<option value="">Select Engineer...</option>' + 
@@ -386,25 +421,23 @@
             }
         }
 
-        // 6. Handle Multiple Files (10-15 Images/PDF)
-        function handleMultipleFiles(input) {
+        // 6. File Counters
+        function handleFileCount(input, msgId) {
             const files = input.files;
-            if(files.length > 15) {
-                alert("Maximum 15 files allowed!");
+            if(input.id === 'ins-photos' && files.length > 15) {
+                alert("Maximum 15 photos allowed!");
                 input.value = "";
-                selectedFiles = [];
-                document.getElementById('ins-upload-msg').innerText = "";
+                document.getElementById(msgId).innerText = "";
                 return;
             }
-            
-            selectedFiles = [];
-            for(let i=0; i<files.length; i++) {
-                selectedFiles.push(files[i].name);
+            if(files.length > 0) {
+                document.getElementById(msgId).innerHTML = `<i class="fa-solid fa-check-circle"></i> ${files.length} File(s) Selected`;
+            } else {
+                document.getElementById(msgId).innerText = "";
             }
-            document.getElementById('ins-upload-msg').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${files.length} Files Selected.`;
         }
 
-        // 7. Save Installation Data (UPDATED FUNCTION)
+        // 7. Save Installation
         function saveInstallationData() {
             const data = {
                 type: 'install',
@@ -417,10 +450,12 @@
                 site: document.getElementById('ins-site').value,
                 customer: document.getElementById('ins-customer').value,
                 address: document.getElementById('ins-address').value,
+                distance: document.getElementById('ins-distance').value,
                 recvTime: document.getElementById('ins-recv-time').value,
                 instDate: document.getElementById('ins-inst-date').value,
                 remark: document.getElementById('ins-remark').value,
-                filesCount: selectedFiles.length
+                photoCount: document.getElementById('ins-photos').files.length,
+                hasPdf: document.getElementById('ins-pdf').files.length > 0 ? 'Yes' : 'No'
             };
 
             if(!data.customer || !data.orderId) return alert("Customer Name and Order ID are required!");
@@ -431,11 +466,12 @@
             
             alert("Installation Saved Successfully!");
             
-            // Clear Form
-            document.querySelectorAll('#tab-install input:not([type="file"]), #tab-install textarea').forEach(el => el.value = '');
-            document.getElementById('ins-files').value = '';
-            document.getElementById('ins-upload-msg').innerText = '';
-            selectedFiles = [];
+            // Reset fields
+            document.querySelectorAll('#tab-install input, #tab-install textarea').forEach(el => {
+                if(el.type !== 'file' && el.id !== 'ins-city') el.value = '';
+            });
+            document.getElementById('ins-photo-msg').innerText = '';
+            document.getElementById('ins-pdf-msg').innerText = '';
             
             renderLedger();
             switchTab('home');
@@ -448,10 +484,12 @@
             if (type === 'sr') {
                 data.fault = document.getElementById('sr-fault').value;
                 data.ticket = document.getElementById('sr-ticket').value;
+                data.distance = document.getElementById('sr-distance').value;
                 if(!data.fault) return alert("Fault description required!");
             } else if (type === 'restore') {
                 data.node = document.getElementById('rest-id').value;
                 data.power = document.getElementById('rest-power').value;
+                data.hasPhoto = document.getElementById('rest-photo').files.length > 0 ? 'Yes' : 'No';
                 if(!data.node) return alert("Node ID required!");
             }
 
@@ -459,11 +497,15 @@
             records.push(data);
             setStore('fib_records', records);
             alert(type.toUpperCase() + " Data Saved!");
+            
+            // Clear inputs
+            document.querySelectorAll(`#tab-${type} input, #tab-${type} textarea`).forEach(el => el.value = '');
+            if(type === 'restore') document.getElementById('rest-photo-msg').classList.add('hidden');
+
             renderLedger();
             switchTab('home');
         }
 
-        // 9. Assign Task Save (Placeholder functionality)
         function saveTask() {
             alert("Task Dispatched successfully to Engineer!");
             document.getElementById('task-cust-name').value = '';
@@ -471,16 +513,15 @@
             document.getElementById('task-details').value = '';
         }
 
-        // 10. Data Render & Reset
+        // 9. Render Ledger Data
         function renderLedger() {
             let records = getStore('fib_records');
             let installCount = 0; let srCount = 0;
-
             const list = document.getElementById('ledger-content');
+
             if (records.length === 0) {
                 list.innerHTML = '<p class="text-center text-slate-400 py-4">No records found.</p>';
             } else {
-                // Reverse to show latest first
                 list.innerHTML = records.slice().reverse().map(r => {
                     if(r.type === 'install') {
                         installCount++;
@@ -490,10 +531,10 @@
                                 <span class="font-bold text-blue-700 uppercase">INSTALL: ${r.isp}</span>
                                 <span class="text-slate-400">${r.date}</span>
                             </div>
-                            <p><b>Order:</b> ${r.orderId} | <b>IPTV:</b> ${r.iptv}</p>
+                            <p><b>Order:</b> ${r.orderId} | <b>Travel:</b> ${r.distance || 0} KM</p>
                             <p><b>Site:</b> ${r.site} (${r.city})</p>
                             <p><b>Cust:</b> ${r.customer}</p>
-                            <p class="text-slate-500 mt-1">Files Attached: ${r.filesCount || 0}</p>
+                            <p class="text-slate-500 mt-1 text-[10px]">Photos: ${r.photoCount} | PDF: ${r.hasPdf}</p>
                             <p class="text-[9px] text-slate-400 mt-2 text-right">By: ${r.by}</p>
                         </div>`;
                     } else if(r.type === 'sr') {
@@ -502,20 +543,21 @@
                         <div class="border-l-4 border-red-500 bg-red-50 p-3 rounded shadow-sm">
                             <span class="font-bold text-red-700">SR FAULT</span> - ${r.date}
                             <p class="mt-1"><b>Issue:</b> ${r.fault}</p>
-                            <p><b>Ticket:</b> ${r.ticket}</p>
+                            <p><b>Ticket:</b> ${r.ticket} | <b>Travel:</b> ${r.distance || 0} KM</p>
+                            <p class="text-[9px] text-slate-400 mt-2 text-right">By: ${r.by}</p>
                         </div>`;
                     } else {
                         return `
                         <div class="border-l-4 border-emerald-500 bg-emerald-50 p-3 rounded shadow-sm">
                             <span class="font-bold text-emerald-700">RESTORED</span> - ${r.date}
                             <p class="mt-1"><b>Node:</b> ${r.node}</p>
-                            <p><b>Power:</b> ${r.power}</p>
+                            <p><b>Power:</b> ${r.power} | <b>Photo:</b> ${r.hasPhoto}</p>
+                            <p class="text-[9px] text-slate-400 mt-2 text-right">By: ${r.by}</p>
                         </div>`;
                     }
                 }).join('');
             }
             
-            // Update Dashboard Counters
             document.getElementById('count-install').innerText = installCount;
             document.getElementById('count-sr').innerText = srCount;
         }
