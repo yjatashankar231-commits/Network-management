@@ -3,915 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiber Work Manager - Enterprise Pro</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <title>Fiber Work Manager - Pro Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         .page-tab { display: none; }
-        .page-tab.active { display: block; }
+        .page-tab.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Hide scrollbar for cleaner look */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-blue-50 text-gray-800 min-h-screen flex flex-col pb-24">
+<body class="bg-slate-50 text-gray-800 min-h-screen flex flex-col pb-16">
 
-    <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center p-4 z-50">
+    <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm space-y-5 text-center">
             <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
-                <i class="fa-solid fa-shield-halved"></i>
+                <i class="fa-solid fa-bolt"></i>
             </div>
             <div>
-                <h2 class="text-xl font-black text-gray-900 tracking-wide">Fiber Work Manager</h2>
-                <p class="text-xs text-gray-400 mt-0.5">Enter Mobile Number to Access Terminal</p>
+                <h2 class="text-xl font-black text-gray-900 tracking-wide">Fiber Manager</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Enter Registered Mobile Number</p>
             </div>
             <div class="space-y-3">
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 font-bold text-sm">+91</span>
                     <input id="login-mobile" type="tel" maxlength="10" placeholder="10 Digit Number" class="w-full border rounded-xl p-3.5 pl-12 outline-none focus:ring-2 focus:ring-blue-500 font-black tracking-widest text-lg text-gray-700 bg-gray-50">
                 </div>
-                <button onclick="handleApplicationAuth()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-700 active:scale-98 transition text-sm tracking-wide">
-                    Verify & Enter System <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i>
+                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-700 active:scale-95 transition duration-200 text-sm tracking-wide">
+                    Login Securely <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i>
                 </button>
             </div>
-            <p class="text-[10px] text-gray-400 font-medium">Authorized Personnel Authorization Layer Only</p>
         </div>
     </div>
 
     <div id="app-content" class="hidden flex flex-col min-h-screen w-full">
 
-        <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-3.5 flex justify-between items-center shadow-md shrink-0">
+        <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-3.5 flex justify-between items-center shadow-md shrink-0 fixed top-0 w-full z-40 max-w-md mx-auto inset-x-0">
             <div class="flex items-center space-x-3">
-                <div class="bg-white/20 p-2 rounded-full text-xl">
-                    <i class="fa-solid fa-satellite-dish"></i>
-                </div>
+                <div class="bg-white/20 p-2 rounded-full text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
                 <div>
-                    <h1 class="text-lg font-black tracking-wide">Fiber Work Manager</h1>
-                    <p id="app-role-badge" class="text-[10px] text-blue-100 font-bold bg-white/10 px-1.5 py-0.5 rounded-sm inline-block mt-0.5"></p>
+                    <h1 class="text-base font-black tracking-wide leading-tight">Fiber Manager</h1>
+                    <p id="app-role-badge" class="text-[10px] text-blue-100 font-bold bg-white/20 px-1.5 rounded-sm inline-block"></p>
                 </div>
             </div>
-            <div class="flex items-center space-x-1.5">
-                <button onclick="switchTab('home')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition">
-                    <i class="fa-solid fa-house"></i>
-                </button>
-                <button onclick="triggerAppLogout()" class="bg-red-500/20 hover:bg-red-500/40 text-red-100 font-bold px-2.5 py-1.5 rounded-lg text-xs transition border border-red-400/30">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
+            <button onclick="logout()" class="bg-red-500/20 hover:bg-red-500/40 text-red-100 font-bold px-3 py-1.5 rounded-lg text-xs transition border border-red-400/30">
+                <i class="fa-solid fa-power-off"></i> Exit
+            </button>
         </header>
 
-        <main class="flex-1 max-w-md mx-auto w-full p-4 overflow-y-auto">
+        <main class="flex-1 max-w-md mx-auto w-full p-4 pt-20 overflow-y-auto mb-16">
 
             <div id="tab-home" class="page-tab active space-y-4">
                 
-                <div id="owner-admin-panel" class="hidden bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-4 rounded-2xl shadow-md border border-slate-800 space-y-3">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                        <div>
-                            <p class="text-[9px] uppercase text-indigo-300 font-black tracking-widest">System Master Registry</p>
-                            <h3 class="text-base font-black tracking-wide text-white">Jatashankar Yadav</h3>
-                        </div>
-                        <span class="bg-amber-500/20 text-amber-300 border border-amber-500/50 text-[10px] font-black px-2 py-0.5 rounded-full"><i class="fa-solid fa-crown mr-1"></i>Master Admin</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-2 pt-1 text-center">
-                        <div class="bg-white/5 border border-white/10 rounded-xl p-2">
-                            <p class="text-sm font-black text-amber-400">1</p>
-                            <p class="text-[9px] uppercase text-gray-400 font-bold">Admin</p>
-                        </div>
-                        <div class="bg-white/5 border border-white/10 rounded-xl p-2">
-                            <p id="staff-count-engineer" class="text-sm font-black text-blue-400">0</p>
-                            <p class="text-[9px] uppercase text-gray-400 font-bold">Engineers</p>
-                        </div>
-                        <div class="bg-white/5 border border-white/10 rounded-xl p-2">
-                            <p class="text-sm font-black text-emerald-400">3</p>
-                            <p class="text-[9px] uppercase text-gray-400 font-bold">Helpers</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-blue-50 text-blue-500 text-lg rounded-lg flex items-center justify-center"><i class="fa-solid fa-box-archive"></i></div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3">
+                        <div class="text-blue-500 text-2xl"><i class="fa-solid fa-box-archive"></i></div>
                         <div>
-                            <h3 id="count-install" class="text-lg font-black text-gray-900">0</h3>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Installation</p>
+                            <h3 id="count-install" class="text-lg font-black text-slate-800">0</h3>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">Installs</p>
                         </div>
                     </div>
-                    <div class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-red-50 text-red-500 text-lg rounded-lg flex items-center justify-center"><i class="fa-solid fa-phone"></i></div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3">
+                        <div class="text-red-500 text-2xl"><i class="fa-solid fa-phone-slash"></i></div>
                         <div>
-                            <h3 id="count-sr" class="text-lg font-black text-gray-900">0</h3>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">SR Logs</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-emerald-50 text-emerald-500 text-lg rounded-lg flex items-center justify-center"><i class="fa-solid fa-signal"></i></div>
-                        <div>
-                            <h3 id="count-restore" class="text-lg font-black text-gray-900">0</h3>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Restored</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-amber-50 text-amber-500 text-lg rounded-lg flex items-center justify-center"><i class="fa-solid fa-list-check"></i></div>
-                        <div>
-                            <h3 id="count-tasks" class="text-lg font-black text-gray-900">0</h3>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">My Tasks</p>
+                            <h3 id="count-sr" class="text-lg font-black text-slate-800">0</h3>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">SR Logs</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-2.5">
-                    <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase pl-1">Operational Work Desk</h2>
+                <div class="space-y-3">
+                    <h2 class="text-xs font-bold text-blue-600 tracking-wider uppercase pl-1">Work Actions</h2>
                     
-                    <button id="btn-menu-tasks" onclick="switchTab('tasks'); loadTaskManager();" class="bg-gradient-to-r from-amber-500 to-orange-500 p-3.5 rounded-xl text-white flex items-center justify-between w-full text-left shadow-sm">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-user-plus"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">Assign & Manage Tasks</h4>
-                                <p class="text-xs text-amber-50">Add field team & allocate routing</p>
-                            </div>
+                    <button onclick="switchTab('install')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-plus-circle"></i></div>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-sm text-slate-700">Add Installation</h4>
+                            <p class="text-[10px] text-slate-400">Manual ISP Entry</p>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-white text-xs"></i>
+                        <i class="fa-solid fa-chevron-right text-slate-300"></i>
                     </button>
 
-                    <button id="btn-engineer-tasks" onclick="switchTab('eng-workspace'); loadEngineerWorkspace();" class="hidden bg-gradient-to-r from-purple-600 to-indigo-600 p-3.5 rounded-xl text-white flex items-center justify-between w-full text-left shadow-md">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-briefcase"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">My Active Field Tasks</h4>
-                                <p class="text-xs text-purple-100">Check tasks assigned to your number</p>
-                            </div>
+                    <button onclick="switchTab('sr')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
+                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-sm text-slate-700">Add SR Fault</h4>
+                            <p class="text-[10px] text-slate-400">Log new network fault</p>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-white text-xs"></i>
+                        <i class="fa-solid fa-chevron-right text-slate-300"></i>
                     </button>
 
-                    <button onclick="switchTab('install')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between w-full text-left hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-base border border-blue-100"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-700 text-sm">Add Installation</h4>
-                                <p class="text-xs text-gray-400">ISP Comprehensive Activation Template</p>
-                            </div>
+                    <button onclick="switchTab('restore')" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center w-full active:bg-slate-50 transition">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center text-lg mr-3"><i class="fa-solid fa-signal"></i></div>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-sm text-slate-700">Site Restore</h4>
+                            <p class="text-[10px] text-slate-400">Fatbox power metrics</p>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
-                    </button>
-
-                    <button onclick="switchTab('sr')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between w-full text-left hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-base border border-red-100"><i class="fa-solid fa-circle-exclamation"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-700 text-sm">Add SR (Service Fault) Log</h4>
-                                <p class="text-xs text-gray-400">Fault records and metrics tracking</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
-                    </button>
-
-                    <button onclick="switchTab('restore')" class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between w-full text-left hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-base border border-emerald-100"><i class="fa-solid fa-signal"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-700 text-sm">Site Restore & Fatbox</h4>
-                                <p class="text-xs text-gray-400">Optical node metrics with photo log</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
-                    </button>
-
-                    <button onclick="switchTab('data'); renderLedgerView();" class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white flex items-center justify-between w-full text-left shadow-md">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-base"><i class="fa-solid fa-database"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">Central Database Logs Ledger</h4>
-                                <p class="text-xs text-blue-100">Daily/Monthly tabular records view</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-white text-xs"></i>
+                        <i class="fa-solid fa-chevron-right text-slate-300"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="tab-tasks" class="page-tab space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-3">
-                    <div class="flex items-center space-x-2 text-amber-600 border-b border-gray-100 pb-2 mb-1">
-                        <i class="fa-solid fa-user-gear text-lg"></i>
-                        <h2 class="font-bold text-base">1. Register New Engineer</h2>
+            <div id="tab-users" class="page-tab space-y-4">
+                <div class="bg-gradient-to-br from-indigo-800 to-slate-900 text-white p-5 rounded-xl shadow-md">
+                    <h2 class="font-bold text-base border-b border-white/20 pb-2 mb-3"><i class="fa-solid fa-users-gear mr-2"></i> User & Sub-Admin Control</h2>
+                    <div class="space-y-3 text-sm">
+                        <input id="new-user-name" type="text" placeholder="Full Name" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 placeholder-white/50 text-white">
+                        <input id="new-user-mobile" type="tel" maxlength="10" placeholder="10 Digit Mobile Number" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 placeholder-white/50 text-white">
+                        <select id="new-user-role" class="w-full bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-400 text-white appearance-none">
+                            <option value="engineer" class="text-black">Field Engineer</option>
+                            <option value="admin" class="text-black">Admin (Full Access)</option>
+                        </select>
+                        <button onclick="saveUser()" class="w-full bg-amber-500 text-slate-900 font-bold rounded-lg p-3 hover:bg-amber-400 transition">Create User Profile</button>
                     </div>
-                    <input id="task-eng-name" type="text" placeholder="Engineer Full Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-amber-500">
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">+91</span>
-                        <input id="task-eng-mobile" type="tel" maxlength="10" placeholder="10 Digit Mobile Number" class="w-full border rounded-lg p-3 pl-10 outline-none focus:ring-1 focus:ring-amber-500 font-bold">
-                    </div>
-                    <button onclick="saveNewEngineer()" class="w-full bg-amber-500 text-white font-bold rounded-xl p-3 hover:bg-amber-600 shadow transition text-sm">
-                        Register Field Engineer
-                    </button>
-                </div>
-
-                <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-3">
-                    <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-2 mb-1">
-                        <i class="fa-solid fa-clipboard-list text-lg"></i>
-                        <h2 class="font-bold text-base">2. Assign Work Task</h2>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Select Registered Engineer</label>
-                        <select id="task-eng-select" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-blue-500 font-semibold"></select>
-                    </div>
-                    <textarea id="task-details" rows="3" placeholder="Enter Work Assignment Routing Details..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500"></textarea>
-                    
-                    <button onclick="saveAssignedTask()" class="w-full bg-blue-600 text-white font-bold rounded-xl p-3 hover:bg-blue-700 shadow transition text-sm">
-                        Dispatch & Save Task Sheet
-                    </button>
-                </div>
-
-                <div class="space-y-2">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Master Allocated Task Sheets</h3>
-                    <div id="assigned-tasks-list" class="space-y-3"></div>
-                </div>
-            </div>
-
-            <div id="tab-eng-workspace" class="page-tab space-y-4">
-                <div class="bg-white p-4 rounded-xl border border-purple-100 shadow-sm flex justify-between items-center">
-                    <div>
-                        <h2 class="text-sm font-black text-purple-700">My Field Dispatch Book</h2>
-                        <p class="text-[10px] text-gray-400">Showing tasks explicitly assigned to you</p>
-                    </div>
-                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-md">Live Sync</span>
-                </div>
-                <div id="engineer-filtered-tasks" class="space-y-3"></div>
-            </div>
-
-            <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
-                <div class="flex items-center space-x-2 text-blue-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-file-circle-plus text-lg"></i>
-                    <h2 class="font-bold text-base">New Custom ISP Installation</h2>
                 </div>
                 
-                <div class="space-y-3.5 text-xs">
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">ISP Name</label>
-                        <select id="ins-isp" class="w-full border rounded-lg p-2.5 bg-white font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                            <option value="Airtel">Airtel Stream</option>
-                            <option value="GTPL Broadband">GTPL Broadband</option>
-                            <option value="Jio Fiber">Jio Fiber</option>
-                            <option value="Tata Play Fiber">Tata Play Fiber</option>
-                        </select>
-                    </div>
+                <h3 class="text-xs font-bold text-gray-500 uppercase">Registered System Users</h3>
+                <div id="users-list" class="space-y-2"></div>
+            </div>
 
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Order ID</label>
-                        <input id="ins-order-id" type="text" placeholder="e.g. 21-174243719335" class="w-full border rounded-lg p-2.5 font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                    </div>
+            <div id="tab-assign" class="page-tab space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <h2 class="font-bold text-base text-blue-600 border-b pb-2"><i class="fa-solid fa-clipboard-list mr-1"></i> Assign New Work</h2>
+                    
+                    <select id="task-user" class="w-full border rounded-lg p-3 font-semibold outline-none focus:ring-2 focus:ring-blue-400"></select>
+                    
+                    <input id="task-cust-name" type="text" placeholder="Customer / Site Name" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
+                    <input id="task-cust-mobile" type="tel" maxlength="10" placeholder="Customer Mobile (For Calling)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
+                    <textarea id="task-details" rows="2" placeholder="Task Details & Address..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    
+                    <label class="block w-full bg-slate-50 border border-dashed border-slate-300 text-slate-500 font-bold px-3 py-3 rounded-lg text-center cursor-pointer hover:bg-slate-100 text-sm">
+                        <i class="fa-solid fa-paperclip mr-1"></i> Attach Reference Photo
+                        <input type="file" accept="image/*" onchange="encodeTaskPhoto(this)" class="hidden">
+                    </label>
+                    <input type="hidden" id="task-photo-base64">
+                    <p id="task-photo-msg" class="text-[10px] text-emerald-600 font-bold hidden"><i class="fa-solid fa-check-circle"></i> Photo Attached</p>
 
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Black White IPTV Included?</label>
-                        <select id="ins-iptv" class="w-full border rounded-lg p-2.5 bg-white font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                            <option value="NO">NO</option>
-                            <option value="YES">YES</option>
-                        </select>
-                    </div>
+                    <button onclick="saveTask()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700">Dispatch Task</button>
+                </div>
+            </div>
 
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">City</label>
-                        <input id="ins-city" type="text" value="Ahmadabad" class="w-full border rounded-lg p-2.5 font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                    </div>
+            <div id="tab-mytasks" class="page-tab space-y-3">
+                <h2 class="text-sm font-black text-indigo-700 bg-indigo-50 p-3 rounded-lg border border-indigo-100">My Field Dispatch Board</h2>
+                <div id="mytasks-list" class="space-y-4"></div>
+            </div>
 
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Site Location / Society</label>
-                        <input id="ins-site" type="text" placeholder="e.g. Rashmi South Park" class="w-full border rounded-lg p-2.5 font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Customer Contact Info (Mobile Name Combo)</label>
-                        <input id="ins-customer-combo" type="text" placeholder="e.g. 9033669337 Khusbhu" class="w-full border rounded-lg p-2.5 font-bold outline-none focus:ring-1 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Complete Demarcation Address</label>
-                        <textarea id="ins-address" rows="2" placeholder="e.g. Shop 38 Rashmi South Park" class="w-full border rounded-lg p-2.5 font-semibold outline-none focus:ring-1 focus:ring-blue-500"></textarea>
-                    </div>
-
+            <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="font-bold text-base text-blue-600 border-b pb-2"><i class="fa-solid fa-network-wired mr-1"></i> New Installation</h2>
+                
+                <div class="space-y-3 text-sm">
+                    <input id="ins-isp" type="text" placeholder="Type ISP Name (e.g. Airtel, Jio, GTPL)" class="w-full border rounded-lg p-3 font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                    <input id="ins-order-id" type="text" placeholder="Order ID" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                    
+                    <input id="ins-customer" type="text" placeholder="Customer Name & Detail" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                    <textarea id="ins-address" rows="2" placeholder="Complete Address" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[9px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Received Time</label>
-                            <input id="ins-time-received" type="text" placeholder="26-june-2026 19:53" class="w-full border rounded-lg p-2.5 font-medium outline-none focus:ring-1 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Installation Date</label>
-                            <input id="ins-time-done" type="text" placeholder="28-June-2026 14:55" class="w-full border rounded-lg p-2.5 font-medium outline-none focus:ring-1 focus:ring-blue-500">
-                        </div>
+                        <label class="bg-slate-50 border p-2 rounded-lg text-center cursor-pointer text-xs font-bold text-slate-600">
+                            <i class="fa-solid fa-camera mb-1 block"></i> Photo Capture
+                            <input type="file" accept="image/*" onchange="encodeBase64(this, 'ins-photo')" class="hidden">
+                        </label>
+                        <label class="bg-slate-50 border p-2 rounded-lg text-center cursor-pointer text-xs font-bold text-slate-600">
+                            <i class="fa-solid fa-file-pdf mb-1 block"></i> PDF Upload
+                            <input type="file" accept=".pdf" onchange="encodeBase64(this, 'ins-pdf')" class="hidden">
+                        </label>
                     </div>
+                    <input type="hidden" id="ins-photo">
+                    <input type="hidden" id="ins-pdf">
+                    <p id="ins-upload-msg" class="text-[10px] text-emerald-600 font-bold hidden text-center">Files Ready</p>
 
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 block mb-1 uppercase tracking-wider">Remarks (If Delayed)</label>
-                        <input id="ins-delay-remark" type="text" placeholder="Reason for line delay if any..." class="w-full border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500">
-                    </div>
-
-                    <div class="bg-gray-50 p-3 rounded-xl border border-dashed border-gray-200 space-y-3">
-                        <span class="text-[10px] font-black text-slate-500 uppercase block tracking-wider"><i class="fa-solid fa-paperclip mr-1"></i> Attach Verification Vault Records</span>
-                        
-                        <div class="space-y-2">
-                            <label class="block text-[10px] font-bold text-gray-500">1. Customer Site Installation Photograph</label>
-                            <div class="flex space-x-2">
-                                <label class="flex-1 bg-blue-50 border border-blue-200 text-blue-600 font-bold px-3 py-2 rounded-lg text-center cursor-pointer hover:bg-blue-100 transition">
-                                    <i class="fa-solid fa-camera mr-1"></i> Live Snap
-                                    <input type="file" accept="image/*" capture="environment" onchange="encodeFileAsBase64(this, 'ins-photo-base64')" class="hidden">
-                                </label>
-                                <label class="flex-1 bg-gray-100 border border-gray-200 text-gray-600 font-bold px-3 py-2 rounded-lg text-center cursor-pointer hover:bg-gray-200 transition">
-                                    <i class="fa-solid fa-image mr-1"></i> Gallery
-                                    <input type="file" accept="image/*" onchange="encodeFileAsBase64(this, 'ins-photo-base64')" class="hidden">
-                                </label>
-                            </div>
-                            <div id="ins-photo-base64-preview" class="text-[9px] text-emerald-600 font-bold hidden"><i class="fa-solid fa-circle-check"></i> Image Rendered Successfully!</div>
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="block text-[10px] font-bold text-gray-500">2. Upload Route Diagram / Completion PDF Document</label>
-                            <label class="block w-full bg-slate-100 border text-slate-700 font-bold px-3 py-2 rounded-lg text-center cursor-pointer hover:bg-slate-200 transition">
-                                <i class="fa-solid fa-file-pdf text-red-500 mr-1"></i> Browse & Select PDF File
-                                <input type="file" accept=".pdf" onchange="encodeFileAsBase64(this, 'ins-pdf-base64')" class="hidden">
-                            </label>
-                            <div id="ins-pdf-base64-preview" class="text-[9px] text-emerald-600 font-bold hidden"><i class="fa-solid fa-circle-check"></i> PDF Transferred Safely!</div>
-                        </div>
-                    </div>
+                    <button onclick="saveData('install')" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3">Submit Installation</button>
                 </div>
-
-                <button onclick="commitInstallationToStorage()" class="w-full bg-blue-600 text-white font-bold rounded-xl p-3.5 mt-2 hover:bg-blue-700 shadow transition text-sm">
-                    Commit Installation & Vault Records
-                </button>
             </div>
 
-            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <div class="flex items-center space-x-2 text-red-500 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-circle-check text-lg"></i>
-                    <h2 class="font-bold text-base">SR Resolved Log</h2>
-                </div>
-                
-                <div class="space-y-3">
-                    <input id="sr-number" type="text" placeholder="SR Number / Ticket ID" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500 font-bold">
-                    <input id="sr-customer-name" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500">
-                    <input id="sr-mobile" type="tel" maxlength="10" placeholder="Customer Mobile Number" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500 font-semibold">
+            <div id="tab-sr" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="font-bold text-base text-red-500 border-b pb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Log SR Fault</h2>
+                <div class="space-y-3 text-sm">
+                    <input id="sr-fault" type="text" placeholder="Type Fault (e.g. Fiber Cut, Red LOS)" class="w-full border border-red-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400 font-bold text-red-700">
+                    <input id="sr-ticket" type="text" placeholder="SR / Ticket Number" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
+                    <input id="sr-customer" type="text" placeholder="Customer Name & Details" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
+                    <textarea id="sr-resolve" rows="2" placeholder="Resolution Steps Taken..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400"></textarea>
                     
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">Fault Category (Issue Kya Tha)</label>
-                        <select id="sr-fault-category" class="w-full border rounded-lg p-3 bg-white outline-none focus:ring-1 focus:ring-red-500">
-                            <option value="Fiber Cut / Splicing Break">Fiber Cut / Splicing Break</option>
-                            <option value="High Optical Loss (-30dBm+)">High Optical Loss (-30dBm+)</option>
-                            <option value="ONU Power Red / Off">ONU Power Red / Off</option>
-                            <option value="Fatbox Port Damage">Fatbox Port Damage</option>
-                        </select>
-                    </div>
-
-                    <textarea id="sr-resolution-remarks" rows="3" placeholder="Describe the resolution steps taken by the field team..." class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-red-500"></textarea>
+                    <button onclick="saveData('sr')" class="w-full bg-red-500 text-white font-bold rounded-lg p-3">Save SR Ticket</button>
                 </div>
-                
-                <button onclick="commitSrLogToStorage()" class="w-full bg-red-500 text-white font-bold rounded-xl p-3 hover:bg-red-600 shadow transition">
-                    Save SR Resolution Logs
-                </button>
             </div>
 
-            <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <div class="flex items-center space-x-2 text-emerald-600 border-b border-gray-100 pb-3 mb-1">
-                    <i class="fa-solid fa-signal text-lg"></i>
-                    <h2 class="font-bold text-base">Site Restore & Fatbox Update</h2>
-                </div>
-                
-                <div class="space-y-3">
-                    <input id="rest-fatbox-id" type="text" placeholder="Fatbox ID / Location Name" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                    <input id="rest-power" type="text" placeholder="Optical Power Level (e.g. -21.5 dBm)" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                    <input id="rest-cores" type="number" placeholder="Number of Splicing Cores Restored" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500">
-                    <textarea id="rest-remarks" rows="2" placeholder="Restoration Team Remarks" class="w-full border rounded-lg p-3 outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
+            <div id="tab-restore" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="font-bold text-base text-emerald-600 border-b pb-2"><i class="fa-solid fa-signal mr-1"></i> Site Restore</h2>
+                <div class="space-y-3 text-sm">
+                    <input id="rest-id" type="text" placeholder="Manual Type Node/Fatbox ID" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400 font-bold">
+                    <input id="rest-power" type="text" placeholder="Power Level (e.g. -21.5 dBm)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400">
+                    <textarea id="rest-remarks" rows="2" placeholder="Remarks..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
                     
-                    <div class="bg-slate-50 p-3 rounded-xl border border-dashed border-emerald-200">
-                        <label class="block text-[10px] font-black text-emerald-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-image mr-1"></i> Snap Restored Node / Fatbox Power Meter</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <label class="bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold p-2.5 rounded-lg text-center cursor-pointer text-xs">
-                                <i class="fa-solid fa-camera mr-1"></i> Camera Snap
-                                <input type="file" accept="image/*" capture="environment" onchange="encodeFileAsBase64(this, 'rest-photo-base64')" class="hidden">
-                            </label>
-                            <label class="bg-gray-100 border border-gray-200 text-gray-700 font-bold p-2.5 rounded-lg text-center cursor-pointer text-xs">
-                                <i class="fa-solid fa-images mr-1"></i> File Album
-                                <input type="file" accept="image/*" onchange="encodeFileAsBase64(this, 'rest-photo-base64')" class="hidden">
-                            </label>
-                        </div>
-                        <div id="rest-photo-base64-preview" class="text-[9px] text-emerald-600 font-bold mt-2 hidden"><i class="fa-solid fa-circle-check"></i> Node Evidence Attached!</div>
-                    </div>
+                    <button onclick="saveData('restore')" class="w-full bg-emerald-600 text-white font-bold rounded-lg p-3">Submit Restoration</button>
                 </div>
-                
-                <button onclick="commitRestoreUpdateToStorage()" class="w-full bg-emerald-600 text-white font-bold rounded-xl p-3 hover:bg-emerald-700 shadow transition">
-                    Submit Node Restoration Record
-                </button>
             </div>
 
             <div id="tab-data" class="page-tab space-y-4">
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-3">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <h2 class="font-black text-sm text-indigo-600"><i class="fa-solid fa-database mr-1"></i> Structural Logs Register</h2>
-                        <button onclick="clearAllSystemData()" class="text-[9px] bg-red-50 text-red-600 px-2 py-1 rounded font-bold border border-red-200"><i class="fa-solid fa-trash"></i> Reset Database</button>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-database mr-1"></i> System Records</h2>
+                        <button onclick="resetData()" class="text-[10px] text-red-500 border border-red-200 px-2 py-1 rounded bg-red-50 font-bold"><i class="fa-solid fa-trash"></i> Reset</button>
                     </div>
-                    
-                    <div class="flex bg-gray-100 p-1 rounded-lg border text-xs font-bold text-center">
-                        <button id="btn-ledger-daily" onclick="toggleLedgerTimeframe('daily')" class="flex-1 bg-white shadow-xs rounded-md text-gray-800 py-1.5 transition">Daily Register</button>
-                        <button id="btn-ledger-monthly" onclick="toggleLedgerTimeframe('monthly')" class="flex-1 text-gray-500 py-1.5 transition">Monthly Ledger</button>
-                    </div>
+                    <div id="ledger-content" class="text-xs space-y-4"></div>
                 </div>
-
-                <div id="ledger-tables-wrapper" class="overflow-x-auto bg-white rounded-xl border border-gray-100 shadow-sm p-2 text-xs">
-                    </div>
             </div>
 
         </main>
+
+        <nav class="bg-white border-t border-slate-200 fixed bottom-0 w-full max-w-md mx-auto inset-x-0 z-50 flex justify-around pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <button onclick="switchTab('home')" class="nav-btn w-full py-3 text-slate-400 flex flex-col items-center hover:text-blue-600 transition" data-target="home">
+                <i class="fa-solid fa-home text-lg mb-1"></i><span class="text-[9px] font-bold">Home</span>
+            </button>
+            <button id="nav-mytasks" onclick="switchTab('mytasks')" class="nav-btn w-full py-3 text-slate-400 flex flex-col items-center hover:text-blue-600 transition" data-target="mytasks">
+                <i class="fa-solid fa-briefcase text-lg mb-1"></i><span class="text-[9px] font-bold">My Tasks</span>
+            </button>
+            <button id="nav-assign" onclick="switchTab('assign')" class="nav-btn hidden w-full py-3 text-slate-400 flex flex-col items-center hover:text-blue-600 transition" data-target="assign">
+                <i class="fa-solid fa-clipboard-check text-lg mb-1"></i><span class="text-[9px] font-bold">Assign</span>
+            </button>
+            <button id="nav-users" onclick="switchTab('users')" class="nav-btn hidden w-full py-3 text-slate-400 flex flex-col items-center hover:text-blue-600 transition" data-target="users">
+                <i class="fa-solid fa-users text-lg mb-1"></i><span class="text-[9px] font-bold">Users</span>
+            </button>
+            <button onclick="switchTab('data')" class="nav-btn w-full py-3 text-slate-400 flex flex-col items-center hover:text-blue-600 transition" data-target="data">
+                <i class="fa-solid fa-list-ul text-lg mb-1"></i><span class="text-[9px] font-bold">Records</span>
+            </button>
+        </nav>
     </div>
 
-    <input type="hidden" id="ins-photo-base64">
-    <input type="hidden" id="ins-pdf-base64">
-    <input type="hidden" id="rest-photo-base64">
-
     <script>
-        let currentActiveUser = null;
-        let activeLedgerTimeframe = 'daily';
+        // Data Structures
+        const MASTER_ADMIN = "9142173747";
+        let currentUser = null;
 
-        window.onload = function() {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', options);
-            
-            // Check persistence active terminal user session
-            const storedSession = localStorage.getItem('fib_session_user');
-            if(storedSession) {
-                currentActiveUser = JSON.parse(storedSession);
-                bootSystemWorkspace();
-            }
-        }
-
-        // Authentication Controller Core
-        function handleApplicationAuth() {
-            const mobileInput = document.getElementById('login-mobile').value.trim();
-            if(mobileInput.length !== 10) {
-                alert("Please type a valid 10-digit registered number!");
-                return;
-            }
-
-            if(mobileInput === "9142173747") {
-                // Master Application Owner Routing
-                currentActiveUser = { name: "Jatashankar Yadav (Owner)", mobile: "9142173747", role: "admin" };
+        // On Page Load: Session Persistence Engine
+        window.onload = () => {
+            const session = localStorage.getItem('fib_session');
+            if (session) {
+                currentUser = JSON.parse(session);
+                bootApp();
             } else {
-                // Look up inside engineering registry array mapping
-                const engineers = getStorageData('fib_engineers');
-                const matchingEng = engineers.find(e => e.mobile === mobileInput);
-                
-                if(matchingEng) {
-                    currentActiveUser = { name: matchingEng.name, mobile: matchingEng.mobile, role: "engineer" };
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+        };
+
+        // Storage Helpers
+        function getStore(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+        function setStore(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+        // Login System
+        function handleLogin() {
+            const mobile = document.getElementById('login-mobile').value.trim();
+            if (mobile.length !== 10) return alert("Enter valid 10 digit number.");
+
+            if (mobile === MASTER_ADMIN) {
+                currentUser = { name: "Master Admin", mobile: mobile, role: "admin" };
+            } else {
+                const users = getStore('fib_users');
+                const user = users.find(u => u.mobile === mobile);
+                if (user) {
+                    currentUser = user;
                 } else {
-                    alert("This number is not registered inside our system logs! Please contact Admin Jatashankar Yadav.");
-                    return;
+                    return alert("Number not registered! Ask Admin to add you.");
                 }
             }
-
-            localStorage.setItem('fib_session_user', JSON.stringify(currentActiveUser));
-            bootSystemWorkspace();
+            
+            // Save Session
+            setStore('fib_session', currentUser);
+            bootApp();
         }
 
-        function triggerAppLogout() {
-            localStorage.removeItem('fib_session_user');
-            currentActiveUser = null;
-            document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('app-content').classList.add('hidden');
+        function logout() {
+            localStorage.removeItem('fib_session');
+            window.location.reload();
         }
 
-        function bootSystemWorkspace() {
+        // Boot UI based on Role
+        function bootApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             
-            // Set Dynamic Header Badging
-            document.getElementById('app-role-badge').innerText = currentActiveUser.role === 'admin' ? "👑 Master Admin View" : `👷 Eng: ${currentActiveUser.name}`;
-            
-            // Toggle view panels dynamically based on access privileges
-            if(currentActiveUser.role === 'admin') {
-                document.getElementById('owner-admin-panel').classList.remove('hidden');
-                document.getElementById('btn-menu-tasks').classList.remove('hidden');
-                document.getElementById('btn-engineer-tasks').classList.add('hidden');
+            document.getElementById('app-role-badge').innerText = currentUser.role === 'admin' ? '👑 Admin Access' : `👷 Eng: ${currentUser.name}`;
+
+            if (currentUser.role === 'admin') {
+                document.getElementById('nav-assign').classList.remove('hidden');
+                document.getElementById('nav-users').classList.remove('hidden');
             } else {
-                document.getElementById('owner-admin-panel').classList.add('hidden');
-                document.getElementById('btn-menu-tasks').classList.add('hidden');
-                document.getElementById('btn-engineer-tasks').classList.remove('hidden');
+                document.getElementById('nav-assign').classList.add('hidden');
+                document.getElementById('nav-users').classList.add('hidden');
             }
 
-            updateDashboardCounters();
+            updateDash();
             switchTab('home');
         }
 
-        // Navigation Engine
+        // Navigation Controller
         function switchTab(tabId) {
-            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
-            const selectedTab = document.getElementById('tab-' + tabId);
-            if (selectedTab) selectedTab.classList.add('active');
-        }
+            // Hide all tabs
+            document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+            const tab = document.getElementById('tab-' + tabId);
+            if (tab) tab.classList.add('active');
 
-        // LocalStorage Safe Array Fetcher
-        function getStorageData(key) {
-            return JSON.parse(localStorage.getItem(key)) || [];
-        }
-
-        function updateDashboardCounters() {
-            const insArr = getStorageData('fib_installations');
-            const srArr = getStorageData('fib_sr_logs');
-            const restArr = getStorageData('fib_restore_logs');
-            const engCount = getStorageData('fib_engineers').length;
-
-            document.getElementById('count-install').innerText = insArr.length;
-            document.getElementById('count-sr').innerText = srArr.length;
-            document.getElementById('count-restore').innerText = restArr.length;
-            document.getElementById('staff-count-engineer').innerText = engCount;
-
-            // Calculate Task Count explicitly based on access role permissions mapping
-            const allTasks = getStorageData('fib_tasks');
-            if(currentActiveUser.role === 'admin') {
-                document.getElementById('count-tasks').innerText = allTasks.length;
-            } else {
-                const personalizedCount = allTasks.filter(t => t.engMobile === currentActiveUser.mobile).length;
-                document.getElementById('count-tasks').innerText = personalizedCount;
-            }
-        }
-
-        // File Converter Helper Engine (Encodes to Base64 safe storage mapping strings)
-        function encodeFileAsBase64(element, targetInputId) {
-            const file = element.files[0];
-            if (!file) return;
-
-            // Compress image logic rough ceiling handling
-            if(file.size > 1.5 * 1024 * 1024 && file.type.startsWith("image/")) {
-                alert("File size limits maximum ceiling threshold criteria of 1.5MB for storage limits optimization safety!");
-                return;
+            // Bottom Nav Colors
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600');
+                btn.classList.add('text-slate-400');
+            });
+            const activeBtn = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('text-blue-600');
             }
 
+            // Trigger Specific Loads
+            if (tabId === 'users') loadUsers();
+            if (tabId === 'assign') loadAssignDrop();
+            if (tabId === 'mytasks') loadMyTasks();
+            if (tabId === 'data') renderLedger();
+        }
+
+        function updateDash() {
+            document.getElementById('count-install').innerText = getStore('fib_installs').length;
+            document.getElementById('count-sr').innerText = getStore('fib_srs').length;
+        }
+
+        // User Management (Admin creates Sub-Admins & Engineers)
+        function saveUser() {
+            const name = document.getElementById('new-user-name').value;
+            const mobile = document.getElementById('new-user-mobile').value;
+            const role = document.getElementById('new-user-role').value;
+            
+            if (mobile.length !== 10) return alert("10 Digit Mobile Needed!");
+            
+            let users = getStore('fib_users');
+            if(users.some(u => u.mobile === mobile)) return alert("Number already exists!");
+
+            users.push({ name, mobile, role });
+            setStore('fib_users', users);
+            alert("User Registered Successfully!");
+            
+            document.getElementById('new-user-name').value = '';
+            document.getElementById('new-user-mobile').value = '';
+            loadUsers();
+        }
+
+        function loadUsers() {
+            const list = document.getElementById('users-list');
+            const users = getStore('fib_users');
+            list.innerHTML = users.map((u, i) => `
+                <div class="flex justify-between items-center bg-white p-3 rounded border">
+                    <div>
+                        <p class="font-bold text-sm text-slate-800">${u.name} <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-500 uppercase">${u.role}</span></p>
+                        <p class="text-xs text-slate-500">+91 ${u.mobile}</p>
+                    </div>
+                    <button onclick="delUser(${i})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">No users created yet.</p>';
+        }
+
+        function delUser(idx) {
+            let u = getStore('fib_users');
+            u.splice(idx, 1);
+            setStore('fib_users', u);
+            loadUsers();
+        }
+
+        // Task Engine (Assign & Photo attachment)
+        function loadAssignDrop() {
+            const users = getStore('fib_users');
+            const sel = document.getElementById('task-user');
+            sel.innerHTML = users.map(u => `<option value="${u.mobile}">${u.name} (${u.role})</option>`).join('') || '<option value="">Create User First</option>';
+        }
+
+        function encodeTaskPhoto(el) {
             const reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById(targetInputId).value = reader.result;
-                document.getElementById(targetInputId + "-preview").classList.remove('hidden');
-            }
-            reader.readAsDataURL(file);
+            reader.onload = e => {
+                document.getElementById('task-photo-base64').value = e.target.result;
+                document.getElementById('task-photo-msg').classList.remove('hidden');
+            };
+            if(el.files[0]) reader.readAsDataURL(el.files[0]);
         }
 
-        // ================= BUSINESS RULES ENTRY STORAGE ROUTINES =================
+        function saveTask() {
+            const mobile = document.getElementById('task-user').value;
+            const cName = document.getElementById('task-cust-name').value;
+            const cMobile = document.getElementById('task-cust-mobile').value;
+            const details = document.getElementById('task-details').value;
+            const photo = document.getElementById('task-photo-base64').value;
 
-        // 1. Save Multi-ISP Activation Form Template
-        function commitInstallationToStorage() {
-            const isp = document.getElementById('ins-isp').value;
-            const orderId = document.getElementById('ins-order-id').value.trim();
-            const iptv = document.getElementById('ins-iptv').value;
-            const city = document.getElementById('ins-city').value.trim();
-            const site = document.getElementById('ins-site').value.trim();
-            const customerCombo = document.getElementById('ins-customer-combo').value.trim();
-            const address = document.getElementById('ins-address').value.trim();
-            const receivedTime = document.getElementById('ins-time-received').value.trim();
-            const doneTime = document.getElementById('ins-time-done').value.trim();
-            const delayRemark = document.getElementById('ins-delay-remark').value.trim();
+            if(!mobile || !details) return alert("Select User and write details!");
+
+            const tasks = getStore('fib_tasks');
+            tasks.push({ engMobile: mobile, cName, cMobile, details, photo, status: 'Pending', date: new Date().toLocaleDateString() });
+            setStore('fib_tasks', tasks);
             
-            const base64Photo = document.getElementById('ins-photo-base64').value;
-            const base64Pdf = document.getElementById('ins-pdf-base64').value;
-
-            if(!orderId || !customerCombo || !site) {
-                alert("Order ID, Site Location, and Customer Data details fields are mandatory!");
-                return;
-            }
-
-            let entries = getStorageData('fib_installations');
-            entries.push({
-                isp, orderId, iptv, city, site, customerCombo, address, receivedTime, doneTime, delayRemark,
-                photo: base64Photo, pdf: base64Pdf,
-                systemTimestamp: new Date().toISOString()
-            });
-
-            localStorage.setItem('fib_installations', JSON.stringify(entries));
-            alert("Installation details written cleanly into Ledger Register!");
-
-            // Form Cleaning resetting values safely
-            ['ins-order-id', 'ins-site', 'ins-customer-combo', 'ins-address', 'ins-time-received', 'ins-time-done', 'ins-delay-remark', 'ins-photo-base64', 'ins-pdf-base64'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.value = '';
-            });
-            document.getElementById('ins-photo-base64-preview').classList.add('hidden');
-            document.getElementById('ins-pdf-base64-preview').classList.add('hidden');
-
-            updateDashboardCounters();
+            alert("Task Dispatched!");
+            // Reset
+            ['task-cust-name', 'task-cust-mobile', 'task-details', 'task-photo-base64'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('task-photo-msg').classList.add('hidden');
             switchTab('home');
         }
 
-        // 2. Save SR Resolved Log Module
-        function commitSrLogToStorage() {
-            const srNum = document.getElementById('sr-number').value.trim();
-            const custName = document.getElementById('sr-customer-name').value.trim();
-            const mobile = document.getElementById('sr-mobile').value.trim();
-            const fault = document.getElementById('sr-fault-category').value;
-            const resolution = document.getElementById('sr-resolution-remarks').value.trim();
+        // Engineer Task View (Direct Call/WhatsApp Integration)
+        function loadMyTasks() {
+            const tasks = getStore('fib_tasks');
+            // Admin sees all, Engineer sees only theirs
+            let myTasks = currentUser.role === 'admin' ? tasks : tasks.filter(t => t.engMobile === currentUser.mobile);
 
-            if(!srNum || !custName || !resolution) {
-                alert("SR Number, Customer Name, and Resolution Steps logs must be fully completed!");
-                return;
-            }
-
-            let logs = getStorageData('fib_sr_logs');
-            logs.push({
-                srNum, custName, mobile, fault, resolution,
-                systemTimestamp: new Date().toISOString()
-            });
-
-            localStorage.setItem('fib_sr_logs', JSON.stringify(logs));
-            alert(`SR Ticket Reference ID ${srNum} cataloged successfully as Resolved.`);
-
-            ['sr-number', 'sr-customer-name', 'sr-mobile', 'sr-resolution-remarks'].forEach(id => document.getElementById(id).value = '');
-            
-            updateDashboardCounters();
-            switchTab('home');
-        }
-
-        // 3. Save Node Restoration Update Ledger
-        function commitRestoreUpdateToStorage() {
-            const fatboxId = document.getElementById('rest-fatbox-id').value.trim();
-            const power = document.getElementById('rest-power').value.trim();
-            const cores = document.getElementById('rest-cores').value.trim();
-            const remarks = document.getElementById('rest-remarks').value.trim();
-            const photo = document.getElementById('rest-photo-base64').value;
-
-            if(!fatboxId || !power) {
-                alert("Fatbox Node ID and Signal Metrics criteria are mandatory fields!");
-                return;
-            }
-
-            let logs = getStorageData('fib_restore_logs');
-            logs.push({
-                fatboxId, power, cores, remarks, photo,
-                systemTimestamp: new Date().toISOString()
-            });
-
-            localStorage.setItem('fib_restore_logs', JSON.stringify(logs));
-            alert("Fatbox validation metrics safely recorded!");
-
-            ['rest-fatbox-id', 'rest-power', 'rest-cores', 'rest-remarks', 'rest-photo-base64'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('rest-photo-base64-preview').classList.add('hidden');
-
-            updateDashboardCounters();
-            switchTab('home');
-        }
-
-        // ================= TASKING ROUTINES & ISOLATIONS =================
-
-        function loadTaskManager() {
-            const engSelect = document.getElementById('task-eng-select');
-            const engineers = getStorageData('fib_engineers');
-            
-            engSelect.innerHTML = engineers.length === 0 
-                ? `<option value="">-- Register Field Engineer Below --</option>`
-                : engineers.map(e => `<option value="${e.mobile}">${e.name} (${e.mobile})</option>`).join('');
-
-            const tasksList = document.getElementById('assigned-tasks-list');
-            const tasks = getStorageData('fib_tasks');
-
-            if(tasks.length === 0) {
-                tasksList.innerHTML = `<p class="text-center text-gray-400 text-xs italic py-4">No tasks allocated inside dispatch engine logs.</p>`;
-                return;
-            }
-
-            tasksList.innerHTML = tasks.map((t, i) => `
-                <div class="bg-white p-3 rounded-xl border text-xs space-y-1 relative">
-                    <span class="absolute top-2 right-2 px-1.5 py-0.5 font-bold rounded-sm text-[9px] ${t.status === 'Completed' ? 'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${t.status}</span>
-                    <h4 class="font-black text-gray-800">${t.engName}</h4>
-                    <p class="text-gray-500 font-bold text-[10px]">Mobile Number: +91 ${t.engMobile}</p>
-                    <p class="bg-gray-50 border p-2 rounded text-gray-700 mt-1">${t.details}</p>
-                    <div class="flex justify-between items-center text-[9px] text-gray-400 pt-1.5 border-t mt-2">
-                        <span>Allocated: ${t.date}</span>
-                        <button onclick="deleteTaskEntry(${i})" class="text-red-500 font-bold"><i class="fa-solid fa-trash"></i> Remove</button>
+            const list = document.getElementById('mytasks-list');
+            list.innerHTML = myTasks.map((t, idx) => `
+                <div class="bg-white p-4 border rounded-xl shadow-sm relative space-y-2">
+                    <span class="absolute top-2 right-2 text-[9px] px-2 py-1 rounded font-bold ${t.status==='Pending'?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'}">${t.status}</span>
+                    <h4 class="font-bold text-sm text-slate-800">${t.cName || 'Unnamed Site'}</h4>
+                    <p class="text-xs text-slate-600 bg-slate-50 p-2 rounded">${t.details}</p>
+                    
+                    <div class="flex space-x-2 pt-2 border-t mt-2">
+                        ${t.cMobile ? `
+                            <a href="tel:${t.cMobile}" class="flex-1 bg-green-500 text-white text-center py-2 rounded-lg text-xs font-bold hover:bg-green-600"><i class="fa-solid fa-phone mr-1"></i> Call</a>
+                            <a href="https://wa.me/91${t.cMobile}" target="_blank" class="flex-1 bg-emerald-500 text-white text-center py-2 rounded-lg text-xs font-bold hover:bg-emerald-600"><i class="fa-brands fa-whatsapp mr-1"></i> Msg</a>
+                        ` : ''}
+                        ${t.photo ? `<button onclick="viewDoc('${t.photo}')" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold"><i class="fa-solid fa-image"></i></button>` : ''}
                     </div>
                 </div>
-            `).join('');
+            `).join('') || '<p class="text-center text-slate-400 italic text-sm mt-5">No Tasks Assigned.</p>';
         }
 
-        function saveNewEngineer() {
-            const name = document.getElementById('task-eng-name').value.trim();
-            const mobile = document.getElementById('task-eng-mobile').value.trim();
+        // Base Data Saving (Manual typing logic integration)
+        function encodeBase64(el, targetId) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById(targetId).value = e.target.result;
+                document.getElementById('ins-upload-msg').classList.remove('hidden');
+            };
+            if(el.files[0]) reader.readAsDataURL(el.files[0]);
+        }
 
-            if(!name || mobile.length !== 10) {
-                alert("Please provide full name identity and clean 10-digit numeric digits mobile string!");
-                return;
+        function saveData(type) {
+            let key = '';
+            let payload = { date: new Date().toLocaleDateString() };
+
+            if(type === 'install') {
+                key = 'fib_installs';
+                payload = {...payload, 
+                    isp: document.getElementById('ins-isp').value,
+                    order: document.getElementById('ins-order-id').value,
+                    cust: document.getElementById('ins-customer').value,
+                    address: document.getElementById('ins-address').value,
+                    photo: document.getElementById('ins-photo').value,
+                    pdf: document.getElementById('ins-pdf').value
+                };
+            } else if (type === 'sr') {
+                key = 'fib_srs';
+                payload = {...payload,
+                    fault: document.getElementById('sr-fault').value,
+                    ticket: document.getElementById('sr-ticket').value,
+                    cust: document.getElementById('sr-customer').value,
+                    resolve: document.getElementById('sr-resolve').value
+                };
+            } else {
+                key = 'fib_restores';
+                payload = {...payload,
+                    id: document.getElementById('rest-id').value,
+                    power: document.getElementById('rest-power').value,
+                    remark: document.getElementById('rest-remarks').value
+                };
             }
 
-            let engineers = getStorageData('fib_engineers');
-            engineers.push({ name, mobile });
-            localStorage.setItem('fib_engineers', JSON.stringify(engineers));
-
-            alert(`Field Personnel profile created for ${name}!`);
-            document.getElementById('task-eng-name').value = '';
-            document.getElementById('task-eng-mobile').value = '';
-
-            updateDashboardCounters();
-            loadTaskManager();
-        }
-
-        function saveAssignedTask() {
-            const engMobile = document.getElementById('task-eng-select').value;
-            const details = document.getElementById('task-details').value.trim();
-
-            if(!engMobile || !details) {
-                alert("Engineer selection matrix mapping and full workflow detail metrics required!");
-                return;
-            }
-
-            const engineers = getStorageData('fib_engineers');
-            const foundEng = engineers.find(e => e.mobile === engMobile);
-
-            let tasks = getStorageData('fib_tasks');
-            tasks.push({
-                engMobile,
-                engName: foundEng ? foundEng.name : "Unregistered Personnel",
-                details,
-                status: "Pending",
-                date: new Date().toLocaleDateString()
-            });
-
-            localStorage.setItem('fib_tasks', JSON.stringify(tasks));
-            alert("Work instructions dispatched to targeted field terminal device.");
-            document.getElementById('task-details').value = '';
-
-            updateDashboardCounters();
-            loadTaskManager();
-        }
-
-        function deleteTaskEntry(idx) {
-            let t = getStorageData('fib_tasks');
-            t.splice(idx,1);
-            localStorage.setItem('fib_tasks', JSON.stringify(t));
-            updateDashboardCounters();
-            loadTaskManager();
-        }
-
-        // ================= REQUIREMENT 5: ISOLATED WORKSPACE VIEWS FOR ENGINEERS =================
-        function loadEngineerWorkspace() {
-            const wrapper = document.getElementById('engineer-filtered-tasks');
-            const tasks = getStorageData('fib_tasks');
+            const dataArr = getStore(key);
+            dataArr.push(payload);
+            setStore(key, dataArr);
             
-            // Filter criteria targeting uniquely the signed mobile number identity logs
-            const filtered = tasks.map((t, originalIndex) => ({...t, originalIndex})).filter(t => t.engMobile === currentActiveUser.mobile);
-
-            if(filtered.length === 0) {
-                wrapper.innerHTML = `<div class="p-8 text-center bg-white border rounded-xl text-gray-400 font-medium italic">No field instructions assigned to your profile record currently!</div>`;
-                return;
-            }
-
-            wrapper.innerHTML = filtered.map(t => `
-                <div class="bg-white p-4 rounded-xl border-l-4 border-purple-600 shadow-xs space-y-2">
-                    <div class="flex justify-between items-center border-b pb-1">
-                        <span class="text-[10px] text-gray-400 font-bold">Assigned: ${t.date}</span>
-                        <button onclick="toggleTaskStatusFromWorkspace(${t.originalIndex})" class="text-[10px] px-2 py-0.5 font-black rounded border transition ${t.status === 'Completed' ? 'bg-emerald-50 text-emerald-600 border-emerald-200':'bg-amber-50 text-amber-600 border-amber-200'}">
-                            ${t.status.toUpperCase()} <i class="fa-solid fa-rotate ml-0.5"></i>
-                        </button>
-                    </div>
-                    <p class="text-xs text-gray-800 font-semibold bg-purple-50/50 p-2.5 rounded-md border border-purple-100/50">${t.details}</p>
-                </div>
-            `).join('');
-        }
-
-        function toggleTaskStatusFromWorkspace(idx) {
-            let tasks = getStorageData('fib_tasks');
-            tasks[idx].status = tasks[idx].status === 'Pending' ? 'Completed' : 'Pending';
-            localStorage.setItem('fib_tasks', JSON.stringify(tasks));
-            loadEngineerWorkspace();
-        }
-
-        // ================= REQUIREMENT 2: STRUCTURAL CHRONOLOGICAL MATRIX VIEW (TABLES) =================
-        function toggleLedgerTimeframe(type) {
-            activeLedgerTimeframe = type;
-            document.getElementById('btn-ledger-daily').className = type === 'daily' ? 'flex-1 bg-white shadow-xs rounded-md text-gray-800 py-1.5 transition' : 'flex-1 text-gray-500 py-1.5 transition';
-            document.getElementById('btn-ledger-monthly').className = type === 'monthly' ? 'flex-1 bg-white shadow-xs rounded-md text-gray-800 py-1.5 transition' : 'flex-1 text-gray-500 py-1.5 transition';
-            renderLedgerView();
-        }
-
-        function renderLedgerView() {
-            const container = document.getElementById('ledger-tables-wrapper');
+            alert("Record Saved Securely!");
             
-            const installations = getStorageData('fib_installations');
-            const srLogs = getStorageData('fib_sr_logs');
-            const restoreLogs = getStorageData('fib_restore_logs');
-
-            // Generate structural responsive table columns markup matching data lists matrix
-            let htmlOutput = `<div class="space-y-6">`;
-
-            // Segment 1: Installations Spreadsheet Ledger View
-            htmlOutput += `
-                <div>
-                    <h3 class="font-black text-xs text-blue-600 uppercase tracking-wider mb-2 border-b pb-1"><i class="fa-solid fa-box-archive"></i> Installation Master Records Ledger (${activeLedgerTimeframe.toUpperCase()})</h3>
-                    <table class="w-full text-left border-collapse border border-gray-100 min-w-[600px]">
-                        <thead>
-                            <tr class="bg-gray-100 font-bold text-gray-600 border-b">
-                                <th class="p-2 border border-gray-200">Order ID</th>
-                                <th class="p-2 border border-gray-200">ISP</th>
-                                <th class="p-2 border border-gray-200">Customer Combo</th>
-                                <th class="p-2 border border-gray-200">Site Location</th>
-                                <th class="p-2 border border-gray-200">IPTV</th>
-                                <th class="p-2 border border-gray-200">Completion Date</th>
-                                <th class="p-2 border border-gray-200">Evidence Vault Links</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${installations.length === 0 ? `<tr><td colspan="7" class="p-3 text-center text-gray-400 italic">No structural data items indexed.</td></tr>` : 
-                              installations.map(ins => `
-                                <tr class="hover:bg-slate-50 border-b">
-                                    <td class="p-2 font-mono font-bold border border-gray-200">${ins.orderId}</td>
-                                    <td class="p-2 font-bold text-blue-600 border border-gray-200">${ins.isp}</td>
-                                    <td class="p-2 border border-gray-200 font-semibold">${ins.customerCombo}</td>
-                                    <td class="p-2 border border-gray-200">${ins.site}</td>
-                                    <td class="p-2 border border-gray-200 font-bold">${ins.iptv}</td>
-                                    <td class="p-2 border border-gray-200">${ins.doneTime || 'N/A'}</td>
-                                    <td class="p-2 border border-gray-200 text-center space-x-1">
-                                        ${ins.photo ? `<button onclick="renderVaultBinary('${ins.photo}', 'image')" class="bg-blue-100 text-blue-700 px-1 rounded font-bold text-[10px]">Photo</button>`:''}
-                                        ${ins.pdf ? `<button onclick="renderVaultBinary('${ins.pdf}', 'pdf')" class="bg-red-100 text-red-700 px-1 rounded font-bold text-[10px]">PDF</button>`:''}
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            // Segment 2: SR Ticket Status Spreadsheet View
-            htmlOutput += `
-                <div>
-                    <h3 class="font-black text-xs text-red-600 uppercase tracking-wider mb-2 border-b pb-1"><i class="fa-solid fa-phone"></i> SR Fault Tickets Ledger</h3>
-                    <table class="w-full text-left border-collapse border border-gray-100 min-w-[500px]">
-                        <thead>
-                            <tr class="bg-gray-100 font-bold text-gray-600 border-b">
-                                <th class="p-2 border border-gray-200">Ticket SR Num</th>
-                                <th class="p-2 border border-gray-200">Customer Identity</th>
-                                <th class="p-2 border border-gray-200">Fault Category</th>
-                                <th class="p-2 border border-gray-200">Resolution Logs Context</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${srLogs.length === 0 ? `<tr><td colspan="4" class="p-3 text-center text-gray-400 italic">No technical support matrix records logged.</td></tr>` : 
-                              srLogs.map(sr => `
-                                <tr class="hover:bg-slate-50 border-b">
-                                    <td class="p-2 font-mono font-bold border border-gray-200">${sr.srNum}</td>
-                                    <td class="p-2 border border-gray-200 font-medium">${sr.custName} (+91 ${sr.mobile})</td>
-                                    <td class="p-2 font-semibold text-red-500 border border-gray-200">${sr.fault}</td>
-                                    <td class="p-2 border border-gray-200 font-medium text-gray-600">${sr.resolution}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            // Segment 3: Site Restoration Spreadsheet Ledger View
-            htmlOutput += `
-                <div>
-                    <h3 class="font-black text-xs text-emerald-600 uppercase tracking-wider mb-2 border-b pb-1"><i class="fa-solid fa-signal"></i> Node Restoration Spreadsheet</h3>
-                    <table class="w-full text-left border-collapse border border-gray-100 min-w-[500px]">
-                        <thead>
-                            <tr class="bg-gray-100 font-bold text-gray-600 border-b">
-                                <th class="p-2 border border-gray-200">Fatbox Node Target ID</th>
-                                <th class="p-2 border border-gray-200">Optical Power Level</th>
-                                <th class="p-2 border border-gray-200">Cores Restored</th>
-                                <th class="p-2 border border-gray-200">Evidence Vault</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${restoreLogs.length === 0 ? `<tr><td colspan="4" class="p-3 text-center text-gray-400 italic">No node records reported in this segment view.</td></tr>` : 
-                              restoreLogs.map(rest => `
-                                <tr class="hover:bg-slate-50 border-b">
-                                    <td class="p-2 font-bold border border-gray-200">${rest.fatboxId}</td>
-                                    <td class="p-2 text-emerald-600 font-black border border-gray-200">${rest.power}</td>
-                                    <td class="p-2 border border-gray-200 font-bold text-center">${rest.cores}</td>
-                                    <td class="p-2 border border-gray-200 text-center">
-                                        ${rest.photo ? `<button onclick="renderVaultBinary('${rest.photo}', 'image')" class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-bold">Inspect Media</button>` : '<span class="text-gray-400 italic">None</span>'}
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            htmlOutput += `</div>`;
-            container.innerHTML = htmlOutput;
+            // Clear inputs dynamically
+            document.querySelectorAll(`#tab-${type} input[type="text"], #tab-${type} textarea, #tab-${type} input[type="hidden"]`).forEach(el => el.value = '');
+            if(type === 'install') document.getElementById('ins-upload-msg').classList.add('hidden');
+            
+            updateDash();
+            switchTab('home');
         }
 
-        // Inline Viewer Tool for Document Attachments Base64 Data
-        function renderVaultBinary(base64Str, mode) {
-            const win = window.open();
-            if(mode === 'image') {
-                win.document.write(`<div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;"><img src="${base64Str}" style="max-width:100%;max-height:95vh;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);" /></div>`);
-            } else if(mode === 'pdf') {
-                win.document.write(`<iframe src="${base64Str}" style="width:100%;height:100vh;border:none;"></iframe>`);
-            }
+        function renderLedger() {
+            const inst = getStore('fib_installs');
+            const sr = getStore('fib_srs');
+            const target = document.getElementById('ledger-content');
+
+            target.innerHTML = `
+                <h4 class="font-bold text-blue-600 bg-blue-50 p-2 rounded mb-1">Installations</h4>
+                ${inst.map(i => `<div class="p-2 border-b"><span class="font-bold">${i.isp}</span> - ${i.cust} (${i.date}) ${i.photo?`<a href="#" onclick="viewDoc('${i.photo}')" class="text-blue-500">📷</a>`:''}</div>`).join('') || '<p>No data</p>'}
+                
+                <h4 class="font-bold text-red-600 bg-red-50 p-2 rounded mb-1 mt-4">SR Logs</h4>
+                ${sr.map(s => `<div class="p-2 border-b"><span class="font-bold text-red-500">${s.fault}</span> - ${s.cust} (${s.date})</div>`).join('') || '<p>No data</p>'}
+            `;
         }
 
-        function clearAllSystemData() {
-            if(confirm("CRITICAL ACCIDENTAL PROTECTION: Are you absolutely certain you want to wipe clean all localized database records matrices? This operation is irreversible!")) {
-                localStorage.removeItem('fib_installations');
-                localStorage.removeItem('fib_sr_logs');
-                localStorage.removeItem('fib_restore_logs');
+        function viewDoc(data) {
+            const w = window.open();
+            w.document.write(`<img src="${data}" style="max-width:100%; display:block; margin:auto;"/>`);
+        }
+
+        function resetData() {
+            if(confirm("Are you sure? This deletes ALL data except Users.")) {
+                localStorage.removeItem('fib_installs');
+                localStorage.removeItem('fib_srs');
+                localStorage.removeItem('fib_restores');
                 localStorage.removeItem('fib_tasks');
-                localStorage.removeItem('fib_engineers');
-                updateDashboardCounters();
-                renderLedgerView();
+                updateDash();
+                switchTab('home');
             }
         }
     </script>
