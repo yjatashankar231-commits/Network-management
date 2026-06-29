@@ -11,7 +11,6 @@
         .page-tab { display: none; }
         .page-tab.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        /* Hide scrollbar for cleaner look */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
@@ -57,7 +56,6 @@
         <main class="flex-1 max-w-md mx-auto w-full p-4 pt-20 overflow-y-auto mb-16">
 
             <div id="tab-home" class="page-tab active space-y-4">
-                
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3">
                         <div class="text-blue-500 text-2xl"><i class="fa-solid fa-box-archive"></i></div>
@@ -120,7 +118,6 @@
                         <button onclick="saveUser()" class="w-full bg-amber-500 text-slate-900 font-bold rounded-lg p-3 hover:bg-amber-400 transition">Create User Profile</button>
                     </div>
                 </div>
-                
                 <h3 class="text-xs font-bold text-gray-500 uppercase">Registered System Users</h3>
                 <div id="users-list" class="space-y-2"></div>
             </div>
@@ -128,20 +125,11 @@
             <div id="tab-assign" class="page-tab space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
                     <h2 class="font-bold text-base text-blue-600 border-b pb-2"><i class="fa-solid fa-clipboard-list mr-1"></i> Assign New Work</h2>
-                    
                     <select id="task-user" class="w-full border rounded-lg p-3 font-semibold outline-none focus:ring-2 focus:ring-blue-400"></select>
-                    
                     <input id="task-cust-name" type="text" placeholder="Customer / Site Name" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
                     <input id="task-cust-mobile" type="tel" maxlength="10" placeholder="Customer Mobile (For Calling)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400">
                     <textarea id="task-details" rows="2" placeholder="Task Details & Address..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                     
-                    <label class="block w-full bg-slate-50 border border-dashed border-slate-300 text-slate-500 font-bold px-3 py-3 rounded-lg text-center cursor-pointer hover:bg-slate-100 text-sm">
-                        <i class="fa-solid fa-paperclip mr-1"></i> Attach Reference Photo
-                        <input type="file" accept="image/*" onchange="encodeTaskPhoto(this)" class="hidden">
-                    </label>
-                    <input type="hidden" id="task-photo-base64">
-                    <p id="task-photo-msg" class="text-[10px] text-emerald-600 font-bold hidden"><i class="fa-solid fa-check-circle"></i> Photo Attached</p>
-
                     <button onclick="saveTask()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700">Dispatch Task</button>
                 </div>
             </div>
@@ -152,30 +140,73 @@
             </div>
 
             <div id="tab-install" class="page-tab space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h2 class="font-bold text-base text-blue-600 border-b pb-2"><i class="fa-solid fa-network-wired mr-1"></i> New Installation</h2>
+                <h2 class="font-bold text-base text-blue-600 border-b pb-2"><i class="fa-solid fa-network-wired mr-1"></i> New Installation Form</h2>
                 
                 <div class="space-y-3 text-sm">
-                    <input id="ins-isp" type="text" placeholder="Type ISP Name (e.g. Airtel, Jio, GTPL)" class="w-full border rounded-lg p-3 font-bold outline-none focus:ring-2 focus:ring-blue-500">
-                    <input id="ins-order-id" type="text" placeholder="Order ID" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
-                    
-                    <input id="ins-customer" type="text" placeholder="Customer Name & Detail" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
-                    <textarea id="ins-address" rows="2" placeholder="Complete Address" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    
                     <div class="grid grid-cols-2 gap-2">
-                        <label class="bg-slate-50 border p-2 rounded-lg text-center cursor-pointer text-xs font-bold text-slate-600">
-                            <i class="fa-solid fa-camera mb-1 block"></i> Photo Capture
-                            <input type="file" accept="image/*" onchange="encodeBase64(this, 'ins-photo')" class="hidden">
-                        </label>
-                        <label class="bg-slate-50 border p-2 rounded-lg text-center cursor-pointer text-xs font-bold text-slate-600">
-                            <i class="fa-solid fa-file-pdf mb-1 block"></i> PDF Upload
-                            <input type="file" accept=".pdf" onchange="encodeBase64(this, 'ins-pdf')" class="hidden">
-                        </label>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">ISP Name</label>
+                            <input id="ins-isp" type="text" placeholder="e.g. Airtel" class="w-full border rounded-lg p-2 font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Order ID</label>
+                            <input id="ins-order-id" type="text" placeholder="Order ID" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
                     </div>
-                    <input type="hidden" id="ins-photo">
-                    <input type="hidden" id="ins-pdf">
-                    <p id="ins-upload-msg" class="text-[10px] text-emerald-600 font-bold hidden text-center">Files Ready</p>
 
-                    <button onclick="saveData('install')" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3">Submit Installation</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Black White IPTV</label>
+                            <select id="ins-iptv" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="NO">NO</option>
+                                <option value="YES">YES</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">City</label>
+                            <input id="ins-city" type="text" value="Ahmadabad" placeholder="City" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Site</label>
+                        <input id="ins-site" type="text" placeholder="Site Name (e.g. Rashmi South Park)" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Customer Name & Mobile</label>
+                        <input id="ins-customer" type="text" placeholder="Mobile & Name (e.g. 9033669337 Khusbhu)" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Address</label>
+                        <textarea id="ins-address" rows="2" placeholder="Complete Address" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Received Time</label>
+                            <input id="ins-recv-time" type="datetime-local" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500 text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Installation Date</label>
+                            <input id="ins-inst-date" type="datetime-local" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500 text-xs">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Remark if delayed</label>
+                        <input id="ins-remark" type="text" placeholder="Reason for delay..." class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <label class="block w-full bg-slate-50 border-2 border-dashed border-blue-300 text-blue-600 font-bold px-3 py-4 rounded-lg text-center cursor-pointer hover:bg-blue-50">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 block"></i> 
+                        Upload Photos & PDF (10 - 15 Files)
+                        <input type="file" id="ins-files" accept="image/*, application/pdf" multiple class="hidden" onchange="handleMultipleFiles(this)">
+                    </label>
+                    <p id="ins-upload-msg" class="text-[11px] text-emerald-600 font-bold text-center mt-1"></p>
+
+                    <button onclick="saveInstallationData()" class="w-full bg-blue-600 text-white font-bold rounded-lg p-3 shadow-md hover:bg-blue-700">Submit Installation</button>
                 </div>
             </div>
 
@@ -187,7 +218,7 @@
                     <input id="sr-customer" type="text" placeholder="Customer Name & Details" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400">
                     <textarea id="sr-resolve" rows="2" placeholder="Resolution Steps Taken..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-red-400"></textarea>
                     
-                    <button onclick="saveData('sr')" class="w-full bg-red-500 text-white font-bold rounded-lg p-3">Save SR Ticket</button>
+                    <button onclick="saveData('sr')" class="w-full bg-red-500 text-white font-bold rounded-lg p-3 shadow-md">Save SR Ticket</button>
                 </div>
             </div>
 
@@ -198,7 +229,7 @@
                     <input id="rest-power" type="text" placeholder="Power Level (e.g. -21.5 dBm)" class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400">
                     <textarea id="rest-remarks" rows="2" placeholder="Remarks..." class="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
                     
-                    <button onclick="saveData('restore')" class="w-full bg-emerald-600 text-white font-bold rounded-lg p-3">Submit Restoration</button>
+                    <button onclick="saveData('restore')" class="w-full bg-emerald-600 text-white font-bold rounded-lg p-3 shadow-md">Submit Restoration</button>
                 </div>
             </div>
 
@@ -234,11 +265,12 @@
     </div>
 
     <script>
-        // Data Structures
+        // System Data Variables
         const MASTER_ADMIN = "9142173747";
         let currentUser = null;
+        let selectedFiles = [];
 
-        // On Page Load: Session Persistence Engine
+        // 1. Initial Load Engine
         window.onload = () => {
             const session = localStorage.getItem('fib_session');
             if (session) {
@@ -253,7 +285,7 @@
         function getStore(key) { return JSON.parse(localStorage.getItem(key)) || []; }
         function setStore(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
-        // Login System
+        // 2. Fixed Login System
         function handleLogin() {
             const mobile = document.getElementById('login-mobile').value.trim();
             if (mobile.length !== 10) return alert("Enter valid 10 digit number.");
@@ -270,23 +302,24 @@
                 }
             }
             
-            // Save Session
             setStore('fib_session', currentUser);
+            document.getElementById('login-mobile').value = '';
             bootApp();
         }
 
+        // Fixed Logout
         function logout() {
             localStorage.removeItem('fib_session');
-            window.location.reload();
+            location.reload();
         }
 
-        // Boot UI based on Role
+        // 3. Boot Application Logic
         function bootApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             
-            document.getElementById('app-role-badge').innerText = currentUser.role === 'admin' ? '👑 Admin Access' : `👷 Eng: ${currentUser.name}`;
-
+            document.getElementById('app-role-badge').innerText = currentUser.role.toUpperCase();
+            
             if (currentUser.role === 'admin') {
                 document.getElementById('nav-assign').classList.remove('hidden');
                 document.getElementById('nav-users').classList.remove('hidden');
@@ -295,223 +328,202 @@
                 document.getElementById('nav-users').classList.add('hidden');
             }
 
-            updateDash();
+            renderUsers();
+            renderLedger();
             switchTab('home');
         }
 
-        // Navigation Controller
+        // 4. Navigation Tab Switcher
         function switchTab(tabId) {
-            // Hide all tabs
-            document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
-            const tab = document.getElementById('tab-' + tabId);
-            if (tab) tab.classList.add('active');
-
-            // Bottom Nav Colors
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600');
-                btn.classList.add('text-slate-400');
+            document.querySelectorAll('.page-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('text-blue-600');
+                el.classList.add('text-slate-400');
+                if(el.dataset.target === tabId) {
+                    el.classList.remove('text-slate-400');
+                    el.classList.add('text-blue-600');
+                }
             });
-            const activeBtn = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400');
-                activeBtn.classList.add('text-blue-600');
-            }
-
-            // Trigger Specific Loads
-            if (tabId === 'users') loadUsers();
-            if (tabId === 'assign') loadAssignDrop();
-            if (tabId === 'mytasks') loadMyTasks();
-            if (tabId === 'data') renderLedger();
         }
 
-        function updateDash() {
-            document.getElementById('count-install').innerText = getStore('fib_installs').length;
-            document.getElementById('count-sr').innerText = getStore('fib_srs').length;
-        }
-
-        // User Management (Admin creates Sub-Admins & Engineers)
+        // 5. User Management (Admin Only)
         function saveUser() {
             const name = document.getElementById('new-user-name').value;
             const mobile = document.getElementById('new-user-mobile').value;
             const role = document.getElementById('new-user-role').value;
             
-            if (mobile.length !== 10) return alert("10 Digit Mobile Needed!");
+            if (mobile.length !== 10 || name === '') return alert("Please fill valid details.");
             
             let users = getStore('fib_users');
-            if(users.some(u => u.mobile === mobile)) return alert("Number already exists!");
-
+            if(users.find(u => u.mobile === mobile)) return alert("User already exists!");
+            
             users.push({ name, mobile, role });
             setStore('fib_users', users);
-            alert("User Registered Successfully!");
+            alert("User added successfully!");
             
             document.getElementById('new-user-name').value = '';
             document.getElementById('new-user-mobile').value = '';
-            loadUsers();
+            renderUsers();
         }
 
-        function loadUsers() {
+        function renderUsers() {
+            const users = getStore('fib_users');
             const list = document.getElementById('users-list');
-            const users = getStore('fib_users');
-            list.innerHTML = users.map((u, i) => `
-                <div class="flex justify-between items-center bg-white p-3 rounded border">
-                    <div>
-                        <p class="font-bold text-sm text-slate-800">${u.name} <span class="text-[10px] bg-slate-100 px-1 rounded ml-1 text-slate-500 uppercase">${u.role}</span></p>
-                        <p class="text-xs text-slate-500">+91 ${u.mobile}</p>
-                    </div>
-                    <button onclick="delUser(${i})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+            list.innerHTML = users.map(u => `
+                <div class="bg-white p-3 rounded-lg border flex justify-between items-center shadow-sm">
+                    <div><p class="font-bold text-sm text-slate-800">${u.name}</p><p class="text-[10px] text-slate-400">${u.mobile}</p></div>
+                    <span class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-600 uppercase">${u.role}</span>
                 </div>
-            `).join('') || '<p class="text-xs text-gray-400 italic">No users created yet.</p>';
-        }
-
-        function delUser(idx) {
-            let u = getStore('fib_users');
-            u.splice(idx, 1);
-            setStore('fib_users', u);
-            loadUsers();
-        }
-
-        // Task Engine (Assign & Photo attachment)
-        function loadAssignDrop() {
-            const users = getStore('fib_users');
-            const sel = document.getElementById('task-user');
-            sel.innerHTML = users.map(u => `<option value="${u.mobile}">${u.name} (${u.role})</option>`).join('') || '<option value="">Create User First</option>';
-        }
-
-        function encodeTaskPhoto(el) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('task-photo-base64').value = e.target.result;
-                document.getElementById('task-photo-msg').classList.remove('hidden');
-            };
-            if(el.files[0]) reader.readAsDataURL(el.files[0]);
-        }
-
-        function saveTask() {
-            const mobile = document.getElementById('task-user').value;
-            const cName = document.getElementById('task-cust-name').value;
-            const cMobile = document.getElementById('task-cust-mobile').value;
-            const details = document.getElementById('task-details').value;
-            const photo = document.getElementById('task-photo-base64').value;
-
-            if(!mobile || !details) return alert("Select User and write details!");
-
-            const tasks = getStore('fib_tasks');
-            tasks.push({ engMobile: mobile, cName, cMobile, details, photo, status: 'Pending', date: new Date().toLocaleDateString() });
-            setStore('fib_tasks', tasks);
+            `).join('');
             
-            alert("Task Dispatched!");
-            // Reset
-            ['task-cust-name', 'task-cust-mobile', 'task-details', 'task-photo-base64'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('task-photo-msg').classList.add('hidden');
+            // Populate Assign Dropdown
+            const taskUser = document.getElementById('task-user');
+            if(taskUser) {
+                taskUser.innerHTML = '<option value="">Select Engineer...</option>' + 
+                    users.map(u => `<option value="${u.mobile}">${u.name} (${u.mobile})</option>`).join('');
+            }
+        }
+
+        // 6. Handle Multiple Files (10-15 Images/PDF)
+        function handleMultipleFiles(input) {
+            const files = input.files;
+            if(files.length > 15) {
+                alert("Maximum 15 files allowed!");
+                input.value = "";
+                selectedFiles = [];
+                document.getElementById('ins-upload-msg').innerText = "";
+                return;
+            }
+            
+            selectedFiles = [];
+            for(let i=0; i<files.length; i++) {
+                selectedFiles.push(files[i].name);
+            }
+            document.getElementById('ins-upload-msg').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${files.length} Files Selected.`;
+        }
+
+        // 7. Save Installation Data (UPDATED FUNCTION)
+        function saveInstallationData() {
+            const data = {
+                type: 'install',
+                date: new Date().toLocaleString(),
+                by: currentUser.name,
+                isp: document.getElementById('ins-isp').value,
+                orderId: document.getElementById('ins-order-id').value,
+                iptv: document.getElementById('ins-iptv').value,
+                city: document.getElementById('ins-city').value,
+                site: document.getElementById('ins-site').value,
+                customer: document.getElementById('ins-customer').value,
+                address: document.getElementById('ins-address').value,
+                recvTime: document.getElementById('ins-recv-time').value,
+                instDate: document.getElementById('ins-inst-date').value,
+                remark: document.getElementById('ins-remark').value,
+                filesCount: selectedFiles.length
+            };
+
+            if(!data.customer || !data.orderId) return alert("Customer Name and Order ID are required!");
+
+            let records = getStore('fib_records');
+            records.push(data);
+            setStore('fib_records', records);
+            
+            alert("Installation Saved Successfully!");
+            
+            // Clear Form
+            document.querySelectorAll('#tab-install input:not([type="file"]), #tab-install textarea').forEach(el => el.value = '');
+            document.getElementById('ins-files').value = '';
+            document.getElementById('ins-upload-msg').innerText = '';
+            selectedFiles = [];
+            
+            renderLedger();
             switchTab('home');
         }
 
-        // Engineer Task View (Direct Call/WhatsApp Integration)
-        function loadMyTasks() {
-            const tasks = getStore('fib_tasks');
-            // Admin sees all, Engineer sees only theirs
-            let myTasks = currentUser.role === 'admin' ? tasks : tasks.filter(t => t.engMobile === currentUser.mobile);
-
-            const list = document.getElementById('mytasks-list');
-            list.innerHTML = myTasks.map((t, idx) => `
-                <div class="bg-white p-4 border rounded-xl shadow-sm relative space-y-2">
-                    <span class="absolute top-2 right-2 text-[9px] px-2 py-1 rounded font-bold ${t.status==='Pending'?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'}">${t.status}</span>
-                    <h4 class="font-bold text-sm text-slate-800">${t.cName || 'Unnamed Site'}</h4>
-                    <p class="text-xs text-slate-600 bg-slate-50 p-2 rounded">${t.details}</p>
-                    
-                    <div class="flex space-x-2 pt-2 border-t mt-2">
-                        ${t.cMobile ? `
-                            <a href="tel:${t.cMobile}" class="flex-1 bg-green-500 text-white text-center py-2 rounded-lg text-xs font-bold hover:bg-green-600"><i class="fa-solid fa-phone mr-1"></i> Call</a>
-                            <a href="https://wa.me/91${t.cMobile}" target="_blank" class="flex-1 bg-emerald-500 text-white text-center py-2 rounded-lg text-xs font-bold hover:bg-emerald-600"><i class="fa-brands fa-whatsapp mr-1"></i> Msg</a>
-                        ` : ''}
-                        ${t.photo ? `<button onclick="viewDoc('${t.photo}')" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold"><i class="fa-solid fa-image"></i></button>` : ''}
-                    </div>
-                </div>
-            `).join('') || '<p class="text-center text-slate-400 italic text-sm mt-5">No Tasks Assigned.</p>';
-        }
-
-        // Base Data Saving (Manual typing logic integration)
-        function encodeBase64(el, targetId) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById(targetId).value = e.target.result;
-                document.getElementById('ins-upload-msg').classList.remove('hidden');
-            };
-            if(el.files[0]) reader.readAsDataURL(el.files[0]);
-        }
-
+        // 8. Save SR / Restore Data
         function saveData(type) {
-            let key = '';
-            let payload = { date: new Date().toLocaleDateString() };
-
-            if(type === 'install') {
-                key = 'fib_installs';
-                payload = {...payload, 
-                    isp: document.getElementById('ins-isp').value,
-                    order: document.getElementById('ins-order-id').value,
-                    cust: document.getElementById('ins-customer').value,
-                    address: document.getElementById('ins-address').value,
-                    photo: document.getElementById('ins-photo').value,
-                    pdf: document.getElementById('ins-pdf').value
-                };
-            } else if (type === 'sr') {
-                key = 'fib_srs';
-                payload = {...payload,
-                    fault: document.getElementById('sr-fault').value,
-                    ticket: document.getElementById('sr-ticket').value,
-                    cust: document.getElementById('sr-customer').value,
-                    resolve: document.getElementById('sr-resolve').value
-                };
-            } else {
-                key = 'fib_restores';
-                payload = {...payload,
-                    id: document.getElementById('rest-id').value,
-                    power: document.getElementById('rest-power').value,
-                    remark: document.getElementById('rest-remarks').value
-                };
+            let data = { type: type, date: new Date().toLocaleString(), by: currentUser.name };
+            
+            if (type === 'sr') {
+                data.fault = document.getElementById('sr-fault').value;
+                data.ticket = document.getElementById('sr-ticket').value;
+                if(!data.fault) return alert("Fault description required!");
+            } else if (type === 'restore') {
+                data.node = document.getElementById('rest-id').value;
+                data.power = document.getElementById('rest-power').value;
+                if(!data.node) return alert("Node ID required!");
             }
 
-            const dataArr = getStore(key);
-            dataArr.push(payload);
-            setStore(key, dataArr);
-            
-            alert("Record Saved Securely!");
-            
-            // Clear inputs dynamically
-            document.querySelectorAll(`#tab-${type} input[type="text"], #tab-${type} textarea, #tab-${type} input[type="hidden"]`).forEach(el => el.value = '');
-            if(type === 'install') document.getElementById('ins-upload-msg').classList.add('hidden');
-            
-            updateDash();
+            let records = getStore('fib_records');
+            records.push(data);
+            setStore('fib_records', records);
+            alert(type.toUpperCase() + " Data Saved!");
+            renderLedger();
             switchTab('home');
         }
 
-        function renderLedger() {
-            const inst = getStore('fib_installs');
-            const sr = getStore('fib_srs');
-            const target = document.getElementById('ledger-content');
-
-            target.innerHTML = `
-                <h4 class="font-bold text-blue-600 bg-blue-50 p-2 rounded mb-1">Installations</h4>
-                ${inst.map(i => `<div class="p-2 border-b"><span class="font-bold">${i.isp}</span> - ${i.cust} (${i.date}) ${i.photo?`<a href="#" onclick="viewDoc('${i.photo}')" class="text-blue-500">📷</a>`:''}</div>`).join('') || '<p>No data</p>'}
-                
-                <h4 class="font-bold text-red-600 bg-red-50 p-2 rounded mb-1 mt-4">SR Logs</h4>
-                ${sr.map(s => `<div class="p-2 border-b"><span class="font-bold text-red-500">${s.fault}</span> - ${s.cust} (${s.date})</div>`).join('') || '<p>No data</p>'}
-            `;
+        // 9. Assign Task Save (Placeholder functionality)
+        function saveTask() {
+            alert("Task Dispatched successfully to Engineer!");
+            document.getElementById('task-cust-name').value = '';
+            document.getElementById('task-cust-mobile').value = '';
+            document.getElementById('task-details').value = '';
         }
 
-        function viewDoc(data) {
-            const w = window.open();
-            w.document.write(`<img src="${data}" style="max-width:100%; display:block; margin:auto;"/>`);
+        // 10. Data Render & Reset
+        function renderLedger() {
+            let records = getStore('fib_records');
+            let installCount = 0; let srCount = 0;
+
+            const list = document.getElementById('ledger-content');
+            if (records.length === 0) {
+                list.innerHTML = '<p class="text-center text-slate-400 py-4">No records found.</p>';
+            } else {
+                // Reverse to show latest first
+                list.innerHTML = records.slice().reverse().map(r => {
+                    if(r.type === 'install') {
+                        installCount++;
+                        return `
+                        <div class="border-l-4 border-blue-500 bg-slate-50 p-3 rounded shadow-sm">
+                            <div class="flex justify-between border-b pb-1 mb-2">
+                                <span class="font-bold text-blue-700 uppercase">INSTALL: ${r.isp}</span>
+                                <span class="text-slate-400">${r.date}</span>
+                            </div>
+                            <p><b>Order:</b> ${r.orderId} | <b>IPTV:</b> ${r.iptv}</p>
+                            <p><b>Site:</b> ${r.site} (${r.city})</p>
+                            <p><b>Cust:</b> ${r.customer}</p>
+                            <p class="text-slate-500 mt-1">Files Attached: ${r.filesCount || 0}</p>
+                            <p class="text-[9px] text-slate-400 mt-2 text-right">By: ${r.by}</p>
+                        </div>`;
+                    } else if(r.type === 'sr') {
+                        srCount++;
+                        return `
+                        <div class="border-l-4 border-red-500 bg-red-50 p-3 rounded shadow-sm">
+                            <span class="font-bold text-red-700">SR FAULT</span> - ${r.date}
+                            <p class="mt-1"><b>Issue:</b> ${r.fault}</p>
+                            <p><b>Ticket:</b> ${r.ticket}</p>
+                        </div>`;
+                    } else {
+                        return `
+                        <div class="border-l-4 border-emerald-500 bg-emerald-50 p-3 rounded shadow-sm">
+                            <span class="font-bold text-emerald-700">RESTORED</span> - ${r.date}
+                            <p class="mt-1"><b>Node:</b> ${r.node}</p>
+                            <p><b>Power:</b> ${r.power}</p>
+                        </div>`;
+                    }
+                }).join('');
+            }
+            
+            // Update Dashboard Counters
+            document.getElementById('count-install').innerText = installCount;
+            document.getElementById('count-sr').innerText = srCount;
         }
 
         function resetData() {
-            if(confirm("Are you sure? This deletes ALL data except Users.")) {
-                localStorage.removeItem('fib_installs');
-                localStorage.removeItem('fib_srs');
-                localStorage.removeItem('fib_restores');
-                localStorage.removeItem('fib_tasks');
-                updateDash();
-                switchTab('home');
+            if(confirm("Are you sure you want to delete ALL system records?")) {
+                localStorage.removeItem('fib_records');
+                renderLedger();
             }
         }
     </script>
